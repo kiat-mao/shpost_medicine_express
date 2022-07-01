@@ -1,0 +1,42 @@
+<%- model_class = UpDownload -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+<div style="float:right">
+    <% if can? :to_import, UpDownload %>
+      <%= link_to t('.import', :default => t("helpers.links.up_download_import")),
+                  to_import_up_downloads_path,
+                  :class => 'btn btn-primary' %>
+      
+    <% end %>
+  </div>
+</div>
+
+<%= grid(@up_downloads, :show_filters => :always) do |g|
+    
+    g.column name: model_class.human_attribute_name(:name), attribute: 'name'
+
+    g.column name: model_class.human_attribute_name(:use), attribute: 'use'
+
+    g.column name: model_class.human_attribute_name(:desc), attribute: 'desc'
+
+    g.column name: model_class.human_attribute_name(:ver_no), attribute: 'ver_no'
+
+
+    g.column name: model_class.human_attribute_name(:oper_date), attribute: 'oper_date' do |up_download|
+      l up_download.oper_date
+    end
+
+    g.column name: model_class.human_attribute_name(:created_at), attribute: 'created_at' do |up_download|
+      l up_download.created_at
+    end
+
+    g.column do |up_download|
+      ActiveSupport::SafeBuffer.new << 
+      (link_to t('.export', :default => t("helpers.links.up_download_export")),
+                      up_download_export_up_download_path(up_download),:method => 'post', :class => 'btn btn-xs btn-primary') << ' ' <<
+        (link_to t('.destroy', :default => t("helpers.links.destroy")), up_download_path(up_download), :method => :delete, :data => { :confirm => t('wice_grid.saved_query_deletion_confirmation', :default => t("helpers.links.confirm", :default => '确定删除?')) }, :class => 'btn btn-xs btn-danger' if can? :destroy, up_download)
+
+
+    end 
+  end 
+%>

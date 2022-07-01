@@ -1,0 +1,279 @@
+/*遮罩层*/  
+#mid{  
+    display:none;  
+    width:100%;  
+    height:100%;  
+    background:#000;
+    /*background-image: url('<%=asset_path("loading.gif")%>');*/
+    position:fixed;  
+    top:58px;  
+    left:230px;  
+    z-index:10;  
+    opacity:0.4;                        /*背景的透明度:(Firefox适用；）*/  
+    filter:alpha(opacity =40);          /*背景的透明度:(IE适用)；  */
+    color:white;
+    /*text-align:center;*/
+    /*vertical-align:middle;*/
+    padding-top:25%;
+    padding-left:40%;
+}
+
+#mid img{
+  display:block;
+  /*margin:0 auto;*/
+}
+
+
+#ulmenu { 
+font-size: 12px;
+font-weight: bolder;
+}
+
+#ulmenu li { 
+list-style-image: none;
+list-style-type: none;
+background-color: #999999;
+border-right-width: 1px;
+border-right-style: solid;
+border-right-color: #000000;
+float: left;
+}
+
+#ulmenu li a {
+color: #FFFFFF;
+text-decoration: none;
+margin: 0px;
+padding-top: 8px;
+display: block; /* 作为一个块 */
+padding-right: 50px; /* 设置块的属性 */
+padding-bottom: 8px;
+padding-left: 50px;
+}
+
+#menu li a:hover {
+background-color: #0099CC;
+}
+
+.extra-row {
+  display: none;
+}
+
+.menu-title {
+    border-bottom: 1px solid #afcdc8;
+    height: 39px;
+    line-height: 40px;
+    color: #ffffff;
+}
+#menu-group-0 a {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: transparent;
+}
+#menu-group-0 a:hover {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: transparent;
+}
+#menu-group-0 .panel-body {
+    padding: 0px;
+}
+#menu-group-0.panel-group .panel+.panel {
+    margin-top: 0px;
+}
+#menu-group-0.panel-group .panel {
+    border: 0px;
+    border-radius: 0px;
+}
+#menu-group-0 .panel-group {
+    margin: 0px;
+}
+#menu-group-0 .panel .menu-title {
+    background-color: #438569;
+    text-indent: 20px;
+}
+#menu-group-0 .panel .panel .menu-title {
+    background-color: #58b08a;
+    text-indent: 40px;
+}
+#menu-group-0 .panel .panel .menu-title.selected {
+    background-color: #000000;
+    background-image: url('<%=asset_path("left_arrow.png")%>');
+    /*background-image: url("left_arrow.png");*/
+    background-size: 13px 20px;
+    background-position: 156px 9px;
+    background-repeat: no-repeat;
+    background-color: #9ef0b8de;
+}
+.header-container {
+    width: 100%;
+    height: 59px;
+    background-color: #0b613c;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+}
+.main-container .left-slider {
+    width: 230px;
+    float: left;
+    min-height: 550px;
+    display: table;
+    position: fixed;
+    top: 59px;
+    left: 0px;
+    height: 3000px;
+}
+
+.main-container .container {
+    width: auto !important;
+    margin: 59px 5px 0px 230px;
+}
+.left-slider .logo {
+    display: table-cell;
+    width: 61px;
+    background-image: url('<%=asset_path("left_logo.jpg")%>');
+    /*background-image: url('left_logo.jpg');*/
+    background-size: contain;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-color: #0b613c;
+}
+.left-slider .menu {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Microsoft Yahei;
+    text-shadow: 1px 1px 1px #666666;
+    display: table-cell;
+    background-color: #438569;
+}
+.header-container .logo {
+    width: 555px;
+    height: 59px;
+    float: left;
+    background-image: url('<%=asset_path("logo.jpg")%>');
+    /*background-image: url('logo.jpg');*/
+    background-size: contain;
+    background-position: left center;
+    background-repeat: no-repeat;
+}
+.header-container .bg {
+    position: relative;
+    height: 59px;
+    margin: 0px 0px 0px 555px;
+    background-image: url('<%=asset_path("top_bg.png")%>');
+    /*background-image: url('top_bg.png');*/
+    background-size: contain;
+    background-position: center;
+    background-repeat: repeat;
+}
+.header-container .bg ul {
+    margin: 28px 10px 0px;
+    line-height: 31px;
+}
+.header-container .bg li.dropdown {
+    line-height: 31px;
+}
+.header-container .bg li.dropdown a {
+    line-height: 31px;
+    padding: 0px 20px;
+    background-color: transparent;
+}
+.header-container .bg li.dropdown a:hover,.header-container .bg li.dropdown a:focus {
+    background-color: transparent;
+}
+.header-container .bg li.dropdown>a {
+    color: #ffffff;
+}
+.main-container .pin-wrapper {
+    float: left;
+}
+#login-wrapper {
+    width: 514px;
+    height: 316px;
+    margin: 120px auto 0px;
+    background-image: url('<%=asset_path("login-bg.png")%>');
+    /*background-image: url('/assets/login_bg.jpg');*/
+    background-size: 514px 316px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    border: 1px solid #676568;
+    border-radius: 6px;
+    box-shadow: 2px 2px 2px #c9cecd;
+}
+#login-wrapper .uname-div {
+    position: absolute;
+    top: 134px;
+    left: 200px;
+}
+#login-wrapper .pwd-div {
+    position: absolute;
+    top: 184px;
+    left: 200px;
+}
+#login-wrapper .remember-div {
+    position: absolute;
+    top: 240px;
+    left: 200px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#login-wrapper .button-div {
+    position: absolute;
+    top: 235px;
+    left: 300px;
+}
+#login-wrapper .button-div .login-btn {
+    width: 109px;
+    height: 39px;
+    background-image: url('<%=asset_path("login_btn.jpg")%>');
+    /*background-image: url('/assets/login_btn.jpg');*/
+    background-size: 109px 39px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0px;
+}
+#remember-password label {
+    display: inline-block;
+}
+.uname-div input, .pwd-div input {
+    width: 206px;
+}
+.findprintindex-filters .custom-dropdown-container, .findprintindex-filters .date-filter, .findprintindex-filters .form-inline{
+    display: inline-block;
+}
+.findprintindex-filters .expand-multi-select-icon {
+    margin-top: 18px;
+    display: none;
+}
+.findprintindex-filters .input-sm {
+    width: 150px;
+    display: inline-block;
+}
+.findprintindex-filters > div {
+    float: left;
+    height: 48px;
+    line-height: 48px;
+    margin-right: 12px;
+}
+.findprintindex-filters button {
+    float: right;
+    margin: 12px 5px;
+}
+.findprintindex-btns .btn {
+    float: right;
+    margin-left: 16px;
+}
+.findprintindex-btns {
+    width: 100%;
+    height: 35px;
+    margin-bottom: 12px;
+}
+.findprintindex-filters {
+    float: left;
+    margin-bottom: 12px;
+}

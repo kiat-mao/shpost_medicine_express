@@ -1,0 +1,26 @@
+<center>
+  <%= bootstrap_flash %>
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+    <div id="login-wrapper" class="png_bg">
+      	<div class="uname-div">
+          <%= f.text_field :username, :class=>"form-control input-md" %>
+        </div>
+
+        <div class="pwd-div">
+          <%= f.password_field :password, :class=>"form-control input-md" %>
+        </div>
+
+        <!--div class="remember-div" id="remember-password">
+          <% if devise_mapping.rememberable? %>
+          <%= f.check_box :remember_me %> 
+          <%= f.label t('devise.sessions.new.remember_me', :default => "Remember me") , :for => "user_remember_me"%>
+          <% end %>
+        </div-->
+
+        <div class="button-div">
+          <%= f.submit t('devise.sessions.new.sign_in', :default => "Sign in"), :class=>"login-btn" ,:value=>"" %>
+        </div>
+
+      </div>
+    <% end %>
+</center>

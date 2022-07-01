@@ -1,0 +1,26 @@
+<%- model_class = UserLog -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.index', '%{model} Manage'], :model => model_class.model_name.human.titleize %></h1>
+</div>
+<%= render partial: '/layouts/page_size' %>
+<%= grid(@user_logs_grid) do |g|
+
+    g.column name: model_class.human_attribute_name(:username), attribute: 'name', assoc: :user do |user_log|
+        user_log.user.try :name
+      end
+
+    g.column name: model_class.human_attribute_name(:operation), attribute: 'operation'
+
+    g.column name: model_class.human_attribute_name(:object_symbol), attribute: 'object_symbol'
+
+    g.column name: model_class.human_attribute_name(:created_at), attribute: 'created_at' do |user_log|
+        l user_log.created_at
+      end
+
+    g.column do |user_log|
+      ActiveSupport::SafeBuffer.new <<
+      (link_to t('.destroy', :default => t("helpers.links.destroy")), user_log_path(user_log), :method => :delete, :data => { :confirm => t('wice_grid.saved_query_deletion_confirmation', :default => t("helpers.links.confirm", :default => '确定删除?')) }, :class => 'btn btn-xs btn-danger'if can? :destroy, user_log)                                                          
+    end
+
+  end 
+%>

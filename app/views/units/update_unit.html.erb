@@ -1,0 +1,50 @@
+<%- model_class = Unit -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
+</div>
+<div>
+   <%= form_tag("/units/update_unit_info", method: "post")%>
+   <%= hidden_field_tag('unitid',@unit.id)%>
+  <div class="control-group">
+      <%= label_tag(:no, "编号") %>
+      <div class="controls">
+      <%= text_field_tag(:no,@unit.no) %>
+      </div>
+  </div>
+	<div class="control-group">
+      <%= label_tag(:name, "单位名称") %>
+      <div class="controls">
+      <%= text_field_tag(:name,@unit.name) %>
+      </div>
+  </div>
+	<div class="control-group">
+      <%= label_tag(:short_name, "英文缩写") %>
+      <div class="controls">
+      <%= text_field_tag(:short_name,@unit.short_name) %>
+      </div>
+  </div>
+	<div class="control-group">
+      <%= label_tag(:unit_desc, "单位描述") %>
+      <div class="controls">
+      <%= text_field_tag(:unit_desc,@unit.unit_desc) %>
+      </div>
+  </div>
+  <div class="control-group">
+      <%= label_tag(:tcbd_khdh, "商务投递客户编号") %>
+      <div class="controls">
+      <%= text_field_tag(:tcbd_khdh,@unit.tcbd_khdh) %>
+	    </div>
+  </div>
+   <% if !@unit.parent.blank? and @unit.parent.name.eql?I18n.t("relevant_unit.parent") %>
+    <div class="control-group">
+    <%= check_box_tag 'is_facility_management_unit' %>是否为设备管理单位
+    </div>
+   <% end %>
+  
+  <div>
+    <%= submit_tag "更新单位管理",:class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            units_path, :class => 'btn btn-default' %>
+  </div>
+   </form>
+</div>

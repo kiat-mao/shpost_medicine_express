@@ -1,0 +1,34 @@
+<%= form_for(@up_download) do |f| %>
+  <% if @up_download.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@up_download.errors.count, "error") %> prohibited this up_download from being saved:</h2>
+
+      <ul>
+      <% @up_download.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :use %><br>
+    <%= f.text_field :use %>
+  </div>
+  <div class="field">
+    <%= f.label :desc %><br>
+    <%= f.text_field :desc %>
+  </div>
+  <div class="field">
+    <%= f.label :ver_no %><br>
+    <%= f.text_field :ver_no %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

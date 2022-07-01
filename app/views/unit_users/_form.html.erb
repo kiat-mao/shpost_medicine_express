@@ -1,0 +1,68 @@
+<%= form_for ([ @unit, @user]), :html => { :class => 'form-horizontal' } do |f| %>
+  <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+  <% end %>
+    <% if can? :role, @user %>
+    <div class="control-group">
+      <%= f.label :username, :class => 'control-label' %>
+      <font color="red">(必填)</font>
+      <div class="controls">
+        <%= f.text_field :username, :class => 'text_field', :id => 'username' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :name, :class => 'control-label' %>
+      <font color="red">(必填)</font>
+      <div class="controls">
+        <%= f.text_field :name, :class => 'text_field', :id => 'name' %>
+      </div>
+    </div>
+  <% else %>
+    <dl class="dl-horizontal">
+      <dt><strong><%= f.label :username%></strong></dt>
+      <font color="red">(必填)</font>
+      <dd><%= @user.username %></dd>
+    </dl>
+    <dl class="dl-horizontal">
+      <dt><strong><%= f.label :name%></strong></dt>
+      <font color="red">(必填)</font>
+      <dd><%= @user.name %></dd>
+    </dl>
+  <% end %>
+  
+  <div class="control-group">
+    <%= f.label :password, :class => 'control-label' %>
+    <font color="red">(必填)</font>
+    <div class="controls">
+      <%= f.password_field :password, :class => 'text_field', :id => 'password' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :email, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :email, :class => 'text_field', :id => 'email' %>
+    </div>
+  </div>
+
+ <% if can? :role, @user %>
+    <div class="control-group">
+      <%= f.label :role, :class => 'control-label' %>
+      <font color="red">(必选)</font>
+      <div class="controls">
+        <%= f.select(:role, User::ROLE.invert.select{|k, v| (can? :role, v.to_sym)}) %>
+      </div>
+    </div>
+  <% else %>
+    <dl class="dl-horizontal">
+      <dt><strong><%= f.label :role%></strong></dt>
+      <font color="red">(必选)</font>
+      <dd><%= @user.rolename %></dd>
+    </dl>
+  <% end %>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                unit_users_path(@unit), :class => 'btn' %>
+  </div>
+<% end %>

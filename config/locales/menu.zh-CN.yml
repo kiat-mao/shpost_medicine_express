@@ -1,0 +1,39 @@
+zh-CN:
+  menu:
+    permission:
+      name: "权限管理"
+      needrole:
+        can: :read
+        role: :User
+      submenu:
+        admin:
+          name: "用户管理"
+          link: "/users"
+          need_count: false
+          needrole:
+            can: :read
+            role: :User
+        unit_admin:
+          name: "单位管理"
+          link: "/units"
+          need_count: false
+          needrole:
+            can: :read
+            role: :User
+    up_downloads:
+      name: "模板管理"
+      needrole:
+        can: :read
+        role: :UpDownload
+      submenu:
+        up_download:
+          name: "模板上传下载"
+          link: "/up_downloads"
+          need_count: false
+    logs:
+      name: "日志查询"
+      submenu:
+        user_log:
+          name: "日志查询"
+          link: "/user_logs"
+          need_count: false

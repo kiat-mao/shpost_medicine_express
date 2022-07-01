@@ -1,0 +1,18 @@
+<center>
+<br><br>
+<font face="微软雅黑" color='#006030' size=6>机构导入</font>   
+
+<br><br><br>
+  
+ 	
+<%= form_tag({:action => 'import'}, :multipart => true, name: 'form1') %>
+<!--<font face="微软雅黑" color='#D9B300' size=3>上传文档模板: <%= file_field("file", "file",:onclick=>'enable_submit_tag()') %></font>  -->
+<font face="微软雅黑" color='#D9B300' size=3>上传文档模板: <%= file_field("file", "file",onclick: "$('#submit_button').removeAttr('disabled');") %></font>  
+<br><br><br>
+
+
+<!--<%= submit_tag "确认导入",:id=>'submit_button', data: { disable_with: "导入中，请稍等..." } %>-->
+<%= submit_tag "确认导入",:id=>'submit_button',onclick: "form1.submit();this.disabled='disabled';" %>
+</form>
+
+</center>

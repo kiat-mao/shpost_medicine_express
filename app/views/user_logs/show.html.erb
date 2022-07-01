@@ -1,0 +1,19 @@
+<%- model_class = UserLog -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @user_log.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:username) %>:</strong></dt>
+  <dd><%= @user_log.user.try :name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:operation) %>:</strong></dt>
+  <dd><%= @user_log.operation %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:object_symbol) %>:</strong></dt>
+  <dd><%= @user_log.object_symbol %></dd>
+</dl>
+<% if can? :index, User_log %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              user_logs_path, :class => 'btn btn-default'  %>
+<% end %>

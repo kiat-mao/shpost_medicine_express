@@ -1,0 +1,15 @@
+<div style="float:left">
+    分页数量:
+    <%= link_to '10',
+            url_for(request.params.merge({page_size: 10})),
+            :class => 'btn btn-primary btn-xs' %>
+    <%= link_to '20',
+            url_for(request.params.merge({page_size: 20})),
+            :class => 'btn btn-primary btn-xs' %>
+    <%= link_to '50',
+            url_for(request.params.merge({page_size: 50})),
+            :class => 'btn btn-primary btn-xs' %>
+    <%= link_to '100',
+            url_for(request.params.merge({page_size: 100})),
+            :class => 'btn btn-primary btn-xs' %>
+  </div>

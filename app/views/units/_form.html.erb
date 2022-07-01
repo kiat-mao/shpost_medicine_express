@@ -1,0 +1,57 @@
+<%= form_for @unit, :html => { :class => 'form-horizontal' } do |f| %>
+  <% @unit.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+  <% end %>
+ 
+  <div class="control-group">
+    <%= f.label :no, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :no, :class => 'text_field', :id => 'no' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <font color="red">(必填)</font>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field', :id => 'name' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :short_name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :short_name, :class => 'text_field', :id => 'short_name' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :desc, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :desc, :class => 'text_field', :id => 'desc' %>
+    </div>
+  </div>
+  <% if ! @unit.parent_id.blank?%>
+    <% if ! @unit.persisted? %>
+      <%= hidden_field(:unit, :parent_id, {value: @parent_id||@unit.parent_id})%>
+    <% end %>
+  <div class="control-group">
+    <%= f.label :parent_unit, :class => 'control-label' %>
+    <div class="controls">
+      <%= @parent_unit.try(:name) || @unit.parent_unit.try(:name)%>
+    </div>
+  </div>
+  <% end %>
+
+  <!-- <div class="control-group">
+    <%= f.label :parent_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select(:parent_id, Unit.where("level in (1,2)").order(:level,:id).map{|u| [u.name,u.id]})%>
+    </div>
+  </div>
+   -->
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            units_path, :class => 'btn btn-default' %>
+ 
+<% end %>
+
+
+

@@ -1,0 +1,25 @@
+ <%= form_for [ @user, @role], :html => { :class => 'form-horizontal' } do |f| %>
+  <% @role.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :unit_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select(:unit_id, Unit.where("units.parent_id = ? or units.id = ?", @user.unit_id, @user.unit_id).accessible_by(current_ability).map{|u| [u.name,u.id]}) %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :role, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select(:role, Role::ROLE.invert) %>
+    </div>
+  </div>
+
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                user_roles_path(@user), :class => 'btn' %>
+  </div>
+<% end %>

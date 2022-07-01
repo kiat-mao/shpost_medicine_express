@@ -1,0 +1,71 @@
+<%- model_class = Unit -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.index', '%{model} Manage'], :model => model_class.model_name.human.titleize %></h1>
+  <%= render partial: '/layouts/page_size' %>
+  
+  <!--% if current_user.unit.blank? or current_user.unit.level == 1 %-->
+  <% if ! params[:id].blank? %>
+  <div style="float:right">
+    <% if can? :new, Unit %>
+      <%= link_to t("新增下级单位"), new_child_unit_unit_path(params[:id]), :class => 'btn btn-primary' %>
+    <% end %>
+
+    <%= link_to t('.back', :default => t("helpers.links.back")),
+                  units_path,
+                  :class => 'btn btn-primary' %> 
+  </div>
+  <br>
+  <% else %>
+  <div style="float:right">
+    <% if can? :new, Unit %>
+      <%= link_to t('.new_unit', :default => t("helpers.links.new_unit")),
+                  new_unit_path,
+                  :class => 'btn btn-primary' %>
+    <% end %>
+  </div>
+  <br>
+  <% end %>
+  <!--% end %-->
+</div>
+
+
+<%= grid(@units_grid) do |g|
+  g.column name: model_class.human_attribute_name(:no), attribute: 'no'
+
+  g.column name: model_class.human_attribute_name(:name), attribute: 'name'  do |unit|
+    [unit.name.try(:truncate, 18), {title: unit.name}] end
+
+  g.column name: model_class.human_attribute_name(:short_name), attribute: 'short_name'
+
+  g.column name: model_class.human_attribute_name(:desc), attribute: 'desc'  do |unit|
+    [unit.desc.try(:truncate, 18), {title: unit.desc}]
+  end
+
+
+  g.column name: model_class.human_attribute_name(:level), attribute: 'level', custom_filter: Unit::LEVEL.invert,  allow_multiple_selection: false  do |unit| 
+    unit.level
+  end
+
+  g.column name: model_class.human_attribute_name(:unit_type), attribute: 'unit_type', allow_multiple_selection: false do |unit| 
+    unit.unit_type
+  end
+  
+  g.column name: model_class.human_attribute_name(:parent_unit), attribute: 'parent_id' ,custom_filter: Unit.where(level: 1).accessible_by(current_ability).map{|u| [u.name,u.id]}, allow_multiple_selection: false do |unit|
+      unit.parent_unit.try(:name)
+  end
+  
+  
+  g.column name: model_class.human_attribute_name(:created_at), attribute: 'created_at' do |unit|
+    l unit.created_at
+  end
+
+  g.column do |unit|
+    ActiveSupport::SafeBuffer.new << 
+      (link_to t("新增下级单位"), new_child_unit_unit_path(unit), :class => 'btn btn-xs btn-primary' if (can? :create, unit) && (unit[:level].eql? 1)) << ' ' << 
+      (link_to t('.edit', :default => t("helpers.links.edit")), edit_unit_path(unit), :class => 'btn btn-xs btn-primary' if can? :update, unit) << ' ' <<
+      (link_to t('.destroy', :default => t("helpers.links.destroy")), unit_path(unit), :method => :delete, :data => { :confirm => t('wice_grid.saved_query_deletion_confirmation', :default => t("helpers.links.confirm", :default => '确定删除?')) }, :class => 'btn btn-xs btn-danger' if can? :destroy, unit) << ' ' <<
+      (link_to t('.users', :default => t("helpers.links.users")), unit_users_path(unit), :class => 'btn btn-xs btn-info' if can? :user, unit) << ' ' << 
+      (link_to "下级单位", child_units_unit_path(unit), :class => 'btn btn-xs btn-primary' if (can? :read, unit) && (unit[:level].eql? 1))
+  end
+end
+%>

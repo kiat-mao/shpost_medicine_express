@@ -1,0 +1,48 @@
+<%- model_class = User -%>
+<div class="page-header">
+<h1><%=t '.title', :default => [:'helpers.titles.index', '%{model} Manage'], :model => model_class.model_name.human.titleize %></h1>
+  <%= render partial: '/layouts/page_size' %>
+  <div style="float:right">
+    <% if can? :new, User %>
+      <%= link_to t('.new_user', :default => t("helpers.links.new_user")),
+                  new_user_path,
+                  :class => 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>
+
+<%= grid(@users_grid) do |g|
+
+    g.column name: model_class.human_attribute_name(:name), attribute: 'name'
+
+    g.column name: model_class.human_attribute_name(:username), attribute: 'username'
+
+    g.column name: model_class.human_attribute_name(:email), attribute: 'email' do |user|
+      [user.email.try(:truncate, 10), {title: user.email}]
+    end
+
+    g.column name: model_class.human_attribute_name(:unit_id), attribute: 'unit_id' , allow_multiple_selection: false, custom_filter: Unit.accessible_by(current_ability).map{|u| [u.name,u.id]} do |user|
+      [user.unit.try(:name).try(:truncate, 18), {title: user.unit.try(:name)}]
+    end
+
+    g.column name: model_class.human_attribute_name(:role), attribute: 'role' , allow_multiple_selection: false, custom_filter: User::ROLE.delete_if{|k| k.eql? :superadmin}.invert do |user| 
+      user.rolename
+    end
+
+    g.column name: model_class.human_attribute_name(:status), attribute: 'status', allow_multiple_selection: false, custom_filter: User::STATUS_NAME.invert do |user| 
+      user.status_name
+    end
+
+    g.column name: model_class.human_attribute_name(:created_at), attribute: 'created_at' do |user|
+      l user.created_at
+    end
+
+    g.column do |user|
+      ActiveSupport::SafeBuffer.new << 
+        (link_to t('.edit', :default => t("helpers.links.edit")), edit_user_path(user), :class => 'btn btn-xs btn-primary' if can? :update, user) << ' ' <<
+          (link_to t('.destroy', :default => t("helpers.links.destroy")), user_path(user), :method => :delete, :data => { :confirm => t('wice_grid.saved_query_deletion_confirmation', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs btn-danger' if can? :destroy, user)<< ' ' <<
+          (link_to t('.reset_pwd', :default => t("helpers.links.reset_pwd")), to_reset_pwd_user_path(user), :class => 'btn btn-xs btn-primary' if can? :reset_pwd, user)<< ' ' <<
+          (link_to user.is_unlocked? ? "用户停用" : "用户启用",  user.is_unlocked? ? lock_user_path(user) :  unlock_user_path(user), :class => 'btn btn-xs btn-primary', :method => :post, name: "switch_user_status", remote: true,  data: { type: 'json' })
+    end
+  end 
+%>

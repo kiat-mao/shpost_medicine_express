@@ -1,0 +1,24 @@
+<%- model_class = User -%>
+<div class="page-header">
+  <h1><%="重置密码" %></h1>
+</div>
+<%= form_for @user, :html => { :class => 'form-horizontal' }, :url => reset_pwd_user_path(@user) do |f| %>
+  <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+  <% end %>
+  <div class="control-group">
+    <%= f.label :password, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.password_field :password, :class => 'text_field' %>
+    </div>
+  </div>
+  
+  <div class="form-actions">
+    <%= f.submit "确定", :class => 'btn btn-primary' %>
+    <% if can? :index, User%>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                users_path, :class => 'btn' %>
+    <% end %>
+  </div>
+<% end %>
+

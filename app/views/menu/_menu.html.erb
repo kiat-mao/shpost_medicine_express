@@ -1,0 +1,72 @@
+<div class="menu">
+  <div class="panel-group" id="menu-group-0">
+    <% 
+      m = t(:menu)
+      m.keys.each_with_index do |k,l1| 
+        if m[k][:needrole].blank? || can?(m[k][:needrole][:can], m[k][:needrole][:role].is_a?(Symbol) ? Module.const_get(m[k][:needrole][:role]) : m[k][:needrole][:role]) 
+    %>
+          <div class="panel">
+            <div class="menu-heading">
+              <a data-toggle="collapse" data-parent="#menu-group-0" href="#menu-0-<%=l1+1%>">
+                        <div class="menu-title">
+                          <%= m[k][:name] %>
+                        </div>
+                    </a>
+            </div>
+            <% 
+              sm = m[k][:submenu]
+              if !sm.blank?
+                #is menu collapse in?
+                in_flag = false
+                sm.values.each do |v|
+                  link = v[:link]
+                  # binding.pry
+                  selected = v[:selected]
+                  if request.original_fullpath.include?(link) || (!selected.blank? && request.original_fullpath.include?(selected))
+                    in_flag = true
+                    break
+                  end
+                end
+            %>
+                <div id="menu-0-<%=l1+1%>" class="panel-collapse collapse <%="in" if in_flag %>">
+                <% 
+                  sm.keys.each_with_index do |sk,l2| 
+                    if sm[sk][:needrole].blank? || can?(sm[sk][:needrole][:can], sm[sk][:needrole][:role].is_a?(Symbol) ? Module.const_get(sm[sk][:needrole][:role]) : sm[sk][:needrole][:role]) 
+                      count = 0
+                      name = sm[sk][:name]
+                      if !sm[sk][:need_count].blank? and sm[sk][:need_count]
+                        count = sk.to_s.camelize.constantize.unfinished_count(session[:current_storage])
+                        name = sm[sk][:name]+"("+count.to_s+")"
+                      end
+                %>
+                      <div class="panel-group" id="menu-group-0-<%=l1+1%>-<%=l2+1%>">
+                        <div class="panel">
+                          <div class="menu-heading">
+                            <a data-toggle="collapse" data-parent="#menu-group-0-<%=l1+1%>" >
+                              <a href="<%=sm[sk][:link]%>">
+                                <div class="menu-title <%="selected" if request.original_fullpath.include?(sm[sk][:link]) || (!sm[sk][:selected].blank? && request.original_fullpath.include?(sm[sk][:selected]))%>">
+                                <% if count>0 %>
+                                  <%= sm[sk][:name] %><span style="color:#FF0000"><%="("+count.to_s+")"%></span>
+                                <% else %>
+                                  <%= name %>
+                                <% end %>
+                                </div>
+                              </a>
+                            </a>
+                          </div>
+                          <div id="menu-0-<%=l1+1%>-<%=l2+1%>" class="panel-collapse collapse">
+                          </div>   
+                        </div>
+                      </div> 
+                <% 
+                    end 
+                  end 
+                %>
+                </div>
+            <% end %>
+          </div>
+    <% 
+        end
+      end 
+    %>
+</div>

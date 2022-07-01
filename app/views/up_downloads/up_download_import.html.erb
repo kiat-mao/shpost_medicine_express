@@ -1,0 +1,52 @@
+<%- model_class = UpDownload -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+</div>
+<%= form_for @up_download, :html => { :class => 'form-horizontal',:action => 'up_download_import',:multipart => true } do |f| %>
+
+  <% 
+  @up_download.errors.full_messages.each do |msg| 
+  %>
+      <li><%= msg %></li>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <font color="red">(必填)</font>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :use, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :use, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :desc, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :desc, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :ver_no, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :ver_no, :class => 'text_field' %>
+    </div>
+  </div>
+
+
+  <div class="controls">
+  <font size=2><b>上传文档模板 </b><font color="red">(必选)</font><%= file_field("file", "file",onclick: "$('#submit_button').removeAttr('disabled');") %>
+  </font>   
+ </div>
+  
+  <br>
+
+  <%= submit_tag "确认导入",:id=>'submit_button',:disabled=> 'disabled', onclick: "form1.submit();this.disabled='disabled';", :class => 'btn btn-primary' %>
+  <!--<%= submit_tag "确认导入", data: { disable_with: "导入中，请稍等..." } %>-->
+  
+
+<% end %>
+

@@ -1,0 +1,45 @@
+<%- model_class = Role -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => "#{@user.unit.name}-#{@user.name}-#{model_class.model_name.human}"%></h1>
+  <div style="float:right">
+    <% if can? :role, @user %>
+      <%= link_to t('.new', :default => t("helpers.links.new")),
+                  new_user_role_path(@user),
+                  :class => 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:unit_id) %></th>
+      <th><%= model_class.human_attribute_name(:role) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @role_groups.each do |x, y| %>
+      <tr>
+        <td><%= y.first.unit.name %></td>
+        <td><%= y.collect{|z| Role::ROLE[z.role.to_sym]}.to_sentence %></td>
+        <td></td>
+      </tr>
+      <% y.each do |z| %>
+      <tr>
+        <td></td>
+        <td><%= Role::ROLE[z.role.to_sym] %></td>
+        <% if can? :role, @user%>
+        <td><%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              user_role_path(@user, z),
+              :method => 'delete',
+              # :remote => true,
+              # "data-type" => "script",
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => '确定删除?')) },
+              :class => 'btn btn-danger' %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
