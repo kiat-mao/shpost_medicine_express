@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  load_and_authorize_resource :unit
   load_and_authorize_resource :user
 
   user_logs_filter only: [:create, :destroy], symbol: :username#, object: :user, operation: '新增用户'
@@ -7,6 +8,7 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
     #@users = User.all
+    @users = @users.where(unit: @unit) if ! @unit.blank?
     @users_grid = initialize_grid(@users,
       :per_page => params[:page_size])
   end
@@ -31,7 +33,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       @user.role = 'user'
       if @user.save
-        format.html { redirect_to @user, notice: I18n.t('controller.create_success_notice', model: '用户') }
+        format.html { redirect_to params[:referer], notice: I18n.t('controller.create_success_notice', model: '用户') }
         format.json { render action: 'show', status: :created, location: @user }
       else
         format.html { render action: 'new' }
@@ -45,7 +47,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: I18n.t('controller.update_success_notice', model: '用户') }
+        format.html { redirect_to params[:referer], notice: I18n.t('controller.update_success_notice', model: '用户') }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -59,7 +61,7 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     respond_to do |format|
-      format.html { redirect_to users_url }
+      format.html { redirect_to request.referer }
       format.json { head :no_content }
     end
   end
@@ -71,10 +73,10 @@ class UsersController < ApplicationController
     @operation = "reset_pwd"
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to request.referer, notice: "密码重置成功" }
+        format.html { redirect_to params[:referer], notice: "密码重置成功" }
         format.js { head :no_content }
       else
-        format.html { render action: 'reset_pwd' }
+        format.html { render action: 'to_reset_pwd' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

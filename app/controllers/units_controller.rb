@@ -33,11 +33,10 @@ class UnitsController < ApplicationController
   # POST /units.json
   def create
     @unit = Unit.new(unit_params)
-
     respond_to do |format|
       # @unit.unit_type = 'branch'
        if @unit.save
-        format.html { redirect_to @unit, notice: I18n.t('controller.create_success_notice', model: '单位')}
+        format.html { redirect_to params[:user][:referer], notice: I18n.t('controller.create_success_notice', model: '单位')}
         format.json { render action: 'show', status: :created, location: @unit }
       else
         format.html { render action: 'new' }
@@ -51,7 +50,7 @@ class UnitsController < ApplicationController
   def update
     respond_to do |format|
       if @unit.update(unit_params_4_update)
-        format.html { redirect_to @unit, notice: I18n.t('controller.update_success_notice', model: '单位') }
+        format.html { redirect_to params[:user][:referer], notice: I18n.t('controller.update_success_notice', model: '单位') }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -66,10 +65,10 @@ class UnitsController < ApplicationController
     if @unit.can_destroy?
       @unit.destroy
     else
-      flash[:alert] = " 该区分公司下存在用户，不可删除。"
+      flash[:alert] = " 该区分公司下存在子公司或用户，不可删除。"
     end
     respond_to do |format|
-      format.html { redirect_to units_url }
+      format.html { redirect_to request.referer }
       format.json { head :no_content }
     end
   end

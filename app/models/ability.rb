@@ -15,19 +15,19 @@ class Ability
         #can :manage, User
     elsif user.unitadmin?
         can :manage, Unit, id: user.unit.id
-        can :manage, Unit, parent_id: user.unit.id
-        can :read, Unit
         can :user, Unit, id: user.unit.id
+        can :manage, Unit, parent_id: user.unit.id
+        can :read, Unit        
+        cannot :destroy, Unit, id: user.unit.id
 
         can :read, UserLog, user: {unit_id: user.unit_id}
 
-        can :read, User, role: 'unitadmin'
-        can :manage, User, role: 'user'
-
-        cannot [:create, :destroy, :update], User, role: ['unitadmin', 'superadmin']
-        
+        can :manage, User, unit_id: user.unit_id
+        can :manage, User, unit_id: user.unit.child_unit_ids
+        cannot [:role, :create, :destroy, :update], User, role: ['unitadmin', 'superadmin']
         can :update, User, id: user.id
-
+        can :role, :user
+        
         can :manage, UpDownload
     else
         can :update, User, id: user.id

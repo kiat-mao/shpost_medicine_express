@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       get 'import'
       post 'import' => 'units#import'
     end
-    resources :users, :controller => 'unit_users'
+    resources :users, :controller => 'users'
 
     member do 
       # get 'index'
@@ -24,8 +24,8 @@ Rails.application.routes.draw do
 
   resources :users do
     member do
-      get 'to_reset_pwd'
-      patch 'reset_pwd'
+      get 'reset_pwd' => 'users#to_reset_pwd'
+      patch 'reset_pwd' => 'users#reset_pwd'
       post 'lock' => 'users#lock'
       post 'unlock' => 'users#unlock'
     end

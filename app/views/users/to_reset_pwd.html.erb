@@ -3,6 +3,8 @@
   <h1><%="重置密码" %></h1>
 </div>
 <%= form_for @user, :html => { :class => 'form-horizontal' }, :url => reset_pwd_user_path(@user) do |f| %>
+  <%= hidden_field_tag 'referer', (params['referer'].blank? ? request.referer : params['referer']) %>
+
   <% @user.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
   <% end %>
@@ -17,7 +19,7 @@
     <%= f.submit "确定", :class => 'btn btn-primary' %>
     <% if can? :index, User%>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                users_path, :class => 'btn' %>
+                 (params['referer'].blank? ? request.referer : params['referer']), :class => 'btn' %>
     <% end %>
   </div>
 <% end %>

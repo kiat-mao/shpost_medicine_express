@@ -12,6 +12,8 @@
   <dd><%= @user.email %></dd>
   <dt><strong><%= model_class.human_attribute_name(:unit_id) %>:</strong></dt>
   <dd><%= @user.unit.try :name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:role) %>:</strong></dt>
+  <dd><%= @user.rolename %></dd>
 </dl>
 <% if can? :index, User %>
 <%= link_to t('.back', :default => t("helpers.links.back")),

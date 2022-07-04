@@ -1,8 +1,8 @@
-<%= form_for @unit, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_with model: @unit, local: true do |f| %>
   <% @unit.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
   <% end %>
- 
+  <%= hidden_field_tag 'referer', (params['referer'].blank? ? request.referer : params['referer']) %>
   <div class="control-group">
     <%= f.label :no, :class => 'control-label' %>
     <div class="controls">
@@ -49,7 +49,7 @@
    -->
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            units_path, :class => 'btn btn-default' %>
+            (params['referer'].blank? ? request.referer : params['referer']), :class => 'btn btn-default' %>
  
 <% end %>
 

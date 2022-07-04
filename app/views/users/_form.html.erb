@@ -1,7 +1,8 @@
-<%= form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_with model: @user, local: true do |f| %>
   <% @user.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
   <% end %>
+  <%= hidden_field_tag 'referer', (params['referer'].blank? ? request.referer : params['referer']) %>
   <% if can? :role, @user %>
     <div class="control-group">
       <%= f.label :username, :class => 'control-label' %>
@@ -18,16 +19,14 @@
       </div>
     </div>
   <% else %>
-    <dl class="dl-horizontal">
+    <div class="control-group">
       <dt><strong><%= f.label :username%></strong></dt>
-      <font color="red">(必填)</font>
       <dd><%= @user.username %></dd>
-    </dl>
-    <dl class="dl-horizontal">
+    </div>
+    <div class="control-group">
       <dt><strong><%= f.label :name%></strong></dt>
-      <font color="red">(必填)</font>
       <dd><%= @user.name %></dd>
-    </dl>
+    </div>
   <% end %>
   
   <div class="control-group">
@@ -50,7 +49,7 @@
       <%= f.label :unit_id, :class => 'control-label' %>
       <font color="red">(必选)</font>
      <div class="controls">
-        <%= f.select(:unit_id, Unit.accessible_by(current_ability).map{|u| [u.name,u.id]}) %>
+        <%= f.select(:unit_id, Unit.accessible_by(current_ability, :update).map{|u| [u.name,u.id]}, selected: @unit.blank? ? @user.unit_id : @unit.id)%>
       </div> 
     </div>
 
@@ -62,23 +61,21 @@
       </div>
     </div>
   <% else %>
-    <dl class="dl-horizontal">
+    <div class="control-group">
       <dt><strong><%= f.label :unit_id%></strong></dt>
-      <font color="red">(必选)</font>
-      <dd><%= @user.unit.try :name %></dd>
-    </dl>
-    <dl class="dl-horizontal">
+      <dt><%= @user.unit.try :name %></dt>
+    </div>
+    <div class="control-group">
       <dt><strong><%= f.label :role%></strong></dt>
-      <font color="red">(必选)</font>
       <dd><%= @user.rolename %></dd>
-    </dl>
+    </div>
   <% end %>
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <% if can? :index, User%>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                users_path, :class => 'btn' %>
+                (params['referer'].blank? ? request.referer : params['referer']), :class => 'btn' %>
     <% end %>
   </div>
 <% end %>

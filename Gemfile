@@ -1,4 +1,4 @@
-source 'https://gems.ruby-china.com/'
+source 'https://rubygems.org/'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.5'
@@ -40,6 +40,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'pry'
 end
 
 group :test do
@@ -57,16 +58,23 @@ gem 'wice_grid', '~> 4.1', github: 'kreintjes/wice_grid', branch: 'fix/all'
 # For WiceGrid
 gem 'font-awesome-sass', '~> 5.13.0'
 
-gem 'cancancan', '~> 3.1'
+gem 'cancancan', '~> 3.4'
 
 gem 'devise', '~> 4.7', '>= 4.7.1'
 
-gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+  # gem 'rack-proxy', '~> 0.6.5'
+  # gem 'semantic_range', '~> 2.3.0'
+
+gem 'twitter-bootstrap-rails', '~> 5.0'
+# gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 #gem 'devise-i18n', '~> 1.9', '>= 1.9.1'
 
-gem "therubyracer"
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
-# gem "twitter-bootstrap-rails"
+gem 'therubyracer'
+gem 'execjs'
+gem 'less-rails', '~> 4.0'#Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+# gem 'twitter-bootstrap-rails'
+
+
 
 gem 'jquery-rails', '~> 4.4'
 
@@ -90,5 +98,5 @@ gem 'bootstrap-table-rails', '~> 1.13', '>= 1.13.4'
 ########Oracle##############
 # gem 'ruby-oci8'
 
-# gem "activerecord-oracle_enhanced-adapter"
+# gem 'activerecord-oracle_enhanced-adapter'
 ############################
