@@ -10,7 +10,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_01_072038) do
+ActiveRecord::Schema.define(version: 2022_07_05_023840) do
+
+  create_table "interface_logs", force: :cascade do |t|
+    t.string "controller_name"
+    t.string "action_name"
+    t.text "request_header"
+    t.text "request_body"
+    t.text "response_header"
+    t.text "response_body"
+    t.text "params"
+    t.string "business_id"
+    t.string "unit_id"
+    t.string "request_ip"
+    t.string "status"
+    t.integer "parent_id"
+    t.string "parent_type"
+    t.string "business_code"
+    t.string "request_url"
+    t.text "error_msg"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "interface_senders", force: :cascade do |t|
+    t.string "url"
+    t.string "host"
+    t.string "port"
+    t.string "interface_type"
+    t.string "http_type"
+    t.string "callback_class"
+    t.string "callback_method"
+    t.text "callback_params"
+    t.string "status"
+    t.integer "send_times"
+    t.datetime "next_time"
+    t.text "header"
+    t.text "body"
+    t.datetime "last_time"
+    t.text "last_response"
+    t.text "last_header"
+    t.string "interface_code"
+    t.integer "max_times"
+    t.integer "interval"
+    t.text "error_msg"
+    t.string "parent_class"
+    t.integer "parent_id"
+    t.integer "unit_id"
+    t.integer "business_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "roles", force: :cascade do |t|
     t.integer "user_id"

@@ -95,6 +95,8 @@ gem 'spreadsheet', '~> 1.2', '>= 1.2.6'
 
 gem 'bootstrap-table-rails', '~> 1.13', '>= 1.13.4'
 
+gem 'whenever', '~> 1.0'
+
 ########Oracle##############
 # gem 'ruby-oci8'
 
