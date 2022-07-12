@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_05_023840) do
+ActiveRecord::Schema.define(version: 2022_07_12_061544) do
+
+  create_table "bags", force: :cascade do |t|
+    t.string "bag_no"
+    t.integer "order_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["bag_no"], name: "index_bags_on_bag_no"
+    t.index ["order_id"], name: "index_bags_on_order_id"
+  end
 
   create_table "interface_logs", force: :cascade do |t|
     t.string "controller_name"
@@ -60,6 +69,50 @@ ActiveRecord::Schema.define(version: 2022_07_05_023840) do
     t.integer "business_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.string "order_no"
+    t.string "prescription_no"
+    t.date "prescription_date"
+    t.string "site_no"
+    t.string "site_id"
+    t.string "site_name"
+    t.string "sender_province"
+    t.string "sender_city"
+    t.string "sender_district"
+    t.string "sender_addr"
+    t.string "sender_name"
+    t.string "sender_phone"
+    t.string "receiver_province"
+    t.string "receiver_city"
+    t.string "receiver_district"
+    t.string "receiver_addr"
+    t.string "receiver_name"
+    t.string "receiver_phone"
+    t.string "customer_addr"
+    t.string "customer_name"
+    t.string "customer_phone"
+    t.string "status"
+    t.integer "package_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_no"], name: "index_orders_on_order_no"
+    t.index ["package_id"], name: "index_orders_on_package_id"
+  end
+
+  create_table "packages", force: :cascade do |t|
+    t.string "package_no"
+    t.string "express_no"
+    t.string "route_code"
+    t.string "status"
+    t.date "packed_at"
+    t.integer "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["express_no"], name: "index_packages_on_express_no"
+    t.index ["package_no"], name: "index_packages_on_package_no"
+    t.index ["user_id"], name: "index_packages_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
