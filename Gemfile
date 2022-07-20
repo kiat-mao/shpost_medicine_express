@@ -90,6 +90,7 @@ gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
 
 # Use Uglifier as compressor for JavaScript assets
 # gem 'uglifier', '>= 1.3.0'
+gem 'httpclient', '~> 2.8', '>= 2.8.3'
 
 gem 'spreadsheet', '~> 1.2', '>= 1.2.6'
 
