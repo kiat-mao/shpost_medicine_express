@@ -1,0 +1,23 @@
+zh-CN:
+  InterfaceSender:
+    # example_name:
+    #   url: 
+    #   interface_type: 'http'
+    #   http_type: 'post'
+    #   callback_class:
+    #   callback_method:
+    #   max_times: 5 #default_times: 10
+    #   interval: 300 #default_interval: 600
+    # ywtb_express:
+    #   # for test
+    #   url: 'http://117.184.226.70:8022/ac-product-api/uapply/saveExpress'
+    #   # for production
+    #   # url: 'http://ywtb.sh.gov.cn:18018/ac-product-api/uapply/saveExpress'
+    #   interface_type: 'json'
+    #   http_type: 'post'
+    #   callback_class: 'YwtbInterface'
+    #   callback_method: 'do_response'
+    #   header: "{\"Content-Type\":\"application/json\"}"
+    #   # object_class: 'Keyclientorder'
+    #   max_times: 5 #default_times: 10
+    #   interval: 300 #default_interval: 600
