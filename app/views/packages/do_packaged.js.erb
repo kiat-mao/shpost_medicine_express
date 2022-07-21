@@ -1,0 +1,19 @@
+<% if !@err_msg.blank? %>
+	alert("<%= @err_msg %>");
+	$('#bag_no').val("");
+	$('#bag_no').focus();
+<% else %>
+	alert("装箱已完成，请继续打印面单和配货单");
+	$('#tkzd').removeAttr('disabled');
+	$('#zxqd').removeAttr('disabled');				
+	$('#site_no').val("");
+	$('#order_bags').val("");
+	$('#is_packaged').val("<%= @is_packaged %>");
+	// $('#out_results').html("");
+	$('#tkzd').attr('onclick', "window.open('/packages/tkzd?package_id=<%= @package_id %>', '_blank');return false;");
+	$('#zxqd').attr('onclick', "window.open('/packages/zxqd?package_id=<%= @package_id %>', '_blank');return false;");
+	$('#express_no').text("邮件号:<%= @express_no %>");
+	$('#route_code').text("格口码:<%= @route_code %>");
+	$('#bag_no').focus();
+<% end %>
+

@@ -12,6 +12,7 @@ class Ability
         cannot [:role, :create, :destroy, :update], User, role: 'superadmin'
         can :update, User, id: user.id
         can :manage, UpDownload
+        can :manage, Package
         #can :manage, User
     elsif user.unitadmin?
         can :manage, Unit, id: user.unit.id
@@ -29,12 +30,14 @@ class Ability
         can :role, :user
         
         can :manage, UpDownload
+        can :manage, Package
     else
         can :update, User, id: user.id
         can :read, UserLog, user: {id: user.id}
 
         can :read, Unit, id: user.unit_id
         can [:read, :up_download_export], UpDownload
+        can :manage, Package, user_id: user.id
     end
 
     
