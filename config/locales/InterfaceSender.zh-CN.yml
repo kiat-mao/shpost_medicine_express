@@ -21,3 +21,16 @@ zh-CN:
     #   # object_class: 'Keyclientorder'
     #   max_times: 5 #default_times: 10
     #   interval: 300 #default_interval: 600
+    xyd_order_create:
+      # for test
+      url: 'http://222.66.108.206:4000/xyd_server/OrderCreateServlet'
+      # for production
+      # url: 'http://180.166.203.242:3000/xyd_server/OrderCreateServlet'
+      interface_type: 'json'
+      http_type: 'post'
+      callback_class: 'XydInterfaceSender'
+      callback_method: 'order_create_send_success'
+      header: "{\"Content-Type\":\"application/json\"}"
+      # object_class: 'Keyclientorder'
+      max_times: 5 #default_times: 10
+      interval: 1000 #default_interval: 600
