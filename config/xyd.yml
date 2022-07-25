@@ -1,0 +1,38 @@
+default: &default
+  timeout: 5000
+
+development:
+  <<: *default
+  order_create_url: http://222.66.108.206:4000/xyd_server/OrderCreateServlet
+  system_name: test
+  pwd: "11111"
+  ecCompanyId: 
+  parentId: 
+  logistics_provider: B
+  ecommerce_no: HNHCYY
+  inner_channel: "0"
+  base_product_no: "1"
+
+test:
+  <<: *default
+  order_create_url: http://222.66.108.206:4000/xyd_server/OrderCreateServlet
+  system_name: test
+  pwd: "11111"
+  ecCompanyId: 
+  parentId: 
+  logistics_provider: B
+  ecommerce_no: HNHCYY
+  inner_channel: "0"
+  base_product_no: "1"
+
+production:
+  <<: *default
+  order_create_url: http://180.166.203.242:3000/xyd_server/OrderCreateServlet
+  system_name: syhs2022
+  pwd: xxxxxxx
+  ecCompanyId: 
+  parentId: 
+  logistics_provider: xxxxxxx
+  ecommerce_no: xxxxxxx
+  inner_channel: xxxxxxx
+  base_product_no: xxxxxxx

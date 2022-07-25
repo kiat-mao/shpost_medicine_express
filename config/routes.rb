@@ -47,5 +47,20 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :packages do
+    collection do 
+      get 'scan'
+      post 'scan'
+      get 'find_bag_result'
+      get 'do_packaged'
+      get 'tkzd'
+      post 'tkzd'
+      get 'zxqd'
+      post 'zxqd'
+    end
+  end
+
+  # match "/print/tkzd" => "print#tkzd",via: [:get, :post]
+  # match "/print/zxqd" => "print#zxqd",via: [:get, :post]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

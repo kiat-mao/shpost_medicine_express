@@ -1,0 +1,44 @@
+<%- model_class = Package -%>
+<% if !@order_bags.blank? %>
+<table class="table table-striped"> 
+	<tr>
+    <td>站点编号:<%= @site_no %></td>
+  </tr>
+  <% @order_bags.split("|").each do |o| %>
+  <% order = Order.find_by(order_no: o.split(":")[0]) %>
+  
+	  <tr>
+	  	<td>
+	  		<% if order.bags.count == o.split(":")[1].split(",").count %><font color="green"><% end %>
+  			订单号:<%= o.split(":")[0] %>	  				
+  			<% if order.bags.count == o.split(":")[1].split(",").count %></font><% end %>
+  		</td>
+	  	<td></td><td></td>
+	  	<td>
+	  		<% if order.bags.count == o.split(":")[1].split(",").count %><font color="green"><% end %>
+	  		总袋数:<%= order.bags.count %>
+	  		<% if order.bags.count == o.split(":")[1].split(",").count %></font><% end %>
+	  	</td>
+	  </tr>
+	
+	  <% 	bag_nos = []
+	  	 	order.bags.order("bags.bag_no desc").each do |bag|
+	  	 		bag_nos << bag.bag_no	
+	  	 	end
+	     	i = 1
+	     	until bag_nos.blank? do 
+	  %>
+	     <tr>
+	     	<% bag_nos.pop(4).reverse.each do |b| %>
+		     	<td>
+		     		<% if @order_bags.include?b %><font color="green"><% end %>
+		     		袋子<%= i %>:<%= b %>
+		     		<% if @order_bags.include?b %></font><% end %>
+		     	</td>
+	     		<% i += 1 %>
+	     	<% end %>
+	     </tr>
+	  <% end %>
+  <% end %>
+</table>
+<% end %>

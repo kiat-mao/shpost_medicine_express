@@ -1,6 +1,6 @@
 class InterfaceSender < ActiveRecord::Base
-  belongs_to :unit
-  belongs_to :business
+  # belongs_to :unit
+  # belongs_to :business
   before_save :url_parser
 
   @@lock = Mutex.new

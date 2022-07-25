@@ -20,6 +20,19 @@ zh-CN:
           needrole:
             can: :read
             role: :User
+    packages:
+      name: "装箱管理"
+      needrole:
+        can: :read
+        role: :Package
+      submenu:
+        scan:
+          name: "扫描装箱"
+          link: "/packages/scan"
+          need_count: false
+          needrole:
+            can: :scan
+            role: :Package
     up_downloads:
       name: "模板管理"
       needrole:

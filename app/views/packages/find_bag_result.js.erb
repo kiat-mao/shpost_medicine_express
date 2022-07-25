@@ -1,0 +1,11 @@
+$('#bag_no').blur();
+<% if !@err_msg.blank? %>
+alert("<%= @err_msg %>");
+<% end %>
+
+$('#bag_no').val("");
+$('#out_results').html(" <%= escape_javascript(render(:partial => 'packages/scan_form')) %> ");
+$('#order_bags').val("<%= @order_bags %>");
+$('#site_no').val("<%= @site_no %>");
+$('#package_no').text("<%= Date.today.strftime('%Y年%m月%d日').to_s %>第<%= Package.get_package_no_by_user(current_user)%>箱");
+$('#bag_no').focus();
