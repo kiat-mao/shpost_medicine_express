@@ -3,41 +3,41 @@ class Ability
 
   def initialize(user)
     if user.superadmin?
-        can :manage, User
-        can :manage, Unit
-        can :manage, UserLog
-        can :manage, Role
-        can :role, :unitadmin
-        can :role, :user
-        cannot [:role, :create, :destroy, :update], User, role: 'superadmin'
-        can :update, User, id: user.id
-        can :manage, UpDownload
-        can :manage, Package
-        #can :manage, User
+      can :manage, User
+      can :manage, Unit
+      can :manage, UserLog
+      can :manage, Role
+      can :role, :unitadmin
+      can :role, :user
+      cannot [:role, :create, :destroy, :update], User, role: 'superadmin'
+      can :update, User, id: user.id
+      can :manage, UpDownload
+      can :manage, Package
+      #can :manage, User
     elsif user.unitadmin?
-        can :manage, Unit, id: user.unit.id
-        can :user, Unit, id: user.unit.id
-        can :manage, Unit, parent_id: user.unit.id
-        can :read, Unit        
-        cannot :destroy, Unit, id: user.unit.id
+      can :manage, Unit, id: user.unit.id
+      can :user, Unit, id: user.unit.id
+      can :manage, Unit, parent_id: user.unit.id
+      can :read, Unit        
+      cannot :destroy, Unit, id: user.unit.id
 
-        can :read, UserLog, user: {unit_id: user.unit_id}
+      can :read, UserLog, user: {unit_id: user.unit_id}
 
-        can :manage, User, unit_id: user.unit_id
-        can :manage, User, unit_id: user.unit.child_unit_ids
-        cannot [:role, :create, :destroy, :update], User, role: ['unitadmin', 'superadmin']
-        can :update, User, id: user.id
-        can :role, :user
-        
-        can :manage, UpDownload
-        can :manage, Package
+      can :manage, User, unit_id: user.unit_id
+      can :manage, User, unit_id: user.unit.child_unit_ids
+      cannot [:role, :create, :destroy, :update], User, role: ['unitadmin', 'superadmin']
+      can :update, User, id: user.id
+      can :role, :user
+      
+      can :manage, UpDownload
+      can :manage, Package
     else
-        can :update, User, id: user.id
-        can :read, UserLog, user: {id: user.id}
+      can :update, User, id: user.id
+      can :read, UserLog, user: {id: user.id}
 
-        can :read, Unit, id: user.unit_id
-        can [:read, :up_download_export], UpDownload
-        can :manage, Package, user_id: user.id
+      can :read, Unit, id: user.unit_id
+      can [:read, :up_download_export], UpDownload
+      can :manage, Package, user_id: user.id
     end
 
     
