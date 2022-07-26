@@ -69,6 +69,8 @@ class XydInterfaceSender < ActiveRecord::Base
 		end
 		if response.nil?
 			puts 'response:'
+			puts '运单号:'
+			puts '分拣码:'
 		else
 			puts 'response:' + response
 			resJSON = JSON.parse response
@@ -78,12 +80,12 @@ class XydInterfaceSender < ActiveRecord::Base
 				resBody = resJSON["body"]
 				express_no = resBody["wayBillNo"]
 				route_code = resBody["routeCode"]
+				if (!package_id.nil? && package_id.is_a?(Numeric))
+					Package.find(package_id).update(express_no: express_no, route_code: route_code)
+				end
 			end
-			puts express_no
-			puts route_code
-		end
-		if (!package_id.nil? && package_id.is_a?(Numeric))
-			Package.find(package_id).update(express_no: express_no, route_code: route_code)
+			puts '运单号:' + express_no
+			puts '分拣码:' + route_code
 		end
 	end
 end
