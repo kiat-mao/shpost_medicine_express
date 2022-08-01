@@ -36,7 +36,7 @@
 
     g.column do |package|
       ActiveSupport::SafeBuffer.new << 
-      (link_to "作废", canceled_package_path(package), :data => { :confirm => "确定作废吗?" }, :class => 'btn btn-xs btn-primary' if (can? :canceled, package) && (["waiting", "failed"].include?package.status))<< ' ' << 
+      (link_to "作废", cancelled_package_path(package), :data => { :confirm => "确定作废吗?" }, :class => 'btn btn-xs btn-primary' if (can? :cancelled, package) && (["waiting", "failed"].include?package.status))<< ' ' << 
       (link_to "获取邮件号", send_xyd_package_path(package), :class => 'btn btn-xs btn-primary' if (can? :send_xyd, package) && (package.express_no.blank? && package.route_code.blank?) && (package.status.eql?"waiting"))
     end
   end 

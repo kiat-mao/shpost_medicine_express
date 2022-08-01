@@ -13,8 +13,8 @@
 	$('#is_packaged').val("<%= @is_packaged %>");
 	$('#tkzd').attr('onclick', "window.open('/packages/tkzd?package_id=<%= @package_id %>', '_blank');return false;");
 	$('#zxqd').attr('onclick', "window.open('/packages/zxqd?package_id=<%= @package_id %>', '_blank');return false;");
-	$('#express_no').text("邮件号:<%= @result['express_no'] %>");
-	$('#route_code').text("格口码:<%= @result['route_code'] %>");
+	$('#express_no').text("邮件号:<%= @package.express_no %>");
+	$('#route_code').text("格口码:<%= @package.route_code %>");
 	// $('#bag_no').focus();
 <% end %>
 

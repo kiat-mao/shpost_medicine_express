@@ -61,7 +61,7 @@ Rails.application.routes.draw do
       post 'send_sy'
     end
     member do
-      get 'canceled'
+      get 'cancelled'
       get 'send_xyd'
     end
   end

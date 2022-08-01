@@ -20,6 +20,7 @@
 	    }
 	    LODOP.SET_LICENSES("上海市邮政公司信息技术局","452677782688188907989821905623","","");
 	    <% @result.sort_by{|x| x.package_no.upcase}.each do |package| %>
+	    <% if !package.status.eql?"cancelled" %>
 	    LODOP.SET_PRINT_PAGESIZE(1,"210mm","297mm","");
 	    LODOP.PRINT_INIT("打印装箱清单");
 	    LODOP.ADD_PRINT_BARCODE("10mm","20mm","50mm","10mm","128A","<%= package.express_no %>");
@@ -83,6 +84,7 @@
 	    // LODOP.PRINT_DESIGN();
 		LODOP.PREVIEW();
 		// LODOP.PRINT();
+		<% end %>
 		<% end %>
 		};
 		

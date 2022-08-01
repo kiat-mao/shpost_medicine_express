@@ -7,7 +7,7 @@ class PackagesController < ApplicationController
   def index
   	@packages = Package.accessible_by(current_ability)
   	if params[:grid].blank?
-	  	@packages = @packages.where(packed_at: Date.today)
+	  	@packages = @packages.where("packed_at>=?", Date.today)
 	  end
     @packages_grid = initialize_grid(@packages,
          :order => 'packed_at',
@@ -60,28 +60,34 @@ class PackagesController < ApplicationController
 	end
 
 	def send_sy
-		@result = []
+		packages = []
 
   	selected = params[:grid][:selected]
 	       
     until selected.blank? do 
-      @result += Package.where(id:selected.pop(1000))
+      packages = Package.where(id:selected.pop(1000))
+      packages.each do |p|
+      	if (["waiting", "failed"].include?p.status) && !p.express_no.blank? && !p.route_code.blank?
+      		SoaInterfaceSender.order_trace_interface_sender_initialize(p)
+    		end
+      end
     end
 	  
     respond_to do |format|
+    	flash[:notice] = "已发送"
       format.html { redirect_to packages_url }
       format.json { head :no_content }
     end
 	end
 
-	def canceled
+	def cancelled
 		if ["waiting", "failed"].include?@package.status
 			@package.orders.update_all status: "waiting", package_id: nil
 			@package.update status: "cancelled"
 		end
 
 		respond_to do |format|
-			flash[:message] = "箱子已作废"
+			flash[:notice] = "箱子已作废"
       format.html { redirect_to request.referer }
       format.json { head :no_content }
     end
@@ -102,7 +108,6 @@ class PackagesController < ApplicationController
 		if bag.blank?
 			@err_msg = "包裹无信息"
 		else
-			# if (bag.order.status.eql?"packaged")
 			if !Bag.joins(:order).joins(:order=>:package).where("bags.bag_no=? and orders.status=? and packages.packed_at>=? and packages.packed_at<?", @bag_no, "packaged", Time.now-1.year, Time.now).blank?
 				@err_msg = "包裹已装箱，不可二次装箱"
 			else
@@ -131,8 +136,7 @@ class PackagesController < ApplicationController
 	  			else
 	  				@order_bags = bag.order.order_no + ":" + @bag_no
 	  			end
-	  			# binding.pry
-  			end
+	  		end
   		end
   	end
 		
@@ -146,11 +150,10 @@ class PackagesController < ApplicationController
   	@err_msg = ""
   	@package_id = params[:package_id]
   	@is_packaged = "0"
-  	@result = {}
-
+  	
   	if !@package_id.blank?
-  		@result = package_send(Package.find(@package_id))
-			@err_msg = @result["err_msg"] if !@result["err_msg"].blank?	
+  		msg = package_send(Package.find(@package_id))
+			@err_msg = msg if !msg.eql?"成功"	
 			@is_packaged = "1"
   	else
 	  	if !@order_bags.blank?
@@ -161,12 +164,12 @@ class PackagesController < ApplicationController
 		  		order_list = get_orders(@order_bags)
 		  		bag_list = get_bags(@order_bags)
 	  			package_no = Package.new_package_no(current_user)
-					package = Package.create package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list
-					@package_id = package.id
-					Order.where(order_no: order_list).update_all package_id: package.id, status: "packaged"
+					@package = Package.create package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list
+					@package_id = @package.id
+					Order.where(order_no: order_list).update_all package_id: @package.id, status: "packaged"
 					@is_packaged = "1"
-					@result = package_send(package)
-					@err_msg = @result["err_msg"] if !@result["err_msg"].blank?				
+					msg = package_send(@package)
+					@err_msg = msg if !msg.eql?"成功"			
 				end
 			end		
 		end
@@ -207,37 +210,26 @@ class PackagesController < ApplicationController
 	end
 
 	def send_xyd
-		# binding.pry
-		result = package_send(@package)
+		msg = package_send(@package)
 		
 		respond_to do |format|
-			if !result["err_msg"].blank?
-				flash[:alert] = result["err_msg"]
+			if msg.eql?"成功"
+				flash[:notice] = "获取邮件号、格口码成功"				
 			else
-				flash[:message] = "获取邮件号、格口码成功"
+				flash[:alert] = msg
 			end
       format.html { redirect_to request.referer }
       format.json { head :no_content }
     end
 	end
 
+	# 发送新一代接口，获取邮件号，格口码,返回'成功'或出错信息
 	def package_send(package)
-		result = {}
 		interface_sender = XydInterfaceSender.order_create_interface_sender_initialize(package)
 		interface_sender.interface_send(10)
-		if interface_sender.status.eql?"success"
-			result["express_no"] = "e001"#package.express_no
-			result["route_code"] = "r001"#package.route_code
-		elsif interface_sender.status.eql?"failed"
-			if interface_sender.error_msg.blank?
-				if interface_sender.last_response.include?""
-					result["err_msg"] = "该地区属于疫区，不允许邮寄"
-				end
-			elsif interface_sender.error_msg.include?"Timeout"
-				result["err_msg"] = "超时,获取邮件号失败"
-			end
-		end	
-		return result			
+		msg = XydInterfaceSender.get_response_message(interface_sender)#"成功"
+		# package.update express_no:"e001",route_code:"r001"
+		return msg			
 	end
 
 	private
