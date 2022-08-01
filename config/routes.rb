@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   end
 
   resources :orders
+  match "/standard_interface/order_push" => "standard_interface#order_push", via: [:get, :post]
 
   # match "/print/tkzd" => "print#tkzd",via: [:get, :post]
   # match "/print/zxqd" => "print#zxqd",via: [:get, :post]

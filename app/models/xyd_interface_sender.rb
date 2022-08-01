@@ -56,8 +56,38 @@ class XydInterfaceSender < ActiveRecord::Base
 		params.to_json
 	end
 
-	def self.order_create_send_success(response, callback_params)
-		puts 'order_create_send_success!!'
+	def self.get_response_message interfaceSender
+		puts 'get_response_message!!'
+		if interfaceSender == nil
+			return '空的InterfaceSender对象'
+		end
+		# 优先显示last_response信息,其次是error_msg信息
+		last_response_string = interfaceSender.last_response
+		if last_response_string != nil
+			last_response = JSON.parse last_response_string
+			head = last_response["head"]
+			if head == nil
+				return '不是新一代InterfaceSender对象'
+			end
+			error_code = head["error_code"]
+			error_msg = head["error_msg"]
+			if error_code == '0'
+				return '成功'
+			else
+				return error_msg
+			end
+		else
+			error_message = interfaceSender.error_msg
+			if (error_message == nil)
+				return '未发送'
+			else
+				return error_message.split("\n")[0]
+			end
+		end
+	end
+
+	def self.order_create_callback_method(response, callback_params)
+		puts 'order_create_callback_method!!'
 		package_id = nil
 		express_no = nil
 		route_code = nil
@@ -69,6 +99,8 @@ class XydInterfaceSender < ActiveRecord::Base
 		end
 		if response.nil?
 			puts 'response:'
+			puts '运单号:'
+			puts '分拣码:'
 		else
 			puts 'response:' + response
 			resJSON = JSON.parse response
@@ -78,12 +110,12 @@ class XydInterfaceSender < ActiveRecord::Base
 				resBody = resJSON["body"]
 				express_no = resBody["wayBillNo"]
 				route_code = resBody["routeCode"]
+				if (!package_id.nil? && package_id.is_a?(Numeric))
+					Package.find(package_id).update(express_no: express_no, route_code: route_code)
+				end
 			end
-			puts express_no
-			puts route_code
-		end
-		if (!package_id.nil? && package_id.is_a?(Numeric))
-			Package.find(package_id).update(express_no: express_no, route_code: route_code)
+			puts '运单号:' + express_no
+			puts '分拣码:' + route_code
 		end
 	end
 end

@@ -83,7 +83,7 @@ class InterfaceSender < ActiveRecord::Base
   #   # end
   # end
 
-  def interface_send(second)
+  def interface_send(second = nil)
     begin
       response = nil
       Timeout.timeout(second.blank? ? 60 : second) do

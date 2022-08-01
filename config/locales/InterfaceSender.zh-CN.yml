@@ -29,7 +29,20 @@ zh-CN:
       interface_type: 'json'
       http_type: 'post'
       callback_class: 'XydInterfaceSender'
-      callback_method: 'order_create_send_success'
+      callback_method: 'order_create_callback_method'
+      header: "{\"Content-Type\":\"application/json\"}"
+      # object_class: 'Keyclientorder'
+      max_times: 1 #default_times: 10
+      interval: 1000 #default_interval: 600
+    soa_order_trace:
+      # for test
+      url: 'http://222.66.127.248/carriertest/SendTMP_ORDER_TRACE_PS'
+      # for production
+      # url: 'http://222.66.127.248/carriertest/SendTMP_ORDER_TRACE_PS'
+      interface_type: 'json'
+      http_type: 'post'
+      callback_class: 'SoaInterfaceSender'
+      callback_method: 'order_trace_callback_method'
       header: "{\"Content-Type\":\"application/json\"}"
       # object_class: 'Keyclientorder'
       max_times: 5 #default_times: 10
