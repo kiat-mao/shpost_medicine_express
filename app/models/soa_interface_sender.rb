@@ -21,7 +21,7 @@ class SoaInterfaceSender < ActiveRecord::Base
 		commonHeader["PASSWORD"] = ''
 		commonHeader["CONSUMER"] = soaConfig[:consumer]
 		commonHeader["COUNT"] = soaConfig[:count]
-		commonHeader["BIZTRANSACTIONID"] = 'order_trace_send_' + now_time.strftime("%Y%m%d%H%M%S%L")
+		commonHeader["BIZTRANSACTIONID"] = 'SendTMP_ORDER_TRACE_PS_' + now_time.strftime("%Y%m%d%H%M%S%L")
 		commonHeader["SRVLEVEL"] = soaConfig[:srvlevel]
 
 		list = {}
@@ -39,7 +39,7 @@ class SoaInterfaceSender < ActiveRecord::Base
 			orderIrace["batchNbr"] = '1'
 			orderIrace["qty"] = '1'
 			orderIrace["procStatCode"] = '1' # 标记（1新增，2修改）
-			orderIrace["packedDateTime"] = package.packed_at
+			orderIrace["packedDateTime"] = package.packed_at.strftime("%Y-%m-%d %H:%M:%S")
 			orderIrace["whse"] = 'FR2'
 			orderIraces[i] = orderIrace
 		end
@@ -51,40 +51,42 @@ class SoaInterfaceSender < ActiveRecord::Base
 		params.to_json
 	end
 
-	def self.order_trace_send_success(response, callback_params)
-		puts 'order_trace_send_success!!'
+	def self.order_trace_callback_method(response, callback_params)
+		puts 'order_trace_callback_method!!'
 		package_id = nil
 		express_no = nil
 		route_code = nil
 		if callback_params.nil?
-			puts 'callback_params:'
+			puts 'callback_params:nil'
 		else
 			puts 'callback_params:' + callback_params.to_s
 			package_id = callback_params["package_id"]
 		end
 		if response.nil?
-			puts 'response:'
-			puts 'result:'
-			puts 'code:'
-			puts 'message:'
+			puts 'response:nil'
+			puts 'result:nil'
+			puts 'code:nil'
+			puts 'message:nil'
 		else
 			puts 'response:' + response
 			resJSON = JSON.parse response
 			commonHeader = resJSON["commonHeader"]
 			result = commonHeader["RESULT"]
-			if (result=='0')
-				list = resJSON["LIST"]
-				code = list["code"]
-				message = resBody["message"]
-				if (!package_id.nil? && package_id.is_a?(Numeric))
-					Package.find(package_id).update(status: :done)
-				end
-			end
-			puts 'result:' + result.to_s
+			list = resJSON["LIST"]
+			code = list["code"]
+			message = list["message"]
+			puts 'result:' + result
 			puts 'code:' + code
 			puts 'message:' + message
+			if (!package_id.nil? && package_id.is_a?(Numeric))
+				if (code=='1')
+					Package.find(package_id).update(status: :done)
+				else
+					Package.find(package_id).update(status: :failed)
+				end
+			else
+				puts 'package_id:nil or not Numeric'
+			end
 		end
-
 	end
-
 end

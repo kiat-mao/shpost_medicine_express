@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_12_061544) do
+ActiveRecord::Schema.define(version: 2022_07_27_012156) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 2022_07_12_061544) do
     t.string "express_no"
     t.string "route_code"
     t.string "status"
-    t.date "packed_at"
+    t.datetime "packed_at"
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
