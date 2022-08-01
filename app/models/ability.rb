@@ -13,6 +13,7 @@ class Ability
         can :update, User, id: user.id
         can :manage, UpDownload
         can :manage, Package
+        can :manage, Order
         #can :manage, User
     elsif user.unitadmin?
         can :manage, Unit, id: user.unit.id
@@ -31,6 +32,7 @@ class Ability
         
         can :manage, UpDownload
         can :manage, Package
+        can :manage, Order
     else
         can :update, User, id: user.id
         can :read, UserLog, user: {id: user.id}
@@ -38,6 +40,8 @@ class Ability
         can :read, Unit, id: user.unit_id
         can [:read, :up_download_export], UpDownload
         can :manage, Package, user_id: user.id
+        cannot [:canceled, :send_sy], Package
+        can :read, Order, package: {user_id: user.id}
     end
 
     

@@ -19,9 +19,10 @@
 	        window.open("/install_lodop32.exe");
 	    }
 	    LODOP.SET_LICENSES("上海市邮政公司信息技术局","452677782688188907989821905623","","");
+	    <% @result.sort_by{|x| x.package_no.upcase}.each do |package| %>
 	    LODOP.SET_PRINT_PAGESIZE(1,"210mm","297mm","");
 	    LODOP.PRINT_INIT("打印装箱清单");
-	    LODOP.ADD_PRINT_BARCODE("10mm","20mm","50mm","10mm","128A","<%= @package.express_no %>");
+	    LODOP.ADD_PRINT_BARCODE("10mm","20mm","50mm","10mm","128A","<%= package.express_no %>");
 	    // LODOP.SET_PRINT_STYLE("FontSize",10);
 	    // LODOP.SET_PRINT_STYLE("Bold",1);
 	    // LODOP.SET_PRINT_STYLE("ItemType",1);
@@ -32,14 +33,14 @@
 	    LODOP.ADD_PRINT_TEXT("17.3mm","80mm","60mm","10mm","延伸处方装箱清单");
 	    LODOP.SET_PRINT_STYLE("FontSize",10);
 	    LODOP.SET_PRINT_STYLE("Bold",1);  
-	    LODOP.ADD_PRINT_TEXT("10mm","150mm","50mm","15mm","站点:<%= @package.orders.first.site_no %>");
-	    LODOP.ADD_PRINT_TEXT("16mm","160mm","50mm","15mm","<%= @package.orders.first.site_id.to_s + @package.orders.first.site_name %>");
-	    LODOP.ADD_PRINT_TEXT("32mm","8mm","45mm","10mm","收货人:<%= @package.orders.first.receiver_name %>");
-	    LODOP.ADD_PRINT_TEXT("32mm","52mm","60mm","10mm","收货电话:<%= @package.orders.first.receiver_phone %>");
-	    LODOP.ADD_PRINT_TEXT("32mm","107mm","60mm","10mm","订单数:<%= @package.orders.count %>");
-	    LODOP.ADD_PRINT_TEXT("32mm","157mm","60mm","10mm","合计袋数:<%= @package.get_all_bags %>");
-	    LODOP.ADD_PRINT_TEXT("40mm","8mm","200mm","10mm","收货地址:<%= @package.orders.first.receiver_addr %>");
-	    <%  orders = @package.orders.to_a
+	    LODOP.ADD_PRINT_TEXT("10mm","150mm","50mm","15mm","站点:<%= package.orders.first.site_no %>");
+	    LODOP.ADD_PRINT_TEXT("16mm","160mm","50mm","15mm","<%= package.orders.first.site_id.to_s + package.orders.first.site_name %>");
+	    LODOP.ADD_PRINT_TEXT("32mm","8mm","45mm","10mm","收货人:<%= package.orders.first.receiver_name %>");
+	    LODOP.ADD_PRINT_TEXT("32mm","52mm","60mm","10mm","收货电话:<%= package.orders.first.receiver_phone %>");
+	    LODOP.ADD_PRINT_TEXT("32mm","107mm","60mm","10mm","订单数:<%= package.orders.count %>");
+	    LODOP.ADD_PRINT_TEXT("32mm","157mm","60mm","10mm","合计袋数:<%= package.get_all_bags %>");
+	    LODOP.ADD_PRINT_TEXT("40mm","8mm","200mm","10mm","收货地址:<%= package.orders.first.receiver_addr %>");
+	    <%  orders = package.orders.to_a
 	    	until orders.blank? do %>
 	    h = 175;
 	    <% order5 = orders.pop(5) %>
@@ -80,9 +81,11 @@
 	  	// LODOP.SET_PRINT_MODE("NOCLEAR_AFTER_PRINT",true);//设置打印完毕不清理打印信息
 	  	LODOP.SET_PRINTER_INDEXA("Microsoft Print to PDF");//设置某个打印机
 	    // LODOP.PRINT_DESIGN();
-			LODOP.PREVIEW();
-			// LODOP.PRINT();
+		LODOP.PREVIEW();
+		// LODOP.PRINT();
+		<% end %>
 		};
+		
 		</script>
 	</head>
   

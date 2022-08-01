@@ -1,0 +1,97 @@
+<%- model_class = Order -%>
+<div class="page-header">
+<h1><%=t '.title', :default => [:'helpers.titles.index', '%{model} Manage'], :model => model_class.model_name.human.titleize %></h1>
+  <div><%= render partial: '/layouts/page_size' %></div>
+</div>
+<%= grid(@orders_grid) do |g|
+	g.after_row do |order, number_of_columns|
+    content_tag(:tr, class: 'extra-row') do
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"寄件人省/市/区:")
+        buffer += content_tag(:dd,order.try(:sender_province)+"/"+order.try(:sender_city)+"/"+order.try(:sender_district))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"寄件人地址:")
+        buffer += content_tag(:dd,order.try(:sender_addr))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"寄件人姓名:")
+        buffer += content_tag(:dd,order.try(:sender_name))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"寄件人电话:")
+        buffer += content_tag(:dd,order.try(:sender_phone))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"收件人省/市/区:")
+        buffer += content_tag(:dd,order.try(:receiver_province)+"/"+order.try(:receiver_city)+"/"+order.try(:receiver_district))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"收件人地址:")
+        buffer += content_tag(:dd,order.try(:receiver_addr))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"收件人姓名:")
+        buffer += content_tag(:dd,order.try(:receiver_name))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"收件人电话:")
+        buffer += content_tag(:dd,order.try(:receiver_phone))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"顾客地址:")
+        buffer += content_tag(:dd,order.try(:customer_addr))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"顾客姓名:")
+        buffer += content_tag(:dd,order.try(:customer_name))
+        raw buffer                   
+      	end)) + 
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"顾客电话:")
+        buffer += content_tag(:dd,order.try(:customer_phone))
+        raw buffer                   
+      end))
+    end
+  end
+  
+  g.column name: model_class.human_attribute_name(:order_no), attribute: 'order_no'
+
+  g.column name: model_class.human_attribute_name(:prescription_no), attribute: 'prescription_no'
+
+  g.column name: model_class.human_attribute_name(:prescription_date), attribute: 'prescription_date' do |order|
+    order.prescription_date.blank? ? "" : order.prescription_date.strftime('%Y-%m-%d').to_s
+  end
+
+  g.column name: model_class.human_attribute_name(:site_no), attribute: 'site_no'
+
+  g.column name: model_class.human_attribute_name(:site_id), attribute: 'site_id'
+
+  g.column name: model_class.human_attribute_name(:site_name), attribute: 'site_name'
+
+  g.column name: model_class.human_attribute_name(:status), attribute: 'status', allow_multiple_selection: false, custom_filter: Order::STATUS_NAME.invert do |order| 
+    order.status_name
+  end
+
+  g.column name: model_class.human_attribute_name(:package_id), attribute: 'package_id', assoc: :package, attribute: 'package_no'
+
+  g.column name: "袋子号", attribute: 'order_no',filter: false do |order|
+    [order.bag_list.try(:truncate, 35), {title: order.bag_list}]
+  end
+
+  g.column do |order|
+    ActiveSupport::SafeBuffer.new << 
+    button_tag("详细信息", class: "btn btn-xs btn-primary", name: 'detail')
+  end
+end 
+%>
+

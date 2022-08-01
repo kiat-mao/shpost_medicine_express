@@ -233,6 +233,12 @@ zh-CN:
       business:
         one: 商户管理
         other: 商户管理
+      package:
+        one: 装箱
+        other: 装箱
+      order:
+        one: 订单
+        other: 订单
     attributes:
       user:
         email: "电子邮件"
@@ -284,6 +290,39 @@ zh-CN:
         oper_date: "操作时间"
         created_at: "创建时间"
         updated_at: "更新时间"
+      package:
+        package_no: "箱号"
+        express_no: "邮件号"
+        route_code: "格口码"
+        status: "状态"
+        packed_at: "装箱日期"
+        user_id: "处理用户"
+        order_list: "订单号列表"
+        bag_list: "袋子号列表"
+      order:
+        order_no: "订单号"
+        prescription_no: "处方号"
+        prescription_date: "开方日期"
+        site_no: "站点编号"
+        site_id: "站点ID"
+        site_name: "站点中文名"
+        sender_province: "寄件人省"
+        sender_city: "寄件人市"
+        sender_district: "寄件人区"
+        sender_addr: "寄件人地址"
+        sender_name: "寄件人姓名"
+        sender_phone: "寄件人电话"
+        receiver_province: "收件人省"
+        receiver_city: "收件人市"
+        receiver_district: "收件人区"
+        receiver_addr: "收件人地址"
+        receiver_name: "收件人姓名"
+        receiver_phone: "收件人电话"
+        customer_addr: "顾客地址"
+        customer_name: "顾客姓名"
+        customer_phone: "顾客电话"
+        status: "状态"
+        package_id: "箱子号"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"

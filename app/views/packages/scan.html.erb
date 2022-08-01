@@ -6,19 +6,24 @@
 <%= hidden_field_tag('site_no', @site_no) %>
 <%= hidden_field_tag('order_bags', @order_bags) %>
 <%= hidden_field_tag('is_packaged', @is_packaged) %>
+<%= hidden_field_tag('package_id', @package_id) %>
 <div>
 	<table>
 		<tr>
-			<td><h3><%= label_tag 'package_no', Date.today.strftime('%Y年%m月%d日').to_s+" 第#{@package_no}箱", class: 'control-group', :id => "package_no" %></h3></td>
+			<td><h3><%= Date.today.strftime('%Y年%m月%d日').to_s+" 第" %></h3></td>
+			<td><font color="red"><h1><%= label_tag 'package_no', @package_no, class: 'control-group', :id => "package_no" %></h1></font></td>
+			<td><h3>箱</h3></td>
 		</tr>
+	</table>
+	<table>
 		<tr class= 'nowrap'>
- 			<td><%= text_field_tag 'bag_no', nil, class: "controls", size: "50" %></td>
+ 			<td><%= text_field_tag 'bag_no', nil, class: "controls showmask", size: "50" %></td>
  			<td><%= button_tag "重置",:class => 'btn btn-primary', :id => "reset", :type => "button"%></td>
  			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :type => "submit", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
 			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :type => "submit", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>
 			<td></td>
-			<td><h4><%= label_tag 'express_no', "", class: 'control-group', :id => "express_no" %></h4></td>
-			<td><h4><%= label_tag 'route_code', "", class: 'control-group', :id => "route_code" %></h4></td>
+			<td><font color="green"><h3><%= label_tag 'express_no', "", class: 'control-group', :id => "express_no" %></h3></font></td>
+			<td><font color="green"><h3><%= label_tag 'route_code', "", class: 'control-group', :id => "route_code" %></h3></font></td>
 		</tr>
 	</table>
 </div>

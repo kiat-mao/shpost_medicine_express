@@ -1,0 +1,45 @@
+<%- model_class = Package -%>
+<div class="page-header">
+<h1><%=t '.title', :default => [:'helpers.titles.index', '%{model} Manage'], :model => model_class.model_name.human.titleize %></h1>
+  <%= render partial: '/layouts/page_size' %>
+  <div style="float:right">
+    <%= submit_tag "发送",:class => 'btn btn-primary', target: '_blank', onclick: "form1.action='packages/send_sy';form1.submit();" %>
+    <%= submit_tag "打印面单",:class => 'btn btn-primary', target: '_blank', onclick: "form1.action='packages/tkzd';form1.submit();" %>
+    <%= submit_tag "打印配货单",:class => 'btn btn-primary', target: '_blank', onclick: "form1.action='packages/zxqd';form1.submit();" %>
+  </div>
+</div>  
+<%= form_tag('', :method => "post", name: 'form1') do %>
+  <%= grid(@packages_grid) do |g|
+    g.action_column select_all_buttons: true do |package|
+      !package.express_no.blank? && !package.route_code.blank?
+    end 
+
+    g.column name: model_class.human_attribute_name(:package_no), attribute: 'package_no'
+
+    g.column name: model_class.human_attribute_name(:express_no), attribute: 'express_no'
+
+    g.column name: model_class.human_attribute_name(:route_code), attribute: 'route_code'
+
+    g.column name: model_class.human_attribute_name(:order_list), attribute: 'order_list'
+
+    g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list'
+
+    g.column name: model_class.human_attribute_name(:status), attribute: 'status', allow_multiple_selection: false, custom_filter: Package::STATUS_NAME.invert do |package| 
+      package.status_name
+    end
+
+    g.column name: model_class.human_attribute_name(:user_id), attribute: 'user_id', assoc: :user, attribute: 'name'
+
+    g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
+      package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d').to_s
+    end
+
+    g.column do |package|
+      ActiveSupport::SafeBuffer.new << 
+      (link_to "作废", canceled_package_path(package), :data => { :confirm => "确定作废吗?" }, :class => 'btn btn-xs btn-primary' if (can? :canceled, package) && (["waiting", "failed"].include?package.status))<< ' ' << 
+      (link_to "获取邮件号", send_xyd_package_path(package), :class => 'btn btn-xs btn-primary' if (can? :send_xyd, package) && (package.express_no.blank? && package.route_code.blank?) && (package.status.eql?"waiting"))
+    end
+  end 
+  %>
+<% end %>
+

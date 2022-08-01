@@ -26,6 +26,13 @@ zh-CN:
         can: :read
         role: :Package
       submenu:
+        package:
+          name: "装箱管理"
+          link: "/packages"
+          need_count: false
+          needrole:
+            can: :read
+            role: :Package
         scan:
           name: "扫描装箱"
           link: "/packages/scan"
@@ -33,6 +40,19 @@ zh-CN:
           needrole:
             can: :scan
             role: :Package
+    orders:
+      name: "订单管理"
+      needrole:
+        can: :read
+        role: :Order
+      submenu:
+        order:
+          name: "订单管理"
+          link: "/orders"
+          need_count: false
+          needrole:
+            can: :read
+            role: :Order
     up_downloads:
       name: "模板管理"
       needrole:

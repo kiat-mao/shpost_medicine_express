@@ -5,23 +5,86 @@ class PackagesController < ApplicationController
   # GET /packages
   # GET /packages.json
   def index
-    @packages_grid = initialize_grid(@packages.accessible_by(current_ability), :per_page => params[:page_size])
+  	@packages = Package.accessible_by(current_ability)
+  	if params[:grid].blank?
+	  	@packages = @packages.where(packed_at: Date.today)
+	  end
+    @packages_grid = initialize_grid(@packages,
+         :order => 'packed_at',
+         :order_direction => 'desc', 
+         :per_page => params[:page_size])
   end
 
   def tkzd
-  	@package = nil
+  	@result = []
 
   	if !params[:package_id].blank?
-  		@package = Package.find(params[:package_id])
-  	end
+  		@result << Package.find(params[:package_id])
+  	else
+	  	if params[:grid] && params[:grid][:selected]
+	      selected = params[:grid][:selected]
+	       
+	      until selected.blank? do 
+	        @result += Package.where(id:selected.pop(1000))
+	      end
+	  	else
+	      flash[:alert] = "请勾选需要打印的箱子"
+	      respond_to do |format|
+	        format.html { redirect_to packages_url }
+	        format.json { head :no_content }
+	      end
+	    end
+    end
   end
 
 	def zxqd
-		@package = nil
+		@result = []
 
   	if !params[:package_id].blank?
-  		@package = Package.find(params[:package_id])
+  		@result << Package.find(params[:package_id])
+  	else
+  		if params[:grid] && params[:grid][:selected]
+	      selected = params[:grid][:selected]
+	       
+	      until selected.blank? do 
+	        @result += Package.where(id:selected.pop(1000))
+	      end
+	  	else
+	      flash[:alert] = "请勾选需要打印的箱子"
+	      respond_to do |format|
+	        format.html { redirect_to packages_url }
+	        format.json { head :no_content }
+	      end
+	    end
   	end
+	end
+
+	def send_sy
+		@result = []
+
+  	selected = params[:grid][:selected]
+	       
+    until selected.blank? do 
+      @result += Package.where(id:selected.pop(1000))
+    end
+	  
+    respond_to do |format|
+      format.html { redirect_to packages_url }
+      format.json { head :no_content }
+    end
+	end
+
+	def canceled
+		if ["waiting", "failed"].include?@package.status
+			@package.orders.update_all status: "waiting", package_id: nil
+			@package.update status: "cancelled"
+		end
+
+		respond_to do |format|
+			flash[:message] = "箱子已作废"
+      format.html { redirect_to request.referer }
+      format.json { head :no_content }
+    end
 	end
 
   def scan
@@ -81,28 +144,32 @@ class PackagesController < ApplicationController
 	def do_packaged
 		@order_bags = params[:order_bags]
   	@err_msg = ""
-  	@package_id = nil
+  	@package_id = params[:package_id]
   	@is_packaged = "0"
+  	@result = {}
 
-  	if !@order_bags.blank?
-	  	uneql_order_no = uneql_order_no(@order_bags)
-	  	if !uneql_order_no.blank?
-	  		@err_msg = "订单号#{uneql_order_no}，有袋子未扫描"
-	  	else
-	  		# get_express_no_route_code    #从新一代获取
-	  		@express_no = "e000001"
-	  		@route_code = "r000001"
-	  		if false
-	  			@err_msg = "获取邮件号失败/该地区属于'疫区‘，不允许邮寄"
-	  		else
-  				package_no = Package.new_package_no(current_user)
-  				package = Package.create package_no: package_no, express_no: @express_no, route_code: @route_code, status: 'waiting', packed_at: Time.now, user_id: current_user.id
-  				@package_id = package.id
-  				@is_packaged = "1"
-  				Order.where(order_no: get_orders(@order_bags)).update_all package_id: package.id, status: "packaged"
+  	if !@package_id.blank?
+  		@result = package_send(Package.find(@package_id))
+			@err_msg = @result["err_msg"] if !@result["err_msg"].blank?	
+			@is_packaged = "1"
+  	else
+	  	if !@order_bags.blank?
+		  	uneql_order_no = uneql_order_no(@order_bags)
+		  	if !uneql_order_no.blank?
+		  		@err_msg = "订单号#{uneql_order_no}，有袋子未扫描"
+		  	else
+		  		order_list = get_orders(@order_bags)
+		  		bag_list = get_bags(@order_bags)
+	  			package_no = Package.new_package_no(current_user)
+					package = Package.create package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list
+					@package_id = package.id
+					Order.where(order_no: order_list).update_all package_id: package.id, status: "packaged"
+					@is_packaged = "1"
+					@result = package_send(package)
+					@err_msg = @result["err_msg"] if !@result["err_msg"].blank?				
 				end
-			end
-		end		
+			end		
+		end
 	end
 
 	def uneql_order_no(order_bags)
@@ -120,6 +187,7 @@ class PackagesController < ApplicationController
 	end
 
 	def get_orders(order_bags)
+		# “订单号1：袋子号1，袋子号2，袋子号3|订单号2：袋子号4，袋子号5...”
 		order_nos = []
 		
 		order_bags.split("|").each do |o|
@@ -127,5 +195,55 @@ class PackagesController < ApplicationController
 		end
 		return order_nos
 	end
+
+	def get_bags(order_bags)
+		# “订单号1：袋子号1，袋子号2，袋子号3|订单号2：袋子号4，袋子号5...”
+		bag_nos = []
+		
+		order_bags.split("|").each do |o|
+			bag_nos += o.split(":")[1].split(",")
+		end
+		return bag_nos
+	end
+
+	def send_xyd
+		# binding.pry
+		result = package_send(@package)
+		
+		respond_to do |format|
+			if !result["err_msg"].blank?
+				flash[:alert] = result["err_msg"]
+			else
+				flash[:message] = "获取邮件号、格口码成功"
+			end
+      format.html { redirect_to request.referer }
+      format.json { head :no_content }
+    end
+	end
+
+	def package_send(package)
+		result = {}
+		interface_sender = XydInterfaceSender.order_create_interface_sender_initialize(package)
+		interface_sender.interface_send(10)
+		if interface_sender.status.eql?"success"
+			result["express_no"] = "e001"#package.express_no
+			result["route_code"] = "r001"#package.route_code
+		elsif interface_sender.status.eql?"failed"
+			if interface_sender.error_msg.blank?
+				if interface_sender.last_response.include?""
+					result["err_msg"] = "该地区属于疫区，不允许邮寄"
+				end
+			elsif interface_sender.error_msg.include?"Timeout"
+				result["err_msg"] = "超时,获取邮件号失败"
+			end
+		end	
+		return result			
+	end
+
+	private
+
+	def package_params
+    params[:package].permit(:package_no, :express_no, :route_code, :status, :packed_at,  :user_id, :order_list, :bag_list)
+  end
 
 end

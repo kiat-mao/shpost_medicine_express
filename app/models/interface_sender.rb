@@ -83,10 +83,10 @@ class InterfaceSender < ActiveRecord::Base
   #   # end
   # end
 
-  def interface_send
+  def interface_send(second)
     begin
       response = nil
-      Timeout.timeout(60) do
+      Timeout.timeout(second.blank? ? 60 : second) do
         case self.interface_type
           when INTERFACE_TYPE[:xml]
             response = self.xml_send

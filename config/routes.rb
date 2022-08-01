@@ -57,8 +57,16 @@ Rails.application.routes.draw do
       post 'tkzd'
       get 'zxqd'
       post 'zxqd'
+      get 'send_sy'
+      post 'send_sy'
+    end
+    member do
+      get 'canceled'
+      get 'send_xyd'
     end
   end
+
+  resources :orders
 
   # match "/print/tkzd" => "print#tkzd",via: [:get, :post]
   # match "/print/zxqd" => "print#zxqd",via: [:get, :post]

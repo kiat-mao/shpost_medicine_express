@@ -20,7 +20,7 @@
         window.open("/install_lodop32.exe");
     }
     LODOP.SET_LICENSES("上海市邮政公司信息技术局","452677782688188907989821905623","","");
-    // LODOP.NewPage();
+    <% @result.sort_by{|x| x.package_no.upcase}.each do |package| %>
     LODOP.PRINT_INIT("打印特快专递单");
     LODOP.SET_PRINT_PAGESIZE(1,750,1300,"tkzd");
     LODOP.ADD_PRINT_LINE("2mm","2mm","2mm","74mm",2,1);
@@ -40,39 +40,39 @@
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_BARCODE("10mm","2.4mm","72mm","14mm","128A","<%= @package.express_no %>");
+    LODOP.ADD_PRINT_BARCODE("10mm","2.4mm","72mm","14mm","128A","<%= package.express_no %>");
     LODOP.ADD_PRINT_LINE("26mm","2mm","26mm","74mm",2,1);
     
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("29.5mm","2mm","72mm","14mm","格口码: <%= @package.route_code %>");
+    LODOP.ADD_PRINT_TEXT("29.5mm","2mm","72mm","14mm","格口码: <%= package.route_code %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
     LODOP.ADD_PRINT_LINE("35mm","2mm","35mm","74mm",2,1);
-    LODOP.ADD_PRINT_TEXT("36mm","2mm","36mm","7mm","收件人姓名: <%= @package.orders.first.receiver_name %>");
+    LODOP.ADD_PRINT_TEXT("36mm","2mm","36mm","7mm","收件人姓名: <%= package.orders.first.receiver_name %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("36mm","36mm","36mm","7mm","收件人电话: <%= @package.orders.first.receiver_phone %>");
+    LODOP.ADD_PRINT_TEXT("36mm","36mm","36mm","7mm","收件人电话: <%= package.orders.first.receiver_phone %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("43mm","2mm","72mm","7mm","收件人地址: <%= @package.orders.first.receiver_addr %>");
+    LODOP.ADD_PRINT_TEXT("43mm","2mm","72mm","7mm","收件人地址: <%= package.orders.first.receiver_addr %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
     LODOP.ADD_PRINT_LINE("49mm","2mm","49mm","74mm",2,1);
-    LODOP.ADD_PRINT_TEXT("49.2mm","2mm","36mm","4mm","寄件人姓名: <%= @package.orders.first.sender_name %>");
+    LODOP.ADD_PRINT_TEXT("49.2mm","2mm","36mm","4mm","寄件人姓名: <%= package.orders.first.sender_name %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("49.2mm","36mm","36mm","4mm","寄件人电话: <%= @package.orders.first.sender_phone %>");
+    LODOP.ADD_PRINT_TEXT("49.2mm","36mm","36mm","4mm","寄件人电话: <%= package.orders.first.sender_phone %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("53.2mm","2mm","72mm","4mm","寄件人地址: <%= @package.orders.first.sender_addr %>");
+    LODOP.ADD_PRINT_TEXT("53.2mm","2mm","72mm","4mm","寄件人地址: <%= package.orders.first.sender_addr %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
@@ -127,7 +127,7 @@
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("98mm","49.2mm","23mm","4mm","编号: <%= @package.package_no.split('-').last %>");
+    LODOP.ADD_PRINT_TEXT("98mm","49.2mm","23mm","4mm","编号: <%= package.package_no.split('-').last %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
@@ -142,13 +142,13 @@
     LODOP.ADD_PRINT_LINE("73mm","49mm","127mm","49mm",2,1);
     LODOP.ADD_PRINT_LINE("2mm","74mm","127mm","74mm",2,1);
 
-    LODOP.SET_PRINTER_INDEXA("Microsoft Print to PDF");//设置某个打印机
+    LODOP.SET_PRINTER_INDEXA("X40 LABEL(1)");//设置某个打印机
     // LODOP.PRINT_DESIGN();
      LODOP.PREVIEW();
     // LODOP.SELECT_PRINTER();
-     // LODOP.SELECT_PRINTER();
+    // LODOP.SELECT_PRINTER();
     // LODOP.PRINT();
-  
+    <% end %>
    };
 
   </script>
@@ -157,5 +157,5 @@
 
   <body onLoad="tkzd_preview();window.opener=null;window.open('','_top'); window.top.close();">
 
-    </body>
+  </body>
 </html>
