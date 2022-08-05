@@ -254,6 +254,8 @@ zh-CN:
         status: "状态"
         created_at: "创建时间"
         updated_at: "更新时间"
+        hot_printer: "面单打印机"
+        normal_printer: "配货单打印机"
       unit:
         "no": "编号"
         name: "单位名称"

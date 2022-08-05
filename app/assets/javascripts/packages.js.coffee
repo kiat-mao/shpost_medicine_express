@@ -59,6 +59,7 @@ do_packaged = ->
 					dataType : 'script'
 				});
 
+
 clear = ->
 	$('#site_no').val("");
 	$('#order_bags').val("");

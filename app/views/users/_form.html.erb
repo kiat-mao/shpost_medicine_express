@@ -70,6 +70,18 @@
       <dd><%= @user.rolename %></dd>
     </div>
   <% end %>
+  <div class="control-group">
+    <%= f.label :hot_printer, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :hot_printer, :class => 'text_field', :id => 'hot_printer' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :normal_printer, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :normal_printer, :class => 'text_field', :id => 'normal_printer' %>
+    </div>
+  </div>
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>

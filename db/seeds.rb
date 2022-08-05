@@ -6,3 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 User.where(username: 'superadmin').first_or_create(username: 'superadmin', password: 'pwd12345', name: 'superadmin', role: 'superadmin')
+User.where(username: 'unitadmin').first_or_create(username: 'unitadmin', password: 'unitadmin12345', name: '机构管理员', role: 'unitadmin')
+User.where(username: 'user').first_or_create(username: 'user', password: 'user12345', name: '普通用户', role: 'user')
+
+Unit.where(no: '20000000').first_or_create(name: '物流分公司', short_name: '物流分公司', level:1)

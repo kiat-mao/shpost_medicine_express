@@ -13,33 +13,13 @@ zh-CN:
           needrole:
             can: :read
             role: :User
-        unit_admin:
-          name: "单位管理"
-          link: "/units"
-          need_count: false
-          needrole:
-            can: :read
-            role: :User
-    packages:
-      name: "装箱管理"
-      needrole:
-        can: :read
-        role: :Package
-      submenu:
-        package:
-          name: "装箱管理"
-          link: "/packages"
-          need_count: false
-          needrole:
-            can: :read
-            role: :Package
-        scan:
-          name: "扫描装箱"
-          link: "/packages/scan"
-          need_count: false
-          needrole:
-            can: :scan
-            role: :Package
+        # unit_admin:
+        #   name: "单位管理"
+        #   link: "/units"
+        #   need_count: false
+        #   needrole:
+        #     can: :read
+        #     role: :User
     orders:
       name: "订单管理"
       needrole:
@@ -53,20 +33,47 @@ zh-CN:
           needrole:
             can: :read
             role: :Order
-    up_downloads:
-      name: "模板管理"
+    packages:
+      name: "装箱管理"
       needrole:
         can: :read
-        role: :UpDownload
+        role: :Package
       submenu:
-        up_download:
-          name: "模板上传下载"
-          link: "/up_downloads"
+        package:
+          name: "装箱管理"
+          link: "/packages"
           need_count: false
-    logs:
-      name: "日志查询"
+          needrole:
+            can: :read
+            role: :Package
+    scan_packages:
+      name: "扫描装箱"
+      needrole:
+        can: :scan
+        role: :Package
       submenu:
-        user_log:
-          name: "日志查询"
-          link: "/user_logs"
+        sacn_package:
+          name: "扫描装箱"  
+          link: "/packages/scan"
           need_count: false
+          needrole:
+            can: :scan
+            role: :Package
+    
+    # up_downloads:
+    #   name: "模板管理"
+    #   needrole:
+    #     can: :read
+    #     role: :UpDownload
+    #   submenu:
+    #     up_download:
+    #       name: "模板上传下载"
+    #       link: "/up_downloads"
+    #       need_count: false
+    # logs:
+    #   name: "日志查询"
+    #   submenu:
+    #     user_log:
+    #       name: "日志查询"
+    #       link: "/user_logs"
+    #       need_count: false

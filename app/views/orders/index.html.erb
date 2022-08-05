@@ -6,11 +6,11 @@
 <%= grid(@orders_grid) do |g|
 	g.after_row do |order, number_of_columns|
     content_tag(:tr, class: 'extra-row') do
-      content_tag(:td, content_tag(:div, content_tag(:dl) do
-        buffer = content_tag(:dt,"寄件人省/市/区:")
-        buffer += content_tag(:dd,order.try(:sender_province)+"/"+order.try(:sender_city)+"/"+order.try(:sender_district))
-        raw buffer                   
-      	end)) + 
+      # content_tag(:td, content_tag(:div, content_tag(:dl) do
+      #   buffer = content_tag(:dt,"寄件人省/市/区:")
+      #   buffer += content_tag(:dd,order.try(:sender_province)+"/"+order.try(:sender_city)+"/"+order.try(:sender_district))
+      #   raw buffer                   
+      # 	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
         buffer = content_tag(:dt,"寄件人地址:")
         buffer += content_tag(:dd,order.try(:sender_addr))
@@ -26,11 +26,11 @@
         buffer += content_tag(:dd,order.try(:sender_phone))
         raw buffer                   
       	end)) + 
-      content_tag(:td, content_tag(:div, content_tag(:dl) do
-        buffer = content_tag(:dt,"收件人省/市/区:")
-        buffer += content_tag(:dd,order.try(:receiver_province)+"/"+order.try(:receiver_city)+"/"+order.try(:receiver_district))
-        raw buffer                   
-      	end)) + 
+      # content_tag(:td, content_tag(:div, content_tag(:dl) do
+      #   buffer = content_tag(:dt,"收件人省/市/区:")
+      #   buffer += content_tag(:dd,order.try(:receiver_province)+"/"+order.try(:receiver_city)+"/"+order.try(:receiver_district))
+      #   raw buffer                   
+      # 	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
         buffer = content_tag(:dt,"收件人地址:")
         buffer += content_tag(:dd,order.try(:receiver_addr))
@@ -60,6 +60,11 @@
         buffer = content_tag(:dt,"顾客电话:")
         buffer += content_tag(:dd,order.try(:customer_phone))
         raw buffer                   
+      end)) +
+      content_tag(:td, content_tag(:div, content_tag(:dl) do
+        buffer = content_tag(:dt,"袋子号:")
+        buffer += content_tag(:dd,order.bag_list.try(:truncate, 35), title: order.bag_list)
+        raw buffer                   
       end))
     end
   end
@@ -84,9 +89,13 @@
 
   g.column name: model_class.human_attribute_name(:package_id), attribute: 'package_id', assoc: :package, attribute: 'package_no'
 
-  g.column name: "袋子号", attribute: 'order_no',filter: false do |order|
-    [order.bag_list.try(:truncate, 35), {title: order.bag_list}]
+  g.column name: "订单日期", attribute: 'created_at' do |order|
+    l order.created_at
   end
+
+  # g.column name: "袋子号", attribute: 'order_no',filter: false do |order|
+  #   [order.bag_list.try(:truncate, 35), {title: order.bag_list}]
+  # end
 
   g.column do |order|
     ActiveSupport::SafeBuffer.new << 

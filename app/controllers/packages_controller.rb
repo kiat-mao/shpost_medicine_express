@@ -11,7 +11,7 @@ class PackagesController < ApplicationController
 	  end
     @packages_grid = initialize_grid(@packages,
          :order => 'packed_at',
-         :order_direction => 'desc', 
+         :order_direction => 'asc', 
          :per_page => params[:page_size])
   end
 
@@ -62,26 +62,30 @@ class PackagesController < ApplicationController
 	def send_sy
 		packages = []
 
-  	selected = params[:grid][:selected]
+		if params[:grid] && params[:grid][:selected]
+  		selected = params[:grid][:selected]
 	       
-    until selected.blank? do 
-      packages = Package.where(id:selected.pop(1000))
-      packages.each do |p|
-      	if (["waiting", "failed"].include?p.status) && !p.express_no.blank? && !p.route_code.blank?
-      		SoaInterfaceSender.order_trace_interface_sender_initialize(p)
-    		end
-      end
-    end
-	  
-    respond_to do |format|
-    	flash[:notice] = "已发送"
+	    until selected.blank? do 
+	      packages = Package.where(id:selected.pop(1000))
+	      packages.each do |p|
+	      	if (["waiting", "failed"].include?p.status)
+	      		# SoaInterfaceSender.order_trace_interface_sender_initialize(p)
+	      		p.update status: "to_send"
+	    		end
+	      end
+	    end
+	    flash[:notice] = "已回传上药"
+	  else
+	  	flash[:alert] = "请勾选需要回传上药的箱子"
+	  end   
+	  respond_to do |format|
       format.html { redirect_to packages_url }
       format.json { head :no_content }
     end
 	end
 
 	def cancelled
-		if ["waiting", "failed"].include?@package.status
+		if ["waiting", "failed", "to_send"].include?@package.status
 			@package.orders.update_all status: "waiting", package_id: nil
 			@package.update status: "cancelled"
 		end
@@ -103,7 +107,6 @@ class PackagesController < ApplicationController
   	@order_bags = params[:order_bags]
   	@err_msg = ""
   	
-# binding.pry  	
   	bag = Bag.find_by(bag_no: @bag_no)
 		if bag.blank?
 			@err_msg = "包裹无信息"
@@ -139,10 +142,6 @@ class PackagesController < ApplicationController
 	  		end
   		end
   	end
-		
-    # respond_to do |format|
-    #   format.js 
-    # end
 	end
 
 	def do_packaged
@@ -225,10 +224,11 @@ class PackagesController < ApplicationController
 
 	# 发送新一代接口，获取邮件号，格口码,返回'成功'或出错信息
 	def package_send(package)
-		interface_sender = XydInterfaceSender.order_create_interface_sender_initialize(package)
-		interface_sender.interface_send(10)
-		msg = XydInterfaceSender.get_response_message(interface_sender)#"成功"
-		# package.update express_no:"e001",route_code:"r001"
+		# interface_sender = XydInterfaceSender.order_create_interface_sender_initialize(package)
+		# interface_sender.interface_send(10)
+		# msg = XydInterfaceSender.get_response_message(interface_sender)
+		package.update express_no: "e000001", route_code: "r000001"
+		msg = "成功"
 		return msg			
 	end
 

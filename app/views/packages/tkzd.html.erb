@@ -21,7 +21,6 @@
     }
     LODOP.SET_LICENSES("上海市邮政公司信息技术局","452677782688188907989821905623","","");
     <% @result.sort_by{|x| x.package_no.upcase}.each do |package| %>
-    <% if !package.status.eql?"cancelled" %>
     LODOP.PRINT_INIT("打印特快专递单");
     LODOP.SET_PRINT_PAGESIZE(1,750,1300,"tkzd");
     LODOP.ADD_PRINT_LINE("2mm","2mm","2mm","74mm",2,1);
@@ -143,13 +142,11 @@
     LODOP.ADD_PRINT_LINE("73mm","49mm","127mm","49mm",2,1);
     LODOP.ADD_PRINT_LINE("2mm","74mm","127mm","74mm",2,1);
 
-    LODOP.SET_PRINTER_INDEXA("X40 LABEL(1)");//设置某个打印机
+    //设置某个打印机
+    LODOP.SET_PRINTER_INDEXA("<%= current_user.hot_printer.blank? ? I18n.t('printer.hot_printer') : current_user.hot_printer %>");
     // LODOP.PRINT_DESIGN();
      LODOP.PREVIEW();
-    // LODOP.SELECT_PRINTER();
-    // LODOP.SELECT_PRINTER();
     // LODOP.PRINT();
-    <% end %>
     <% end %>
    };
 

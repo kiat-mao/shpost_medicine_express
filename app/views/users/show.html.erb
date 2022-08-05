@@ -14,6 +14,10 @@
   <dd><%= @user.unit.try :name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:role) %>:</strong></dt>
   <dd><%= @user.rolename %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:hot_printer) %>:</strong></dt>
+  <dd><%= @user.hot_printer %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:normal_printer) %>:</strong></dt>
+  <dd><%= @user.normal_printer %></dd>
 </dl>
 <% if can? :index, User %>
 <%= link_to t('.back', :default => t("helpers.links.back")),

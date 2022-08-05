@@ -29,6 +29,10 @@
       user.rolename
     end
 
+    g.column name: model_class.human_attribute_name(:hot_printer), attribute: 'hot_printer'
+
+    g.column name: model_class.human_attribute_name(:normal_printer), attribute: 'normal_printer'
+
     g.column name: model_class.human_attribute_name(:status), attribute: 'status', allow_multiple_selection: false, custom_filter: User::STATUS_NAME.invert do |user| 
       user.status_name
     end

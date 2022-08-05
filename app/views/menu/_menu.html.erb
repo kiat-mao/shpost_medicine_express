@@ -22,7 +22,7 @@
                   link = v[:link]
                   # binding.pry
                   selected = v[:selected]
-                  if request.original_fullpath.start_with?(link) || (!selected.blank? && request.original_fullpath.start_with?(selected))
+                  if request.original_fullpath.eql?(link) || (!selected.blank? && request.original_fullpath.eql?(selected))
                     in_flag = true
                     break
                   end
@@ -44,7 +44,7 @@
                           <div class="menu-heading">
                             <a data-toggle="collapse" data-parent="#menu-group-0-<%=l1+1%>" >
                               <a href="<%=sm[sk][:link]%>">
-                                <div class="menu-title <%="selected" if request.original_fullpath.start_with?(sm[sk][:link]) || (!sm[sk][:selected].blank? && request.original_fullpath.start_with?(sm[sk][:selected]))%>">
+                                <div class="menu-title <%="selected" if request.original_fullpath.eql?(sm[sk][:link]) || (!sm[sk][:selected].blank? && request.original_fullpath.eql?(sm[sk][:selected]))%>">
                                 <% if count>0 %>
                                   <%= sm[sk][:name] %><span style="color:#FF0000"><%="("+count.to_s+")"%></span>
                                 <% else %>
