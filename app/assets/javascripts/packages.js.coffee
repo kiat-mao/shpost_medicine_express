@@ -33,7 +33,9 @@ enterpress = (e) ->
 					do_packaged()
 					return false;
 			else
-				alert("您还未扫描袋子");
+				if $('#is_packaged').val() == "1"
+					alert("是否打印面单和配货单？");
+					print_tkzd()
 				$('#bag_no').focus();	
 				
 
@@ -73,4 +75,20 @@ clear = ->
 
 showMask = ->
 	document.getElementById('mid').style.display="block";
-	setTimeout("document.getElementById('mid').style.display='none';$('#bag_no').focus();",10000);
+	#setTimeout("document.getElementById('mid').style.display='none';$('#bag_no').focus();",10000);
+
+print_tkzd = ->
+				$.ajax({
+					type : 'GET',
+					url : '/packages/tkzd/',
+					data: { package_id: $('#package_id').val()},
+					dataType : 'script'
+				});
+
+print_zxqd = ->
+				$.ajax({
+					type : 'GET',
+					url : '/packages/zxqd/',
+					data: { package_id: $('#package_id').val()},
+					dataType : 'script'
+				});

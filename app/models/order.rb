@@ -12,9 +12,9 @@ class Order < ApplicationRecord
  		status.blank? ? "" : Order::STATUS_NAME["#{status}".to_sym]
  	end
 
- 	def bag_list
- 		self.bags.map{|b| b.bag_no}.compact.join(",")
- 	end
+ 	# def get_bag_list
+ 	# 	self.bags.map{|b| b.bag_no}.compact.join(",")
+ 	# end
 
 	def self.order_push(context_hash)
 		order = Order.new

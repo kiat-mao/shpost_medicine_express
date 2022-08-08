@@ -325,6 +325,7 @@ zh-CN:
         customer_phone: "顾客电话"
         status: "状态"
         package_id: "箱子号"
+        bag_list: "袋子号列表"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"

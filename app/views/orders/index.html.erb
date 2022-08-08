@@ -60,22 +60,23 @@
         buffer = content_tag(:dt,"顾客电话:")
         buffer += content_tag(:dd,order.try(:customer_phone))
         raw buffer                   
-      end)) +
-      content_tag(:td, content_tag(:div, content_tag(:dl) do
-        buffer = content_tag(:dt,"袋子号:")
-        buffer += content_tag(:dd,order.bag_list.try(:truncate, 35), title: order.bag_list)
-        raw buffer                   
-      end))
+      end)) 
+      # +
+      # content_tag(:td, content_tag(:div, content_tag(:dl) do
+      #   buffer = content_tag(:dt,"袋子号:")
+      #   buffer += content_tag(:dd,order.get_bag_list.try(:truncate, 35), title: order.get_bag_list)
+      #   raw buffer                   
+      # end))
     end
   end
   
   g.column name: model_class.human_attribute_name(:order_no), attribute: 'order_no'
 
-  g.column name: model_class.human_attribute_name(:prescription_no), attribute: 'prescription_no'
+  # g.column name: model_class.human_attribute_name(:prescription_no), attribute: 'prescription_no'
 
-  g.column name: model_class.human_attribute_name(:prescription_date), attribute: 'prescription_date' do |order|
-    order.prescription_date.blank? ? "" : order.prescription_date.strftime('%Y-%m-%d').to_s
-  end
+  # g.column name: model_class.human_attribute_name(:prescription_date), attribute: 'prescription_date' do |order|
+  #   order.prescription_date.blank? ? "" : order.prescription_date.strftime('%Y-%m-%d').to_s
+  # end
 
   g.column name: model_class.human_attribute_name(:site_no), attribute: 'site_no'
 
@@ -89,14 +90,16 @@
 
   g.column name: model_class.human_attribute_name(:package_id), attribute: 'package_id', assoc: :package, attribute: 'package_no'
 
+  g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |order|
+    [order.bag_list.try(:truncate, 35), {title: order.bag_list}]
+  end
+
   g.column name: "订单日期", attribute: 'created_at' do |order|
     l order.created_at
   end
 
-  # g.column name: "袋子号", attribute: 'order_no',filter: false do |order|
-  #   [order.bag_list.try(:truncate, 35), {title: order.bag_list}]
-  # end
-
+  g.column name: "装箱用户", attribute: 'name', assoc: [:package, :user]
+  
   g.column do |order|
     ActiveSupport::SafeBuffer.new << 
     button_tag("详细信息", class: "btn btn-xs btn-primary", name: 'detail')
