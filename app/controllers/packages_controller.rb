@@ -70,7 +70,7 @@ class PackagesController < ApplicationController
 	      packages.each do |p|
 	      	if (["waiting", "failed"].include?p.status)
 	      		# SoaInterfaceSender.order_trace_interface_sender_initialize(p)
-	      		p.update status: "to_send"
+	      		p.update status: "done"
 	    		end
 	      end
 	    end
