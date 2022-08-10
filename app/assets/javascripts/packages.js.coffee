@@ -83,6 +83,8 @@ print_tkzd = ->
 					url : '/packages/tkzd/',
 					data: { package_id: $('#package_id').val()},
 					dataType : 'script'
+					async : false
+					success : print_zxqd()
 				});
 
 print_zxqd = ->

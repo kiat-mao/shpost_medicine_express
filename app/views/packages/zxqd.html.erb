@@ -34,7 +34,7 @@
 	    LODOP.SET_PRINT_STYLE("FontSize",10);
 	    LODOP.SET_PRINT_STYLE("Bold",1);  
 	    LODOP.ADD_PRINT_TEXT("10mm","150mm","50mm","15mm","站点:<%= package.orders.first.site_no %>");
-	    LODOP.ADD_PRINT_TEXT("16mm","160mm","50mm","15mm","<%= package.orders.first.site_id.to_s + package.orders.first.site_name %>");
+	    LODOP.ADD_PRINT_TEXT("16mm","155mm","50mm","15mm","<%= package.orders.first.site_id.to_s + package.orders.first.site_name %>");
 	    LODOP.ADD_PRINT_TEXT("32mm","8mm","45mm","10mm","收货人:<%= package.orders.first.receiver_name %>");
 	    LODOP.ADD_PRINT_TEXT("32mm","52mm","60mm","10mm","收货电话:<%= package.orders.first.receiver_phone %>");
 	    LODOP.ADD_PRINT_TEXT("32mm","107mm","60mm","10mm","订单数:<%= package.orders.count %>");
@@ -72,7 +72,7 @@
 	  	<% end %>
 	  	LODOP.SET_PRINT_STYLE("ItemType",1);
 	    LODOP.ADD_PRINT_TEXT("98%","160mm","80mm","30mm","打包日期：<%= Time.now.strftime('%Y-%m-%d') %>");
-		LODOP.SET_PRINT_STYLE("ItemType",2);
+			LODOP.SET_PRINT_STYLE("ItemType",2);
 	    LODOP.SET_PRINT_STYLE("Horient",2);
 	    LODOP.SET_PRINT_STYLE("Vorient",1);
 	    LODOP.ADD_PRINT_TEXT("98%","80%",100,39,"第#页/共&页");
@@ -80,8 +80,8 @@
 	  	//设置某个打印机
 	  	LODOP.SET_PRINTER_INDEXA("<%= current_user.normal_printer.blank? ? I18n.t('printer.normal_printer') : current_user.normal_printer %>");
 	    // LODOP.PRINT_DESIGN();
-		LODOP.PREVIEW();
-		// LODOP.PRINT();
+			LODOP.PREVIEW();
+			// LODOP.PRINT();
 		<% end %>
 		};
 		

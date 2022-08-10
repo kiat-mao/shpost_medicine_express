@@ -91,7 +91,7 @@
   g.column name: model_class.human_attribute_name(:package_id), attribute: 'package_id', assoc: :package, attribute: 'package_no'
 
   g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |order|
-    [order.bag_list.try(:truncate, 35), {title: order.bag_list}]
+    [order.bag_list.try(:truncate, 50), {title: order.bag_list}]
   end
 
   g.column name: "订单日期", attribute: 'created_at' do |order|

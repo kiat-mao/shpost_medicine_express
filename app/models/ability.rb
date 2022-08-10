@@ -40,7 +40,7 @@ class Ability
       can [:read, :up_download_export], UpDownload
       can :manage, Package, user_id: user.id
       cannot [:cancelled, :send_sy], Package
-      can :read, Order, package: {user_id: user.id}
+      can :read, Order#, package: {user_id: user.id}
     end
 
     

@@ -22,9 +22,9 @@
       LODOP.SET_PRINT_PAGESIZE(1,"210mm","297mm","");
       LODOP.PRINT_INIT("打印装箱清单");
       h=10;
-    <% Bag.all.each do |b| %>
+    <% Bag.where("id>3").each do |b| %>
     LODOP.ADD_PRINT_BARCODE(h,"20mm","50mm","10mm","128A","<%= b.bag_no %>");
-    h+=50;
+    h+=80;
     <% end %>
     LODOP.PREVIEW();
     };

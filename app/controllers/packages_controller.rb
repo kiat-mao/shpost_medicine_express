@@ -17,7 +17,7 @@ class PackagesController < ApplicationController
 
   def tkzd
   	@result = []
-
+  	@package_id = params[:package_id]
   	if !params[:package_id].blank?
   		@result << Package.find(params[:package_id])
   	else
