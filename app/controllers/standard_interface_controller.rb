@@ -94,7 +94,7 @@ class StandardInterfaceController < ApplicationController
 
     @response = response_builder
 
-    render json: @response
+    render json: @response, content_type: "application/json"
   end
 
   def error_builder(error_code, msg = nil)
@@ -106,7 +106,7 @@ class StandardInterfaceController < ApplicationController
 
     Rails.logger.error @response
 
-    render json: @response
+    render json: @response, content_type: "application/json"
   end
 
   def response_builder(code = nil, msg = nil)
