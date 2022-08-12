@@ -29,6 +29,10 @@ class XydInterfaceSender < ActiveRecord::Base
 		order["logistics_provider"] = xydConfig[:logistics_provider]
 		order["ecommerce_no"] = xydConfig[:ecommerce_no]
 		order["ecommerce_user_id"] = now_time.strftime("%Y%m%d%H%M%S%L")
+		if xydConfig[:sender_no] != nil
+			order["sender_no"] = xydConfig[:sender_no]
+			order["sender_type"] = '1'
+		end			
 		order["inner_channel"] = xydConfig[:inner_channel]
 		order["logistics_order_no"] = "package" + package.package_no
 		order["base_product_no"] = xydConfig[:base_product_no]

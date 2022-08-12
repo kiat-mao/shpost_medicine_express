@@ -10,14 +10,14 @@ development:
 
 test:
   <<: *default
-  order_trace_url: http://xxxxxxxxxxxx/carriertest/SendTMP_ORDER_TRACE_PS
+  order_trace_url: http://222.66.127.248/carriertest/SendTMP_ORDER_TRACE_PS
   consumer: EMS
   count: "1"
   srvlevel: "1"
 
 production:
   <<: *default
-  order_trace_url: http://xxxxxxxxxxx/carriertest/SendTMP_ORDER_TRACE_PS
+  order_trace_url: http://222.66.127.248/carrier/SendTMP_ORDER_TRACE_PS
   consumer: EMS
   count: "1"
   srvlevel: "1"
