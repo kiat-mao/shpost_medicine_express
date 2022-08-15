@@ -19,8 +19,8 @@
 		<tr class= 'nowrap'>
  			<td><%= text_field_tag 'bag_no', nil, class: "controls showmask", size: "50" %></td>
  			<td><%= button_tag "重置",:class => 'btn btn-primary', :id => "reset", :type => "button"%></td>
- 			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :type => "submit", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
-			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :type => "submit", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>
+ 			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
+			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>
 			<td></td>
 			<td><font color="green"><h3><%= label_tag 'express_no', "", class: 'control-group', :id => "express_no" %></h3></font></td>
 			<td><font color="green"><h3><%= label_tag 'route_code', "", class: 'control-group', :id => "route_code" %></h3></font></td>

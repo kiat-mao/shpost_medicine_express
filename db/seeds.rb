@@ -9,4 +9,4 @@ User.where(username: 'superadmin').first_or_create(username: 'superadmin', passw
 
 unit = Unit.where(no: '20000000').first_or_create(name: '物流分公司', short_name: '物流分公司', level:1)
 User.where(username: 'unitadmin').first_or_create(username: 'unitadmin', password: 'unitadmin12345', name: '机构管理员', role: 'unitadmin', unit_id: unit.id)
-User.where(username: 'user').first_or_create(username: 'user', password: 'user12345', name: '普通用户', role: 'user', unit_id: unit.id)
+# User.where(username: 'user').first_or_create(username: 'user', password: 'user12345', name: '普通用户', role: 'user', unit_id: unit.id)

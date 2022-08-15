@@ -30,4 +30,9 @@ class Package < ApplicationRecord
  	def status_name
  		status.blank? ? "" : Package::STATUS_NAME["#{status}".to_sym]
  	end
+
+ 	def cancelled
+ 		self.orders.update_all status: "waiting", package_id: nil
+		self.update status: "cancelled"
+	end
 end

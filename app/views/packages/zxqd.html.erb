@@ -80,8 +80,8 @@
 	  	//设置某个打印机
 	  	LODOP.SET_PRINTER_INDEXA("<%= current_user.normal_printer.blank? ? I18n.t('printer.normal_printer') : current_user.normal_printer %>");
 	    // LODOP.PRINT_DESIGN();
-			LODOP.PREVIEW();
-			// LODOP.PRINT();
+			// LODOP.PREVIEW();
+			LODOP.PRINT();
 		<% end %>
 		};
 		

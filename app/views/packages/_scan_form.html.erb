@@ -9,13 +9,13 @@
   
 	  <tr>
 	  	<td>
-	  		<% if order.bags.count == o.split(":")[1].split(",").count %><font color="green"><% end %>
+	  		<% if order.bags.count == o.split(":")[1].split(",").count %><font color="red"><% end %>
   			订单号:<%= o.split(":")[0] %>	  				
   			<% if order.bags.count == o.split(":")[1].split(",").count %></font><% end %>
   		</td>
 	  	<td></td><td></td>
 	  	<td>
-	  		<% if order.bags.count == o.split(":")[1].split(",").count %><font color="green"><% end %>
+	  		<% if order.bags.count == o.split(":")[1].split(",").count %><font color="red"><% end %>
 	  		总袋数:<%= order.bags.count %>
 	  		<% if order.bags.count == o.split(":")[1].split(",").count %></font><% end %>
 	  	</td>
@@ -31,7 +31,7 @@
 	     <tr>
 	     	<% bag_nos.pop(4).reverse.each do |b| %>
 		     	<td>
-		     		<% if @order_bags.include?b %><font color="green"><% end %>
+		     		<% if @order_bags.include?b %><font color="red"><% end %>
 		     		袋子<%= i %>:<%= b %>
 		     		<% if @order_bags.include?b %></font><% end %>
 		     	</td>

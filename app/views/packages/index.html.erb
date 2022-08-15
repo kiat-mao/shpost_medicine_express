@@ -4,10 +4,14 @@
   <%= render partial: '/layouts/page_size' %>
   <div style="float:right">
     <% if (can? :send_sy, Package) %>
-    <%= submit_tag "装箱回传上药",:class => 'btn btn-primary', target: '_blank', onclick: "form1.action='packages/send_sy';form1.submit();" %>
+    <%= submit_tag "装箱回传上药",:class => 'btn btn-primary', onclick: "form1.action='packages/send_sy';form1.submit();" %>
     <% end %>
-    <%= submit_tag "打印面单",:class => 'btn btn-primary', target: '_blank', onclick: "form1.action='packages/tkzd';form1.submit();" %>
-    <%= submit_tag "打印配货单",:class => 'btn btn-primary', target: '_blank', onclick: "form1.action='packages/zxqd';form1.submit();" %>
+    <!-- <%= submit_tag "打印面单",:class => 'btn btn-primary', target: '_blank', onclick: "form1.action='packages/tkzd';form1.submit();" %> -->
+    <%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzds" %>
+    <%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqds" %>
+    <% if (can? :package_export, Package) %>
+    <%= submit_tag "导出",:class => 'btn btn-primary', onclick: "form1.action='packages/package_export.xls';form1.submit();" %>
+    <% end %>
   </div>
 </div>  
 <%= form_tag('', :method => "post", name: 'form1') do %>
@@ -34,10 +38,10 @@
       package.status_name
     end
 
-    g.column name: model_class.human_attribute_name(:user_id), attribute: 'user_id', assoc: :user, attribute: 'name'
+    g.column name: model_class.human_attribute_name(:user_id), attribute: 'name', assoc: :user
 
     g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
-      package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d').to_s
+      package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
     end
 
     g.column do |package|

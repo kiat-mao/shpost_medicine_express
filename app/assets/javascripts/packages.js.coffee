@@ -34,9 +34,12 @@ enterpress = (e) ->
 					return false;
 			else
 				if $('#is_packaged').val() == "1"
-					alert("是否打印面单和配货单？");
-					print_tkzd()
-				$('#bag_no').focus();	
+					if confirm("是否打印面单和配货单？")
+						package_id = $('#package_id').val()
+						window.open("/packages/tkzd?package_id="+package_id)
+						window.open("/packages/zxqd?package_id="+package_id)
+				$('#bag_no').focus();
+				return false;
 				
 
 enterpress2 = ->	
@@ -77,20 +80,4 @@ showMask = ->
 	document.getElementById('mid').style.display="block";
 	#setTimeout("document.getElementById('mid').style.display='none';$('#bag_no').focus();",10000);
 
-print_tkzd = ->
-				$.ajax({
-					type : 'GET',
-					url : '/packages/tkzd/',
-					data: { package_id: $('#package_id').val()},
-					dataType : 'script'
-					async : false
-					success : print_zxqd()
-				});
 
-print_zxqd = ->
-				$.ajax({
-					type : 'GET',
-					url : '/packages/zxqd/',
-					data: { package_id: $('#package_id').val()},
-					dataType : 'script'
-				});
