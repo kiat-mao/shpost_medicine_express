@@ -1,4 +1,5 @@
-source 'https://rubygems.org/'
+#source 'https://rubygems.org/'
+source 'https://gems.ruby-china.com'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.5'
@@ -99,7 +100,7 @@ gem 'bootstrap-table-rails', '~> 1.13', '>= 1.13.4'
 gem 'whenever', '~> 1.0'
 
 ########Oracle##############
-# gem 'ruby-oci8'
+gem 'ruby-oci8', '2.2.8'
 
-# gem 'activerecord-oracle_enhanced-adapter'
+gem 'activerecord-oracle_enhanced-adapter', '6.0.3'
 ############################
