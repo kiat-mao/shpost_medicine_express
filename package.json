@@ -14,7 +14,8 @@
     "jquery-ujs": "^1.2.2",
     "popper.js": "^1.16.1",
     "turbolinks": "^5.2.0",
-    "webpack": "^4.0.0"
+    "webpack": "^4.0.0",
+    "yarn": "^1.22.19"
   },
   "version": "0.1.0",
   "devDependencies": {

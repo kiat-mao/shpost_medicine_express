@@ -43,7 +43,7 @@
                         <div class="panel">
                           <div class="menu-heading">
                             <a data-toggle="collapse" data-parent="#menu-group-0-<%=l1+1%>" >
-                              <a href="<%=sm[sk][:link]%>">
+                              <a href="/shangyao<%=sm[sk][:link]%>">
                                 <div class="menu-title <%="selected" if request.original_fullpath.eql?(sm[sk][:link]) || (!sm[sk][:selected].blank? && request.original_fullpath.eql?(sm[sk][:selected]))%>">
                                 <% if count>0 %>
                                   <%= sm[sk][:name] %><span style="color:#FF0000"><%="("+count.to_s+")"%></span>
