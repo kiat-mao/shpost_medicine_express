@@ -59,6 +59,7 @@ Rails.application.routes.draw do
       post 'zxqd'
       get 'send_sy'
       post 'send_sy'
+      post 'package_export'
     end
     member do
       get 'cancelled'
