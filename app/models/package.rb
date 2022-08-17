@@ -16,8 +16,8 @@ class Package < ApplicationRecord
 
 	# 每日每个工号自动从“编号1”开始装箱计数
  	def self.get_package_no_by_user(current_user)
- 		num = Package.where(user_id: current_user.id).where("packed_at>=?", Date.today).count
- 		package_no = num.zero? ? 1 : num+1
+    num =  Package.where(user_id: current_user.id).where("packed_at>=?", Date.today).count
+ 		package_no = num.zero? ? 1 : (num + 1)
  	end
 
  	def get_all_bags

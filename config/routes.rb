@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  scope 'shangyao' do
   resources :expresses
   root 'welcome#index'
   
@@ -73,4 +74,5 @@ Rails.application.routes.draw do
   # match "/print/tkzd" => "print#tkzd",via: [:get, :post]
   # match "/print/zxqd" => "print#zxqd",via: [:get, :post]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  end
 end

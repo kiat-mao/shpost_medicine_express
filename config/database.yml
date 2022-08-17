@@ -21,5 +21,14 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  #<<: *default
+  #database: db/production.sqlite3
+  adapter: oracle_enhanced
+  database: sy
+  host: 172.25.4.40
+  port: 1521
+  username: sy
+  password: Shp0st_BCL
+  pool: 64
+  statement_limit: 250
+
