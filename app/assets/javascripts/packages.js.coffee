@@ -36,8 +36,8 @@ enterpress = (e) ->
 				if $('#is_packaged').val() == "1"
 					if confirm("是否打印面单和配货单？")
 						package_id = $('#package_id').val()
-						window.open("/packages/tkzd?package_id="+package_id)
-						window.open("/packages/zxqd?package_id="+package_id)
+						window.open("../packages/tkzd?package_id="+package_id)
+						window.open("../packages/zxqd?package_id="+package_id)
 				$('#bag_no').focus();
 				return false;
 				
@@ -51,7 +51,7 @@ enterpress2 = ->
 find_bag_result = -> 
 				$.ajax({
 					type : 'GET',
-					url : '/packages/find_bag_result/',
+					url : '../packages/find_bag_result/',
 					data: { bag_no: $('#bag_no').val(), site_no: $('#site_no').val(), order_bags: $('#order_bags').val()},
 					dataType : 'script'
 				});
@@ -59,7 +59,7 @@ find_bag_result = ->
 do_packaged = -> 
 				$.ajax({
 					type : 'GET',
-					url : '/packages/do_packaged/',
+					url : '../packages/do_packaged/',
 					data: { order_bags: $('#order_bags').val(), package_id: $('#package_id').val()},
 					dataType : 'script'
 				});

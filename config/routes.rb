@@ -70,9 +70,5 @@ Rails.application.routes.draw do
 
   resources :orders
   match "/standard_interface/order_push" => "standard_interface#order_push", via: [:get, :post]
-
-  # match "/print/tkzd" => "print#tkzd",via: [:get, :post]
-  # match "/print/zxqd" => "print#zxqd",via: [:get, :post]
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   end
 end

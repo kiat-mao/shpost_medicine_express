@@ -13,10 +13,10 @@
 	  function zxqd_preview(){
 	    LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));  
 	    if(LODOP == undefined){
-	        window.open("/CLodop_Setup_for_Win64NT.exe");
+	        window.open("CLodop_Setup_for_Win64NT.exe");
 	    }
 	    if(!LODOP.hasOwnProperty('PRINT') && (LODOP.VERSION == undefined)){
-	        window.open("/install_lodop32.exe");
+	        window.open("install_lodop32.exe");
 	    }
 	    LODOP.SET_LICENSES("上海市邮政公司信息技术局","452677782688188907989821905623","","");
 	    <% @result.sort_by{|x| x.package_no.upcase}.each do |package| %>
