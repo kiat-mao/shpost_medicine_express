@@ -29,7 +29,7 @@ test:
 
 production:
   <<: *default
-  order_create_url: http://180.166.203.242:3000/xyd_server/OrderCreateServlet
+  order_create_url: http://172.20.7.11:3000/xyd_server/OrderCreateServlet
   system_name: syhs2022
   pwd: M3Q5NGREcjB0NE9zOCk5
   ecCompanyId: SHYIYAO
