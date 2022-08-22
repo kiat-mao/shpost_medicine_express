@@ -41,6 +41,7 @@ class SoaInterfaceSender < ActiveRecord::Base
 			orderIrace["procStatCode"] = '1' # 标记（1新增，2修改）
 			orderIrace["packedDateTime"] = package.packed_at.strftime("%Y-%m-%d %H:%M:%S")
 			orderIrace["whse"] = 'FR2'
+			orderIrace["udf01"] = 'ZGYZ'
 			orderIraces[i] = orderIrace
 		end
 		
