@@ -1,17 +1,18 @@
 class XydInterfaceSender < ActiveRecord::Base
 
 	def self.order_create_interface_sender_initialize(package)
-		body = self.order_create_request_body_generate package
+		xydConfig = Rails.application.config_for(:xyd)
+		body = self.order_create_request_body_generate(package, xydConfig)
 		args = Hash.new
 		callback_params = Hash.new
 		callback_params["package_id"] = package.id
 		args[:callback_params] = callback_params.to_json
+		args[:url] = xydConfig[:order_create_url]
 		InterfaceSender.interface_sender_initialize("xyd_order_create", body, args)
 	end
 
-	def self.order_create_request_body_generate(package)
+	def self.order_create_request_body_generate(package, xydConfig)
 		now_time = Time.new
-		xydConfig = Rails.application.config_for(:xyd)
 
 		params = {}
 		head = {}

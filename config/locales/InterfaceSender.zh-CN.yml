@@ -25,7 +25,7 @@ zh-CN:
       # for test
       url: 'http://222.66.108.206:4000/xyd_server/OrderCreateServlet'
       # for production
-      # url: 'http://180.166.203.242:3000/xyd_server/OrderCreateServlet'
+      # url: 'http://172.20.7.11:3000/xyd_server/OrderCreateServlet'
       interface_type: 'json'
       http_type: 'post'
       callback_class: 'XydInterfaceSender'
@@ -38,7 +38,7 @@ zh-CN:
       # for test
       url: 'http://222.66.127.248/carriertest/SendTMP_ORDER_TRACE_PS'
       # for production
-      # url: 'http://222.66.127.248/carriertest/SendTMP_ORDER_TRACE_PS'
+      # url: 'http://222.66.127.248/carrier/SendTMP_ORDER_TRACE_PS'
       interface_type: 'json'
       http_type: 'post'
       callback_class: 'SoaInterfaceSender'

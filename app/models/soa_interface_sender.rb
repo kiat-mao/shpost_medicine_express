@@ -3,17 +3,18 @@ class SoaInterfaceSender < ActiveRecord::Base
 
 
 	def self.order_trace_interface_sender_initialize(package)
-		body = self.order_trace_request_body_generate package
+		soaConfig = Rails.application.config_for(:soa)
+		body = self.order_trace_request_body_generate(package, soaConfig)
 		args = Hash.new
 		callback_params = Hash.new
 		callback_params["package_id"] = package.id
 		args[:callback_params] = callback_params.to_json
+		args[:url] = soaConfig[:order_trace_url]
 		InterfaceSender.interface_sender_initialize("soa_order_trace", body, args)
 	end
 
-	def self.order_trace_request_body_generate(package)
+	def self.order_trace_request_body_generate(package, soaConfig)
 		now_time = Time.new
-		soaConfig = Rails.application.config_for(:soa)
 
 		params = {}
 		commonHeader = {}
@@ -39,7 +40,11 @@ class SoaInterfaceSender < ActiveRecord::Base
 			orderIrace["batchNbr"] = '1'
 			orderIrace["qty"] = '1'
 			orderIrace["procStatCode"] = '1' # 标记（1新增，2修改）
-			orderIrace["packedDateTime"] = package.packed_at.strftime("%Y-%m-%d %H:%M:%S")
+			if package.packed_at.nil?
+				orderIrace["packedDateTime"] = nil
+			else
+				orderIrace["packedDateTime"] = package.packed_at.strftime("%Y-%m-%d %H:%M:%S")
+			end
 			orderIrace["whse"] = 'FR2'
 			orderIrace["udf01"] = 'ZGYZ'
 			orderIraces[i] = orderIrace
