@@ -17,7 +17,7 @@ class Order < ApplicationRecord
  	# end
 
 	def self.order_push(context_hash)
-		order = Order.new
+		order = Order.find_or_initialize_by order_no: context_hash['ORDER_NO']
 
 		context_hash.keys.each do |key|
 			if order.respond_to? "#{key.downcase}="
@@ -25,9 +25,12 @@ class Order < ApplicationRecord
 			end
 		end
 		
+		order.bags.destroy_all
 
 		packages_context = context_hash["PACKAGES"]
-		bags = packages_context.each{|x| order.bags <<  Bag.new(bag_no: x)}
+		bags = packages_context.each{|x| order.bags.new(bag_no: x)}
+
+		order.bag_list = order.bags.map{|x| x.bag_no}.join(',')
 
 		order.waiting!
 	end
