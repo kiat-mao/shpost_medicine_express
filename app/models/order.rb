@@ -27,11 +27,20 @@ class Order < ApplicationRecord
 		
 		order.bags.destroy_all
 
+		order.waiting!
+
 		packages_context = context_hash["PACKAGES"]
 		bags = packages_context.each{|x| order.bags.new(bag_no: x)}
 
 		order.bag_list = order.bags.map{|x| x.bag_no}.join(',')
 
 		order.waiting!
+	end
+
+	def self.tet
+		o = Order.first
+		o.bags.destroy_all
+		o.bags.new(bag_no: 'sdf2')
+		o.waiting!
 	end
 end

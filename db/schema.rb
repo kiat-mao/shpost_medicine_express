@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2022_09_21_031051) do
     t.integer "parent_id"
     t.string "parent_type"
     t.string "business_code"
-    t.text "request_url"
+    t.string "request_url", limit: 2000
     t.text "error_msg"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

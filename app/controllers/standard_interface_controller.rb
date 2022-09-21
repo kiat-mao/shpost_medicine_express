@@ -44,10 +44,16 @@ class StandardInterfaceController < ApplicationController
 
     return error_builder('0005', "ORDER_NO is null") if @context_hash['ORDER_NO'].blank?
 
-    return error_builder('0005', 'ORDER_NO had packaged') if Order.find_by(order_no: @context_hash['ORDER_NO']).try('packaged?')
+    order = Order.find_by(order_no: @context_hash['ORDER_NO'])
+
+    return error_builder('0005', 'ORDER_NO had packaged') if order.try('packaged?')
 
     return error_builder('0005', "PACKAGES is null") if @context_hash['PACKAGES'].blank?
-    @context_hash['PACKAGES'].each{|x| return error_builder('0005', "PACKAGES_NO #{x} exists") if Bag.exists? bag_no: x}
+
+
+    @context_hash['PACKAGES'].each{|x| 
+      return error_builder('0005', "PACKAGES_NO #{x} exists")  if ! Bag.where.not(order: order).find_by(bag_no: x).blank?
+    }
 
     return error_builder('0005', "SITE_NO is null") if @context_hash['SITE_NO'].blank?
 
