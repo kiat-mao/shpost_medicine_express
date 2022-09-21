@@ -119,8 +119,8 @@ class XydInterfaceSender < ActiveRecord::Base
 					Package.find(package_id).update(express_no: express_no, route_code: route_code)
 				end
 			end
-			puts '运单号:' + express_no
-			puts '分拣码:' + route_code
+			puts '运单号:' + express_no.to_s
+			puts '分拣码:' + route_code.to_s
 		end
 	end
 end
