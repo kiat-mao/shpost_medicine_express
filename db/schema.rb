@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_08_032316) do
+ActiveRecord::Schema.define(version: 2022_09_21_031051) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2022_08_08_032316) do
     t.integer "parent_id"
     t.string "parent_type"
     t.string "business_code"
-    t.string "request_url"
+    t.text "request_url"
     t.text "error_msg"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
