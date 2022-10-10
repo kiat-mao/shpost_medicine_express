@@ -74,6 +74,7 @@ class SoaInterfaceSender < ActiveRecord::Base
 			puts 'result:nil'
 			puts 'code:nil'
 			puts 'message:nil'
+			return false
 		else
 			puts 'response:' + response
 			resJSON = JSON.parse response
@@ -88,11 +89,14 @@ class SoaInterfaceSender < ActiveRecord::Base
 			if (!package_id.nil? && package_id.is_a?(Numeric))
 				if (code=='1')
 					Package.find(package_id).update(status: :done)
+					return true
 				else
 					Package.find(package_id).update(status: :failed)
+					return false
 				end
 			else
 				puts 'package_id:nil or not Numeric'
+				return false
 			end
 		end
 	end

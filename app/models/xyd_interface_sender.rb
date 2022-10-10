@@ -106,6 +106,7 @@ class XydInterfaceSender < ActiveRecord::Base
 			puts 'response:'
 			puts '运单号:'
 			puts '分拣码:'
+			return false
 		else
 			puts 'response:' + response
 			resJSON = JSON.parse response
@@ -117,10 +118,12 @@ class XydInterfaceSender < ActiveRecord::Base
 				route_code = resBody["routeCode"]
 				if (!package_id.nil? && package_id.is_a?(Numeric))
 					Package.find(package_id).update(express_no: express_no, route_code: route_code)
+					puts '运单号:' + express_no.to_s
+					puts '分拣码:' + route_code.to_s
+					return true
 				end
 			end
-			puts '运单号:' + express_no.to_s
-			puts '分拣码:' + route_code.to_s
+			return false
 		end
 	end
 end
