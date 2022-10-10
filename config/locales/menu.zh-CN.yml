@@ -41,7 +41,7 @@ zh-CN:
       submenu:
         package:
           name: "装箱管理"
-          link: "/packages"
+          link: "/packages?grid[f][packed_at][fr]="
           need_count: false
           needrole:
             can: :read
@@ -59,7 +59,7 @@ zh-CN:
           needrole:
             can: :scan
             role: :Package
-    
+  
     # up_downloads:
     #   name: "模板管理"
     #   needrole:

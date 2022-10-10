@@ -36,4 +36,5 @@ class Package < ApplicationRecord
  		self.orders.update_all status: "waiting", package_id: nil
 		self.update status: "cancelled"
 	end
+
 end
