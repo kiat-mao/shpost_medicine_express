@@ -53,8 +53,8 @@
 	    LODOP.ADD_PRINT_TEXT(h+10,"100mm","50mm","10mm","订单袋数:<%= o.bags.count %>");
 	    LODOP.ADD_PRINT_TEXT(h+10,"150mm","50mm","10mm","开方日期:<%= o.prescription_date.strftime('%Y-%m-%d') %>");
 	    LODOP.ADD_PRINT_TEXT(h+35,"8mm","200mm","10mm","顾客地址:<%= o.customer_addr %>");
-	    LODOP.ADD_PRINT_TEXT(h+60,"8mm","50mm","10mm","订单号:<%= o.order_no %>");
-	    LODOP.ADD_PRINT_TEXT(h+60,"60mm","100mm","10mm","处方单号:<%= o.prescription_no %>");
+	    LODOP.ADD_PRINT_TEXT(h+60,"8mm","80mm","10mm","订单号:<%= o.order_no %>");
+	    LODOP.ADD_PRINT_TEXT(h+60,"80mm","100mm","10mm","处方单号:<%= o.prescription_no %>");
 	    LODOP.ADD_PRINT_LINE(h+80,"8mm",h+80,"200mm",0,2);
 	    LODOP.SET_PRINT_STYLE("FontSize",10);
 	    LODOP.SET_PRINT_STYLE("Bold",0);  

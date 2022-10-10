@@ -9,6 +9,7 @@ class PackagesController < ApplicationController
   	if params[:grid].blank?
 	  	@packages = @packages.where("packed_at>=?", Date.today)
 	  end
+	  
     @packages_grid = initialize_grid(@packages,
          :order => 'packed_at',
          :order_direction => 'asc', 
@@ -30,7 +31,7 @@ class PackagesController < ApplicationController
 	  	else
 	      flash[:alert] = "请勾选需要打印的箱子"
 	      respond_to do |format|
-	        format.html { redirect_to packages_url }
+	        format.html { redirect_to request.referer }
 	        format.json { head :no_content }
 	      end
 	    end
@@ -52,7 +53,7 @@ class PackagesController < ApplicationController
 	  	else
 	      flash[:alert] = "请勾选需要打印的箱子"
 	      respond_to do |format|
-	        format.html { redirect_to packages_url }
+	        format.html { redirect_to request.referer }
 	        format.json { head :no_content }
 	      end
 	    end
@@ -70,16 +71,16 @@ class PackagesController < ApplicationController
 	      packages.each do |p|
 	      	if (["waiting", "failed"].include?p.status)
 	      		SoaInterfaceSender.order_trace_interface_sender_initialize(p)
-	      		# p.update status: "done"
-	    		end
+	      	end
 	      end
 	    end
-	    flash[:notice] = "已回传上药"
+	    flash[:notice] = "已回传上药"	    
 	  else
 	  	flash[:alert] = "请勾选需要回传上药的箱子"
 	  end   
-	  respond_to do |format|
-      format.html { redirect_to packages_url }
+	  
+  	respond_to do |format|
+      format.html { redirect_to request.referer }
       format.json { head :no_content }
     end
 	end

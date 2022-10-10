@@ -11,6 +11,7 @@ class SoaInterfaceSender < ActiveRecord::Base
 		args[:callback_params] = callback_params.to_json
 		args[:url] = soaConfig[:order_trace_url]
 		InterfaceSender.interface_sender_initialize("soa_order_trace", body, args)
+		package.update status: "to_send"
 	end
 
 	def self.order_trace_request_body_generate(package, soaConfig)
