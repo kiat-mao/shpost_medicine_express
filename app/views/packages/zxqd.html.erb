@@ -84,11 +84,23 @@
 			LODOP.PRINT();
 		<% end %>
 		};
+
+	  if (needCLodop()) {
+		//如果是只运行C-Lodop,只需下边的代码，
+		//C-Lodop----begin----
+		window.On_CLodop_Opened=function(){
+			zxqd_preview();	//OpenPreview()是调用打印方法						
+			window.On_CLodop_Opened=null;
+		};	
+		//C-Lodop----end----				
+	  } else 
+	  window.onload = function(){zxqd_preview();};	//使用lodop控件时的调用
+							
 		
 		</script>
 	</head>
   
-  <body onLoad="zxqd_preview();window.opener=null;window.open('','_top');window.top.close(); ">
+  <!-- <body onLoad="zxqd_preview();window.opener=null;window.open('','_top');window.top.close(); "> -->
 
   </body>
 </html>
