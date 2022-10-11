@@ -168,16 +168,11 @@
       window.On_CLodop_Opened=function(){
         tkzd_preview(); //OpenPreview()是调用打印方法                      
         window.On_CLodop_Opened=null;
-        window.open('','_top'); 
-        window.top.close();
       };  
       //C-Lodop----end----                
     } else {
       window.onload = function(){
         tkzd_preview(); //使用lodop控件时的调用
-        window.opener=null;
-        window.open('','_top'); 
-        window.top.close();
       };  
     }                        
 
