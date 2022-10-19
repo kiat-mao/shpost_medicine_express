@@ -157,7 +157,7 @@
     //设置某个打印机
     LODOP.SET_PRINTER_INDEXA("<%= current_user.hot_printer.blank? ? I18n.t('printer.hot_printer') : current_user.hot_printer %>");
     // LODOP.PRINT_DESIGN();
-     // LODOP.PREVIEW();
+    // LODOP.PREVIEW();
     LODOP.PRINT();
     <% end %>
     };
@@ -173,6 +173,8 @@
     } else {
       window.onload = function(){
         tkzd_preview(); //使用lodop控件时的调用
+        window.open('','_top');
+        window.top.close();
       };  
     }                        
 

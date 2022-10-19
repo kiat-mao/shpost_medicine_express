@@ -50,7 +50,7 @@ enterpress2 = ->
 
 find_bag_result = -> 
 				$.ajax({
-					type : 'GET',
+					type : 'POST',
 					url : '../packages/find_bag_result/',
 					data: { bag_no: $('#bag_no').val(), site_no: $('#site_no').val(), order_bags: $('#order_bags').val()},
 					dataType : 'script'
@@ -58,7 +58,7 @@ find_bag_result = ->
 
 do_packaged = -> 
 				$.ajax({
-					type : 'GET',
+					type : 'POST',
 					url : '../packages/do_packaged/',
 					data: { order_bags: $('#order_bags').val(), package_id: $('#package_id').val()},
 					dataType : 'script'
