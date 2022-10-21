@@ -96,11 +96,10 @@
 	  } else 
 	  window.onload = function(){
 	  	zxqd_preview(); //使用lodop控件时的调用
-	  	window.open('','_top');
-      window.top.close();
+	  	// window.open('','_top');
 	  };	
 							
-		
+		setTimeout(function(){window.top.close()},3000);	
 		</script>
 	</head>
   

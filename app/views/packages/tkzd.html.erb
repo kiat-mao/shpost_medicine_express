@@ -174,9 +174,11 @@
       window.onload = function(){
         tkzd_preview(); //使用lodop控件时的调用
         window.open('','_top');
-        window.top.close();
+        // window.top.close();
       };  
-    }                        
+    }
+
+    setTimeout(function(){window.top.close()},3000);                
 
   </script>
 
