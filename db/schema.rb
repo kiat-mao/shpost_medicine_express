@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_21_031051) do
+ActiveRecord::Schema.define(version: 2022_10_26_024638) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -19,6 +19,21 @@ ActiveRecord::Schema.define(version: 2022_09_21_031051) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["bag_no"], name: "index_bags_on_bag_no"
     t.index ["order_id"], name: "index_bags_on_order_id"
+  end
+
+  create_table "commodities", force: :cascade do |t|
+    t.string "commodity_no"
+    t.string "commodity_name"
+    t.string "spec"
+    t.string "batch"
+    t.integer "num"
+    t.string "manufacture"
+    t.date "produced_at"
+    t.date "expiration_date"
+    t.integer "order_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_id"], name: "index_commodities_on_order_id"
   end
 
   create_table "interface_logs", force: :cascade do |t|
