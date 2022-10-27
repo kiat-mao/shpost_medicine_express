@@ -27,7 +27,7 @@ class Order < ApplicationRecord
 		end
 		
 		order.bags.destroy_all
-
+		order.commodities.destroy_all
 		order.waiting!
 
 		packages_context = context_hash["PACKAGES"]
@@ -35,13 +35,17 @@ class Order < ApplicationRecord
 
 		order.bag_list = order.bags.map{|x| x.bag_no}.join(',')
 
-		order.waiting!
-	end
 
-	def self.tet
-		o = Order.first
-		o.bags.destroy_all
-		o.bags.new(bag_no: 'sdf2')
-		o.waiting!
+		commodities_context = context_hash["COMMODITIES"]
+		commodities_context.each do |commodity|
+			c = order.commodities.new
+			commodity.keys.each do |key|
+				if c.respond_to? "#{key.downcase}="
+					c.send "#{key.downcase}=", commodity[key]
+				end
+			end
+		end
+
+		order.waiting!
 	end
 end
