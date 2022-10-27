@@ -99,6 +99,7 @@ class PackagesController < ApplicationController
 
   def scan
   	@package_no = Package.get_package_no_by_user(current_user)
+  	@bag_amount = 0
   end
 
   def find_bag_result
@@ -106,7 +107,8 @@ class PackagesController < ApplicationController
   	@site_no = params[:site_no]
   	@order_bags = params[:order_bags]
   	@err_msg = ""
-  	
+  	@bag_amount = params[:bag_amount].to_i
+ 	
   	bag = Bag.find_by(bag_no: @bag_no)
 		if bag.blank?
 			@err_msg = "包裹无信息"
@@ -139,9 +141,11 @@ class PackagesController < ApplicationController
 	  			else
 	  				@order_bags = bag.order.order_no + ":" + @bag_no
 	  			end
+	  			@bag_amount += 1
 	  		end
   		end
   	end
+  	# binding.pry
 	end
 
 	def do_packaged

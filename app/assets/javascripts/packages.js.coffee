@@ -9,7 +9,8 @@ $(document).on "turbolinks:load", ->
 ready = ->
   $("#bag_no").keypress(enterpress)
   $('#reset').click(enterpress2)
-  
+  if document.getElementById("bag_no")
+  	setInterval("$('#bag_no').focus();",3000);
   
 
 enterpress = (e) ->
@@ -19,6 +20,8 @@ enterpress = (e) ->
 			if $('#is_packaged').val() == "1"
 				clear()
 			if ($('#order_bags').val() != "") && ($('#order_bags').val().search($('#bag_no').val())!=-1)
+				audio = document.getElementById("failed_alert");
+				audio.play();
 				alert("不可重复扫描");
 				$('#bag_no').val("");
 				$('#bag_no').focus();
@@ -52,7 +55,7 @@ find_bag_result = ->
 				$.ajax({
 					type : 'POST',
 					url : '../packages/find_bag_result/',
-					data: { bag_no: $('#bag_no').val(), site_no: $('#site_no').val(), order_bags: $('#order_bags').val()},
+					data: { bag_no: $('#bag_no').val(), site_no: $('#site_no').val(), order_bags: $('#order_bags').val(), bag_amount: $('#bag_amount').text()},
 					dataType : 'script'
 				});
 
@@ -75,6 +78,7 @@ clear = ->
 	$('#route_code').text("");
 	$('#tkzd').attr('disabled', true);
 	$('#zxqd').attr('disabled', true);
+	$('#bag_amount').text("0");
 
 showMask = ->
 	document.getElementById('mid').style.display="block";

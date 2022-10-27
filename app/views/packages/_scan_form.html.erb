@@ -4,7 +4,7 @@
 	<tr>
     <td>站点编号:<%= @site_no %></td>
   </tr>
-  <% @order_bags.split("|").each do |o| %>
+  <% @order_bags.split("|").reverse.each do |o| %>
   <% order = Order.find_by(order_no: o.split(":")[0]) %>
   
 	  <tr>

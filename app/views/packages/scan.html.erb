@@ -7,17 +7,22 @@
 <%= hidden_field_tag('order_bags', @order_bags) %>
 <%= hidden_field_tag('is_packaged', @is_packaged) %>
 <%= hidden_field_tag('package_id', @package_id) %>
+<audio src="/success.mp3" id="success_alert"></audio>
+<audio src="/failed.mp3" id="failed_alert"></audio>
 <div>
 	<table>
 		<tr>
 			<td><h3><%= Date.today.strftime('%Y年%m月%d日').to_s+" 第" %></h3></td>
 			<td><font color="red"><h1><%= label_tag 'package_no', @package_no, class: 'control-group', :id => "package_no" %></h1></font></td>
 			<td><h3>箱</h3></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td><h3>已扫袋数:</h3></td>
+			<td><font color="red"><h1><%= label_tag 'bag_amount', @bag_amount, class: 'control-group', :id => "bag_amount" %></h1></font></td>
 		</tr>
 	</table>
 	<table>
 		<tr class= 'nowrap'>
- 			<td><%= text_field_tag 'bag_no', nil, class: "controls showmask", size: "50" %></td>
+ 			<td><%= text_field_tag 'bag_no', nil, class: "controls showmask", size: "50", :id => "bag_no" %></td>
  			<td><%= button_tag "重置",:class => 'btn btn-primary', :id => "reset", :type => "button"%></td>
  			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
 			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>

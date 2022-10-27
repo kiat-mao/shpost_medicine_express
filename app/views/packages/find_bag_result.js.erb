@@ -1,6 +1,11 @@
 $('#bag_no').blur();
 <% if !@err_msg.blank? %>
-alert("<%= @err_msg %>");
+	var audio = document.getElementById("failed_alert");
+	audio.play();
+	alert("<%= @err_msg %>");
+<% else %>
+ 	var audio = document.getElementById("success_alert");
+	audio.play();
 <% end %>
 
 $('#bag_no').val("");
@@ -8,4 +13,5 @@ $('#out_results').html(" <%= escape_javascript(render(:partial => 'packages/scan
 $('#order_bags').val("<%= @order_bags %>");
 $('#site_no').val("<%= @site_no %>");
 $('#package_no').text("<%= Package.get_package_no_by_user(current_user)%>");
+$('#bag_amount').text("<%= @bag_amount %>");
 $('#bag_no').focus();

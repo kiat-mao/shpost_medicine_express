@@ -21,7 +21,7 @@
 	    LODOP.SET_LICENSES("上海市邮政公司信息技术局","452677782688188907989821905623","","");
 	    <% @result.sort_by{|x| x.package_no.upcase}.each do |package| %>
 	    LODOP.SET_PRINT_PAGESIZE(1,"210mm","297mm","");
-	    LODOP.PRINT_INIT("打印装箱清单");
+	    LODOP.PRINT_INITA("5mm","2mm","210mm","297mm","打印装箱清单");
 	    LODOP.ADD_PRINT_BARCODE("10mm","20mm","50mm","10mm","128A","<%= package.express_no %>");
 	    // LODOP.SET_PRINT_STYLE("FontSize",10);
 	    // LODOP.SET_PRINT_STYLE("Bold",1);
@@ -40,42 +40,57 @@
 	    LODOP.ADD_PRINT_TEXT("32mm","107mm","60mm","10mm","订单数:<%= package.orders.count %>");
 	    LODOP.ADD_PRINT_TEXT("32mm","157mm","60mm","10mm","合计袋数:<%= package.get_all_bags %>");
 	    LODOP.ADD_PRINT_TEXT("40mm","8mm","200mm","10mm","收货地址:<%= package.orders.first.receiver_addr %>");
-	    <%  orders = package.orders.to_a
-	    	until orders.blank? do %>
 	    h = 175;
-	    <% order5 = orders.pop(5) %>
-	    <% order5.each do |o| %>
-	  	LODOP.ADD_PRINT_LINE(h,"8mm",h,"200mm",0,2);
-	  	LODOP.SET_PRINT_STYLE("FontSize",10);
-	    LODOP.SET_PRINT_STYLE("Bold",1);  
-	    LODOP.ADD_PRINT_TEXT(h+10,"8mm","50mm","10mm","顾客姓名:<%= o.customer_name %>");
-	    LODOP.ADD_PRINT_TEXT(h+10,"50mm","50mm","10mm","联系电话:<%= o.customer_phone %>");
-	    LODOP.ADD_PRINT_TEXT(h+10,"100mm","50mm","10mm","订单袋数:<%= o.bags.count %>");
-	    LODOP.ADD_PRINT_TEXT(h+10,"150mm","50mm","10mm","开方日期:<%= o.prescription_date.strftime('%Y-%m-%d') %>");
-	    LODOP.ADD_PRINT_TEXT(h+35,"8mm","200mm","10mm","顾客地址:<%= o.customer_addr %>");
-	    LODOP.ADD_PRINT_TEXT(h+60,"8mm","80mm","10mm","订单号:<%= o.order_no %>");
-	    LODOP.ADD_PRINT_TEXT(h+60,"80mm","100mm","10mm","处方单号:<%= o.prescription_no %>");
-	    LODOP.ADD_PRINT_LINE(h+80,"8mm",h+80,"200mm",0,2);
-	    LODOP.SET_PRINT_STYLE("FontSize",10);
-	    LODOP.SET_PRINT_STYLE("Bold",0);  
-	    LODOP.ADD_PRINT_TEXT(h+85,"8mm","200mm","10mm","商品编码          药品名称                  规格                      批号              数量");
-	    LODOP.ADD_PRINT_LINE(h+100,"8mm",h+100,"200mm",0,1);
-	    LODOP.ADD_PRINT_TEXT(h+135,"8mm","200mm","10mm","生产厂家:");
-	    LODOP.ADD_PRINT_TEXT(h+160,"8mm","200mm","10mm","生产日期:                                    有效期:");
-	    h += 175;
-
-	  	<% end %>
-	  	<% if !orders.blank? %>
-	  	LODOP.NewPage();
+	    <%  package.orders.each do |o| %>
+		    LODOP.ADD_PRINT_LINE(h,"8mm",h,"200mm",0,2);
+		  	LODOP.SET_PRINT_STYLE("FontSize",10);
+		    LODOP.SET_PRINT_STYLE("Bold",1);  
+		    h += 10;
+		    LODOP.ADD_PRINT_TEXT(h,"8mm","50mm","10mm","顾客姓名:<%= o.customer_name %>");
+		    LODOP.ADD_PRINT_TEXT(h,"50mm","50mm","10mm","联系电话:<%= o.customer_phone %>");
+		    LODOP.ADD_PRINT_TEXT(h,"100mm","50mm","10mm","订单袋数:<%= o.bags.count %>");
+		    LODOP.ADD_PRINT_TEXT(h,"150mm","50mm","10mm","开方日期:<%= o.prescription_date.strftime('%Y-%m-%d') %>");
+		    h += 25;
+		    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","顾客地址:<%= o.customer_addr %>");
+		    h += 25;
+		    LODOP.ADD_PRINT_TEXT(h,"8mm","80mm","10mm","订单号:<%= o.order_no %>");
+		    LODOP.ADD_PRINT_TEXT(h,"80mm","100mm","10mm","处方单号:<%= o.prescription_no %>");
+		    h += 20;
+		    LODOP.ADD_PRINT_LINE(h,"8mm",h,"200mm",0,2);
+		    LODOP.SET_PRINT_STYLE("FontSize",10);
+		    LODOP.SET_PRINT_STYLE("Bold",0);  
+		    h += 5;
+		    LODOP.ADD_PRINT_TEXT(h,"8mm","40mm","10mm","商品编码");
+		    LODOP.ADD_PRINT_TEXT(h,"43mm","60mm","10mm","药品名称");
+		    LODOP.ADD_PRINT_TEXT(h,"103mm","60mm","10mm","规格");
+		    LODOP.ADD_PRINT_TEXT(h,"163mm","20mm","10mm","批号");
+		    LODOP.ADD_PRINT_TEXT(h,"183mm","10mm","10mm","数量");
+		    h += 15;
+		    <% o.commodities.each do |c| %>
+			    LODOP.ADD_PRINT_LINE(h,"8mm",h,"200mm",0,1);
+			    h += 5;
+			    LODOP.ADD_PRINT_TEXT(h,"8mm","40mm","10mm","<%= c.commodity_no %>");
+			    LODOP.ADD_PRINT_TEXT(h,"43mm","60mm","10mm","<%= c.commodity_name %>");
+			    LODOP.ADD_PRINT_TEXT(h,"103mm","60mm","10mm","<%= c.spec %>");
+			    LODOP.ADD_PRINT_TEXT(h,"163mm","20mm","10mm","<%= c.batch %>");
+			    LODOP.ADD_PRINT_TEXT(h,"183mm","10mm","10mm","<%= c.num %>");
+			    h += 35;
+			    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","生产厂家:<%= c.manufacture %>");
+			    h += 20;
+			    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","生产日期:<%= c.produced_at.strftime('%Y-%m-%d').to_s %>                                       有效期:<%= c.expiration_date.strftime('%Y-%m-%d').to_s %>");
+			    h += 15;	    
+		  	<% end %>
+	  	<% #if !orders.blank? %>
+	  	// LODOP.NewPage();
 	  	// LODOP.NEWPAGEA();
-	  	<% end %>
+	  	<% #end %>
 	  	<% end %>
 	  	LODOP.SET_PRINT_STYLE("ItemType",1);
-	    LODOP.ADD_PRINT_TEXT("98%","160mm","80mm","30mm","打包日期：<%= Time.now.strftime('%Y-%m-%d') %>");
+	    LODOP.ADD_PRINT_TEXT("97.5%","160mm","80mm","30mm","打包日期：<%= Time.now.strftime('%Y-%m-%d') %>");
 			LODOP.SET_PRINT_STYLE("ItemType",2);
 	    LODOP.SET_PRINT_STYLE("Horient",2);
 	    LODOP.SET_PRINT_STYLE("Vorient",1);
-	    LODOP.ADD_PRINT_TEXT("98%","80%",100,39,"第#页/共&页");
+	    LODOP.ADD_PRINT_TEXT("97.5%","80%",100,39,"第#页/共&页");
 
 	  	//设置某个打印机
 	  	LODOP.SET_PRINTER_INDEXA("<%= current_user.normal_printer.blank? ? I18n.t('printer.normal_printer') : current_user.normal_printer %>");
