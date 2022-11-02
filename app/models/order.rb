@@ -21,6 +21,8 @@ class Order < ApplicationRecord
 		order = Order.find_or_initialize_by order_no: context_hash['ORDER_NO']
 
 		context_hash.keys.each do |key|
+			next if key.eql? "COMMODITIES"
+
 			if order.respond_to? "#{key.downcase}="
 				order.send "#{key.downcase}=", context_hash[key]
 			end
