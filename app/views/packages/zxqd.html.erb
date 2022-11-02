@@ -86,11 +86,11 @@
 	  	<% #end %>
 	  	<% end %>
 	  	LODOP.SET_PRINT_STYLE("ItemType",1);
-	    LODOP.ADD_PRINT_TEXT("97.5%","160mm","80mm","30mm","打包日期：<%= Time.now.strftime('%Y-%m-%d') %>");
+	    LODOP.ADD_PRINT_TEXT("97.4%","160mm","80mm","30mm","打包日期：<%= Time.now.strftime('%Y-%m-%d') %>");
 			LODOP.SET_PRINT_STYLE("ItemType",2);
 	    LODOP.SET_PRINT_STYLE("Horient",2);
 	    LODOP.SET_PRINT_STYLE("Vorient",1);
-	    LODOP.ADD_PRINT_TEXT("97.5%","80%",100,39,"第#页/共&页");
+	    LODOP.ADD_PRINT_TEXT("97.4%","80%",100,39,"第#页/共&页");
 
 	  	//设置某个打印机
 	  	LODOP.SET_PRINTER_INDEXA("<%= current_user.normal_printer.blank? ? I18n.t('printer.normal_printer') : current_user.normal_printer %>");
