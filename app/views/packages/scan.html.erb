@@ -7,8 +7,8 @@
 <%= hidden_field_tag('order_bags', @order_bags) %>
 <%= hidden_field_tag('is_packaged', @is_packaged) %>
 <%= hidden_field_tag('package_id', @package_id) %>
-<audio src="/success.mp3" id="success_alert"></audio>
-<audio src="/failed.mp3" id="failed_alert"></audio>
+<audio src="<%=asset_path("success.mp3")%>" id="success_alert"></audio>
+<audio src="<%=asset_path("failed.mp3")%>" id="failed_alert"></audio>
 <div>
 	<table>
 		<tr>
