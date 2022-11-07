@@ -31,9 +31,11 @@ zh-CN:
       callback_class: 'XydInterfaceSender'
       callback_method: 'order_create_callback_method'
       header: "{\"Content-Type\":\"application/json\"}"
+      parent_class: 'Package'
       # object_class: 'Keyclientorder'
       max_times: 1 #default_times: 10
       interval: 1000 #default_interval: 600
+    # 上药
     soa_order_trace:
       # for test
       url: 'http://222.66.127.248/carriertest/SendTMP_ORDER_TRACE_PS'
@@ -44,6 +46,22 @@ zh-CN:
       callback_class: 'SoaInterfaceSender'
       callback_method: 'order_trace_callback_method'
       header: "{\"Content-Type\":\"application/json\"}"
+      parent_class: 'Package'
+      # object_class: 'Keyclientorder'
+      max_times: 5 #default_times: 10
+      interval: 1000 #default_interval: 600
+    # 国药
+    tms_order_trace:
+      # for test
+      url: 'http://'
+      # for production
+      # url: 'http://'
+      interface_type: 'json'
+      http_type: 'post'
+      callback_class: 'TmsInterfaceSender'
+      callback_method: 'order_trace_callback_method'
+      # header: "{\"Content-Type\":\"application/json\"}"
+      parent_class: 'Order'
       # object_class: 'Keyclientorder'
       max_times: 5 #default_times: 10
       interval: 1000 #default_interval: 600

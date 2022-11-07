@@ -1,0 +1,26 @@
+default: &default
+  timeout: 5000
+
+development:
+  <<: *default
+  order_trace_url: 'http://tmstest.savecloud.cn:30004/gytms_edi/*.expressCollect'
+  method: 'collect'
+  appKey: '3bdfdedb1c370749'
+  appSercret: 'b27df4bbce458abaa710ee553b7a9a28c57cc393'
+  from: 'EMS'
+
+test:
+  <<: *default
+  order_trace_url: 'http://'
+  method: 'collect'
+  appKey: '3bdfdedb1c370749'
+  appSercret: 'b27df4bbce458abaa710ee553b7a9a28c57cc393'
+  from: 'EMS'
+
+production:
+  <<: *default
+  order_trace_url: 'http://'
+  method: 'collect'
+  appKey: 'xxxx'
+  appSercret: 'xxxx'
+  from: 'EMS'

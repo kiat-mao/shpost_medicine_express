@@ -8,6 +8,7 @@ class XydInterfaceSender < ActiveRecord::Base
 		callback_params["package_id"] = package.id
 		args[:callback_params] = callback_params.to_json
 		args[:url] = xydConfig[:order_create_url]
+		args[:parent_id] = package.id
 		InterfaceSender.interface_sender_initialize("xyd_order_create", body, args)
 	end
 

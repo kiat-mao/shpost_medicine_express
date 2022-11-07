@@ -1,7 +1,5 @@
 class SoaInterfaceSender < ActiveRecord::Base
 
-
-
 	def self.order_trace_interface_sender_initialize(package)
 		soaConfig = Rails.application.config_for(:soa)
 		body = self.order_trace_request_body_generate(package, soaConfig)
@@ -10,6 +8,7 @@ class SoaInterfaceSender < ActiveRecord::Base
 		callback_params["package_id"] = package.id
 		args[:callback_params] = callback_params.to_json
 		args[:url] = soaConfig[:order_trace_url]
+		args[:parent_id] = package.id
 		InterfaceSender.interface_sender_initialize("soa_order_trace", body, args)
 		package.update status: "to_send"
 	end
