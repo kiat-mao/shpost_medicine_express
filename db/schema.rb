@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 2022_11_03_065535) do
-=======
-ActiveRecord::Schema.define(version: 2022_11_07_072817) do
->>>>>>> 2cfacb3a0ec4d422d042ba1935ddfc5b5da9a3c9
+ActiveRecord::Schema.define(version: 2022_11_07_080532) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -125,6 +121,7 @@ ActiveRecord::Schema.define(version: 2022_11_07_072817) do
     t.string "social_no"
     t.string "print_desc"
     t.string "unit_id"
+    t.string "interface_status"
     t.index ["order_no"], name: "index_orders_on_order_no"
     t.index ["package_id"], name: "index_orders_on_package_id"
   end
@@ -140,10 +137,7 @@ ActiveRecord::Schema.define(version: 2022_11_07_072817) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "order_list", limit: 2000
     t.string "bag_list", limit: 2000
-<<<<<<< HEAD
-=======
     t.string "unit_id"
->>>>>>> 2cfacb3a0ec4d422d042ba1935ddfc5b5da9a3c9
     t.index ["express_no"], name: "index_packages_on_express_no"
     t.index ["package_no"], name: "index_packages_on_package_no"
     t.index ["user_id"], name: "index_packages_on_user_id"

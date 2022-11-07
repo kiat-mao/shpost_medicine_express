@@ -1,5 +1,12 @@
 class TmsInterfaceSender < ActiveRecord::Base
 
+	def self.order_trace_schedule
+		orders = Order.where(interface_status: :need_send)
+		orders.each_with_index do |order, i|
+			self.order_trace_order_interface_sender_initialize order
+		end
+	end
+
 	def self.order_trace_order_interface_sender_initialize(order)
 		tmsConfig = Rails.application.config_for(:tms)
 		body = self.order_trace_request_body_generate(order, tmsConfig)
@@ -12,17 +19,11 @@ class TmsInterfaceSender < ActiveRecord::Base
 		args[:url] = tmsConfig[:order_trace_url]
 		args[:header] = header
 		args[:parent_id] = order.id
+		args[:unit_id] = order.unit_id
 		InterfaceSender.interface_sender_initialize("tms_order_trace", body, args)
 		# 更新Order状态
-		order.update status: "to_send"
+		order.update interface_status: :to_send
 	end
-
-	# def self.order_trace_package_interface_sender_initialize(package)
-	# 	package.orders.each_with_index do |order, i|
-	# 		self.order_trace_order_interface_sender_initialize order
-	# 	end
-	# 	package.update status: "to_send"
-	# end
 
 	def self.order_trace_request_head_generate(body, tmsConfig)
 		args = Hash.new
@@ -76,10 +77,10 @@ class TmsInterfaceSender < ActiveRecord::Base
 			puts 'code:' + code
 			if (!order_id.nil? && order_id.is_a?(Numeric))
 				if (code=='0')
-					Order.find(order_id).update(status: :done)
+					Order.find(order_id).update(interface_status: :done)
 					return true
 				else
-					Order.find(order_id).update(status: :failed)
+					Order.find(order_id).update(interface_status: :failed)
 					return false
 				end
 			else
