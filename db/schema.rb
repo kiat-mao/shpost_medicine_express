@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2022_11_03_065535) do
+=======
+ActiveRecord::Schema.define(version: 2022_11_07_072817) do
+>>>>>>> 2cfacb3a0ec4d422d042ba1935ddfc5b5da9a3c9
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -113,6 +117,14 @@ ActiveRecord::Schema.define(version: 2022_11_03_065535) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "bag_list"
+    t.string "ec_no"
+    t.string "order_mode"
+    t.string "hospital_no"
+    t.string "hospital_name"
+    t.boolean "feight"
+    t.string "social_no"
+    t.string "print_desc"
+    t.string "unit_id"
     t.index ["order_no"], name: "index_orders_on_order_no"
     t.index ["package_id"], name: "index_orders_on_package_id"
   end
@@ -128,6 +140,10 @@ ActiveRecord::Schema.define(version: 2022_11_03_065535) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "order_list", limit: 2000
     t.string "bag_list", limit: 2000
+<<<<<<< HEAD
+=======
+    t.string "unit_id"
+>>>>>>> 2cfacb3a0ec4d422d042ba1935ddfc5b5da9a3c9
     t.index ["express_no"], name: "index_packages_on_express_no"
     t.index ["package_no"], name: "index_packages_on_package_no"
     t.index ["user_id"], name: "index_packages_on_user_id"

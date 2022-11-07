@@ -22,7 +22,7 @@ class StandardInterfaceController < ApplicationController
       end
     ensure
       # binding.pry
-      InterfaceLog.log(params[:controller], params[:action], @status ? InterfaceLog::statuses[:success] : InterfaceLog::statuses[:failed], {request_url: request.url, params: params.to_json, response_body: @response, request_ip: request.ip, business_code: @business_no, parent: @object, error_msg: @error_msg, unit: Unit.first}) if @status.eql? false#if Rails.env.development?
+      InterfaceLog.log(params[:controller], params[:action], @status ? InterfaceLog::statuses[:success] : InterfaceLog::statuses[:failed], {request_url: request.url, params: params.to_json, response_body: @response, request_ip: request.ip, business_code: @business_no, parent: @object, error_msg: @error_msg, unit: @unit}) if @status.eql? false#if Rails.env.development?
     end
   end
 
@@ -31,6 +31,7 @@ class StandardInterfaceController < ApplicationController
     return error_builder('0004') if @business_no.blank?
 
     @unit_no = params[:unit]
+    @unit = UNit.find_by_no(@unit_no)
     return error_builder('0003') if @unit_no.blank?
 
    
@@ -81,7 +82,7 @@ class StandardInterfaceController < ApplicationController
 
     return error_builder('0005', "RECEIVER_PHONE is null") if @context_hash['RECEIVER_PHONE'].blank?
 
-
+    # return error_builder('0005', "SITE_NO is null") if @context_hash['SITE_NO'].blank?
 
     return verify_sign
   end
