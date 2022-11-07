@@ -2,6 +2,7 @@ class Order < ApplicationRecord
 	has_many :bags, dependent: :destroy
 	has_many :commodities, dependent: :destroy
 	belongs_to :package, optional: true
+	belongs_to :unit
 
 	validates_presence_of :order_no, :message => '订单号不能为空'
 	validates_uniqueness_of :order_no, :message => '订单号已存在'
