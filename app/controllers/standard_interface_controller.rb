@@ -31,7 +31,7 @@ class StandardInterfaceController < ApplicationController
     return error_builder('0004') if @business_no.blank?
 
     @unit_no = params[:unit]
-    @unit = UNit.find_by_no(@unit_no)
+    @unit = Unit.find_by_no(@unit_no)
     return error_builder('0003') if @unit.blank?
 
    
@@ -49,7 +49,7 @@ class StandardInterfaceController < ApplicationController
 
     return error_builder('0005', 'ORDER_NO had packaged') if order.try('packaged?')
 
-    return error_builder('0005', "EC_NO is null") if (unit_no.eql?('0002') && @context_hash['EC_NO'].blank?)
+    return error_builder('0005', "EC_NO is null") if (@unit_no.eql?('0002') && @context_hash['EC_NO'].blank?)
     
     return error_builder('0005', "PACKAGES is null") if @context_hash['PACKAGES'].blank?
 
@@ -58,11 +58,11 @@ class StandardInterfaceController < ApplicationController
       return error_builder('0005', "PACKAGES_NO #{x} exists")  if ! Bag.where.not(order: order).find_by(bag_no: x).blank?
     }
 
-    return error_builder('0005', "EC_NO is null") if (unit_no.eql?('0002') && @context_hash['EC_NO'].blank?)    
+    return error_builder('0005', "EC_NO is null") if (@unit_no.eql?('0002') && @context_hash['EC_NO'].blank?)    
 
-    return error_builder('0005', "ORDER_MODE is null") if (unit_no.eql?('0002') && @context_hash['ORDER_MODE'].blank?)
+    return error_builder('0005', "ORDER_MODE is null") if (@unit_no.eql?('0002') && @context_hash['ORDER_MODE'].blank?)
 
-    return error_builder('0005', "FREIGHT is null") if (unit_no.eql?('0002') && @context_hash['FREIGHT'].blank?)    
+    return error_builder('0005', "FREIGHT is null") if (@unit_no.eql?('0002') && @context_hash['FREIGHT'].blank?)    
 
     return error_builder('0005', "SENDER_PROVINCE is null") if @context_hash['SENDER_PROVINCE'].blank?
 
@@ -76,11 +76,11 @@ class StandardInterfaceController < ApplicationController
 
     return error_builder('0005', "SENDER_PHONE is null") if @context_hash['SENDER_PHONE'].blank?
 
-    return error_builder('0005', "RECEIVER_PROVINCE is null") if (unit_no.eql?('0001') && @context_hash['RECEIVER_PROVINCE'].blank?)
+    return error_builder('0005', "RECEIVER_PROVINCE is null") if (@unit_no.eql?('0001') && @context_hash['RECEIVER_PROVINCE'].blank?)
 
-    return error_builder('0005', "RECEIVER_CITY is null") if (unit_no.eql?('0001') && @context_hash['RECEIVER_CITY'].blank?)
+    return error_builder('0005', "RECEIVER_CITY is null") if (@unit_no.eql?('0001') && @context_hash['RECEIVER_CITY'].blank?)
 
-    return error_builder('0005', "RECEIVER_DISTRICT is null") if (unit_no.eql?('0001') && @context_hash['RECEIVER_DISTRICT'].blank?)
+    return error_builder('0005', "RECEIVER_DISTRICT is null") if (@unit_no.eql?('0001') && @context_hash['RECEIVER_DISTRICT'].blank?)
 
     return error_builder('0005', "RECEIVER_ADDR is null") if @context_hash['RECEIVER_ADDR'].blank?
 
