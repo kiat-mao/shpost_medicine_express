@@ -10,7 +10,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_07_080532) do
+ActiveRecord::Schema.define(version: 2022_11_10_072943) do
+
+  create_table "Orders", force: :cascade do |t|
+    t.string "order_no"
+    t.string "prescription_no"
+    t.date "prescription_date"
+    t.string "site_no"
+    t.string "site_id"
+    t.string "site_name"
+    t.string "sender_province"
+    t.string "sender_city"
+    t.string "sender_district"
+    t.string "sender_addr"
+    t.string "sender_name"
+    t.string "sender_phone"
+    t.string "receiver_province"
+    t.string "receiver_city"
+    t.string "receiver_district"
+    t.string "receiver_addr"
+    t.string "receiver_name"
+    t.string "receiver_phone"
+    t.string "customer_addr"
+    t.string "customer_name"
+    t.string "customer_phone"
+    t.string "status"
+    t.integer "package_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "bag_list"
+    t.string "ec_no"
+    t.string "order_mode"
+    t.string "hospital_no"
+    t.string "hospital_name"
+    t.boolean "freight"
+    t.string "social_no"
+    t.string "print_desc"
+    t.string "unit_id"
+    t.string "interface_status"
+    t.index ["order_no"], name: "index_orders_on_order_no"
+    t.index ["package_id"], name: "index_orders_on_package_id"
+  end
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -84,46 +124,6 @@ ActiveRecord::Schema.define(version: 2022_11_07_080532) do
     t.integer "business_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "orders", force: :cascade do |t|
-    t.string "order_no"
-    t.string "prescription_no"
-    t.date "prescription_date"
-    t.string "site_no"
-    t.string "site_id"
-    t.string "site_name"
-    t.string "sender_province"
-    t.string "sender_city"
-    t.string "sender_district"
-    t.string "sender_addr"
-    t.string "sender_name"
-    t.string "sender_phone"
-    t.string "receiver_province"
-    t.string "receiver_city"
-    t.string "receiver_district"
-    t.string "receiver_addr"
-    t.string "receiver_name"
-    t.string "receiver_phone"
-    t.string "customer_addr"
-    t.string "customer_name"
-    t.string "customer_phone"
-    t.string "status"
-    t.integer "package_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "bag_list"
-    t.string "ec_no"
-    t.string "order_mode"
-    t.string "hospital_no"
-    t.string "hospital_name"
-    t.boolean "feight"
-    t.string "social_no"
-    t.string "print_desc"
-    t.string "unit_id"
-    t.string "interface_status"
-    t.index ["order_no"], name: "index_orders_on_order_no"
-    t.index ["package_id"], name: "index_orders_on_package_id"
   end
 
   create_table "packages", force: :cascade do |t|

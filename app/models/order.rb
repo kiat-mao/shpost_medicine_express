@@ -7,28 +7,24 @@ class Order < ApplicationRecord
 	validates_presence_of :order_no, :message => '订单号不能为空'
 	validates_uniqueness_of :order_no, :message => '订单号已存在'
 
- 	enum status: {waiting: 'waiting', packaged: 'packaged'}
- 	STATUS_NAME = { waiting: '未装箱', packaged: '已装箱'}
+	enum status: {waiting: 'waiting', packaged: 'packaged'}
+	STATUS_NAME = { waiting: '未装箱', packaged: '已装箱'}
 
- 	enum interface_status: {interface_waiting: 'interface_waiting', need_send: 'need_send', to_send: 'to_send', failed: 'failed', done: 'done'}
- 	INTERFACE_STATUS_NAME = {interface_waiting: '待发送', need_send: '可以发送', to_send: '发送队列中', failed: '发送失败', done: '发送成功'}
+	enum interface_status: {interface_waiting: 'interface_waiting', need_send: 'need_send', to_send: 'to_send', failed: 'failed', done: 'done'}
+	INTERFACE_STATUS_NAME = {interface_waiting: '待发送', need_send: '可以发送', to_send: '发送队列中', failed: '发送失败', done: '发送成功'}
 
- 	def status_name
- 		status.blank? ? "" : Order::STATUS_NAME["#{status}".to_sym]
- 	end
+	def status_name
+		status.blank? ? "" : Order::STATUS_NAME["#{status}".to_sym]
+	end
 
- 	def interface_status_name
- 		interface_status.blank? ? "" : Order::INTERFACE_STATUS_NAME["#{interface_status}".to_sym]
- 	end
- 	
- 	# def get_bag_list
- 	# 	self.bags.map{|b| b.bag_no}.compact.join(",")
- 	# end
+	def interface_status_name
+		interface_status.blank? ? "" : Order::INTERFACE_STATUS_NAME["#{interface_status}".to_sym]
+	end
 
 	def self.order_push(context_hash, unit = nil)
 		order = Order.find_or_initialize_by order_no: context_hash['ORDER_NO']
 
-		order.unit = unit
+		order.unit = unit 
 
 		context_hash.keys.each do |key|
 			next if key.eql? "COMMODITIES"
@@ -49,15 +45,18 @@ class Order < ApplicationRecord
 
 
 		commodities_context = context_hash["COMMODITIES"]
-		commodities_context.each do |commodity|
-			c = order.commodities.new
-			commodity.keys.each do |key|
-				if c.respond_to? "#{key.downcase}="
-					c.send "#{key.downcase}=", commodity[key]
+		if !commodities_context.blank?
+			commodities_context.each do |commodity|
+				c = order.commodities.new
+				commodity.keys.each do |key|
+					if c.respond_to? "#{key.downcase}="
+						c.send "#{key.downcase}=", commodity[key]
+					end
 				end
 			end
 		end
 
-		order.waiting!
+		order.interface_waiting! 
+		# order.waiting!
 	end
 end
