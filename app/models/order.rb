@@ -2,7 +2,7 @@ class Order < ApplicationRecord
 	has_many :bags, dependent: :destroy
 	has_many :commodities, dependent: :destroy
 	belongs_to :package, optional: true
-	belongs_to :unit
+	belongs_to :unit, optional: true
 
 	validates_presence_of :order_no, :message => '订单号不能为空'
 	validates_uniqueness_of :order_no, :message => '订单号已存在'
@@ -25,8 +25,10 @@ class Order < ApplicationRecord
  	# 	self.bags.map{|b| b.bag_no}.compact.join(",")
  	# end
 
-	def self.order_push(context_hash)
+	def self.order_push(context_hash, unit = nil)
 		order = Order.find_or_initialize_by order_no: context_hash['ORDER_NO']
+
+		order.unit = unit
 
 		context_hash.keys.each do |key|
 			next if key.eql? "COMMODITIES"

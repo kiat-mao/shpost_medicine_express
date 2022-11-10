@@ -1,5 +1,5 @@
 class InterfaceLog < ApplicationRecord
-  belongs_to :unit
+  belongs_to :unit, optional: true
   # belongs_to :business
   # belongs_to :parent, polymorphic: true
   enum status: {success: 'success', failed: 'failed'}
