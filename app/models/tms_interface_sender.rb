@@ -51,9 +51,9 @@ class TmsInterfaceSender < ActiveRecord::Base
 		orderInfo["ecNo"] = order.ec_no
 		orderInfo["waybillNo"] = order.package.express_no
 		orderInfo["operationTime"] = (order.updated_at.to_f*1000).to_i.to_s
-		orderInfo["volume"] = order.volume
-		orderInfo["weight"] = order.weight
-		orderInfo["amount"] = order.price
+		orderInfo["volume"] = order.volume #包裹体积（立方厘米）
+		orderInfo["weight"] = order.weight/1000 #包裹重量（公斤）
+		orderInfo["amount"] = order.price #元
 
 		orderInfo.to_json
 	end
