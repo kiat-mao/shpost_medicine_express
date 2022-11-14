@@ -22,10 +22,7 @@ zh-CN:
     #   max_times: 5 #default_times: 10
     #   interval: 300 #default_interval: 600
     xyd_order_create:
-      # for test
-      url: 'http://222.66.108.206:4000/xyd_server/OrderCreateServlet'
-      # for production
-      # url: 'http://172.20.7.11:3000/xyd_server/OrderCreateServlet'
+      # url: ''
       interface_type: 'json'
       http_type: 'post'
       callback_class: 'XydInterfaceSender'
@@ -37,10 +34,7 @@ zh-CN:
       interval: 1000 #default_interval: 600
     # 上药
     soa_order_trace:
-      # for test
-      url: 'http://222.66.127.248/carriertest/SendTMP_ORDER_TRACE_PS'
-      # for production
-      # url: 'http://222.66.127.248/carrier/SendTMP_ORDER_TRACE_PS'
+      # url: ''
       interface_type: 'json'
       http_type: 'post'
       callback_class: 'SoaInterfaceSender'
@@ -52,10 +46,7 @@ zh-CN:
       interval: 1000 #default_interval: 600
     # 国药
     tms_order_trace:
-      # for test
-      url: 'http://'
-      # for production
-      # url: 'http://'
+      # url: ''
       interface_type: 'json'
       http_type: 'post'
       callback_class: 'TmsInterfaceSender'
