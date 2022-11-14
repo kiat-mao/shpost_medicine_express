@@ -5,7 +5,7 @@ class StandardInterfaceController < ApplicationController
 
   def order_push
     begin
-      Order.order_push(@context_hash)
+      Order.order_push(@context_hash, @unit)
     rescue Exception => e
       out_error e
       return error_builder('9999', e.message)
@@ -45,7 +45,7 @@ class StandardInterfaceController < ApplicationController
 
     return error_builder('0005', "ORDER_NO is null") if @context_hash['ORDER_NO'].blank?
 
-    order = Order.find_by(order_no: @context_hash['ORDER_NO'])
+    order = Order.find_by(order_no: @context_hash['ORDER_NO'], unit: @unit)
 
     return error_builder('0005', 'ORDER_NO had packaged') if order.try('packaged?')
 
@@ -62,7 +62,7 @@ class StandardInterfaceController < ApplicationController
 
     return error_builder('0005', "ORDER_MODE is null") if (@unit_no.eql?('0002') && @context_hash['ORDER_MODE'].blank?)
 
-    return error_builder('0005', "FREIGHT is null") if (@unit_no.eql?('0002') && @context_hash['FREIGHT'].blank?)    
+    #return error_builder('0005', "FREIGHT is null") if (@unit_no.eql?('0002') && @context_hash['FREIGHT'])    
 
     return error_builder('0005', "SENDER_PROVINCE is null") if @context_hash['SENDER_PROVINCE'].blank?
 

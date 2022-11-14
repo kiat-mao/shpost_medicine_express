@@ -22,7 +22,7 @@ class Order < ApplicationRecord
 	end
 
 	def self.order_push(context_hash, unit = nil)
-		order = Order.find_or_initialize_by order_no: context_hash['ORDER_NO']
+		order = Order.find_or_initialize_by(order_no: context_hash['ORDER_NO'], unit: unit)
 
 		order.unit = unit 
 
