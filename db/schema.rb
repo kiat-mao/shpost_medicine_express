@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_11_023304) do
+ActiveRecord::Schema.define(version: 2022_11_17_025957) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -125,6 +125,7 @@ ActiveRecord::Schema.define(version: 2022_11_11_023304) do
     t.decimal "weight"
     t.decimal "volume"
     t.decimal "price"
+    t.string "address_status"
     t.index ["order_no"], name: "index_orders_on_order_no"
     t.index ["package_id"], name: "index_orders_on_package_id"
   end

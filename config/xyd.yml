@@ -3,39 +3,70 @@ default: &default
 
 development:
   <<: *default
+  # order create
   order_create_url: http://222.66.108.206:4000/xyd_server/OrderCreateServlet
-  system_name: test
-  pwd: "11111"
+  oc_system_name: test
+  oc_pwd: "11111"
   ecCompanyId: 
   parentId: 
   logistics_provider: B
   ecommerce_no: HNHCYY
-  sender_no:
   inner_channel: "0"
-  base_product_no: "1"
-
+  sy_sender_no:
+  gy_sender_no:
+  base_product_no_1: "1" #寄付
+  base_product_no_3: "3" #到付
+  payment_mode_2: "2"
+  sy_unit_id: "1" #上药unit
+  gy_unit_id: "2" #国药unit
+  # address parsing
+  address_parsing_url: http://222.66.108.206:4000/xyd_server/AddressParsingServlet
+  ap_system_name: test
+  ap_pwd: "11111"
+  ap_salt: ""
 test:
   <<: *default
+  # order create
   order_create_url: http://10.126.22.218:9080/xyd_server/OrderCreateServlet
-  system_name: test
-  pwd: "11111"
+  oc_system_name: test
+  oc_pwd: "11111"
   ecCompanyId: 
   parentId: 
   logistics_provider: B
   ecommerce_no: HNHCYY
-  sender_no:
   inner_channel: "0"
-  base_product_no: "1"
-
+  sy_sender_no:
+  gy_sender_no:
+  base_product_no_1: "1" #寄付
+  base_product_no_3: "3" #到付
+  payment_mode_2: "2"
+  sy_unit_id: "1" #上药unit
+  gy_unit_id: "2" #国药unit
+  # address parsing
+  address_parsing_url: http://10.126.22.218:9080/xyd_server/AddressParsingServlet
+  ap_system_name: test
+  ap_pwd: "11111"
+  ap_salt: ""
 production:
   <<: *default
+  # order create
   order_create_url: http://172.20.7.11:3000/xyd_server/OrderCreateServlet
-  system_name: syhs2022
-  pwd: M3Q5NGREcjB0NE9zOCk5
+  oc_system_name: syhs2022
+  oc_pwd: M3Q5NGREcjB0NE9zOCk5
   ecCompanyId: SHYIYAO
   parentId: b2aaZH1Cnjf8D
   logistics_provider: B
   ecommerce_no: SHYIYAO
-  sender_no: "1030001771000"
   inner_channel: "0"
-  base_product_no: "1"
+  sy_sender_no: "1030001771000"
+  gy_sender_no: "1100128414327"
+  base_product_no_1: "1" #寄付
+  base_product_no_3: "3" #到付
+  payment_mode_2: "2"
+  sy_unit_id: "" #上药unit
+  gy_unit_id: "" #国药unit
+  # address parsing
+  address_parsing_url: http://172.20.7.11:3000/xyd_server/AddressParsingServlet
+  ap_system_name: xxxxxx
+  ap_pwd: xxxxxxxx
+  ap_salt: xxxxxxxxxx
