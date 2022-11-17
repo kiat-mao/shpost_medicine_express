@@ -163,6 +163,7 @@ class XydInterfaceSender < ActiveRecord::Base
 		args[:parent_id] = order.id
 		args[:unit_id] = order.unit_id
 		InterfaceSender.interface_sender_initialize("xyd_address_parsing", body, args)
+		order.update(address_status: :address_parseing)
 	end
 
 	def self.address_parsing_request_body_generate(order, xydConfig)
@@ -220,8 +221,13 @@ class XydInterfaceSender < ActiveRecord::Base
 					puts '省:' + prov_name.to_s
 					puts '市:' + city_name.to_s
 					puts '区:' + county_name.to_s
-					if (!order_id.nil? && order_id.is_a?(Numeric) && !prov_name.nil? && !city_name.nil? && !county_name.nil? && !prov_name.empty? && !city_name.empty? && !county_name.empty?)
-						Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_success)
+					if (!order_id.nil? && order_id.is_a?(Numeric))
+						if (!prov_name.nil? && !city_name.nil? && !county_name.nil? && !prov_name.empty? && !city_name.empty? && !county_name.empty?)
+							Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_success)
+						else
+							# TODO
+							Order.find(order_id).update(address_status: :address_failed)
+						end
 						return true
 					end
 				else

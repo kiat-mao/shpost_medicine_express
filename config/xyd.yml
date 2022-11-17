@@ -67,6 +67,6 @@ production:
   gy_unit_id: "" #国药unit
   # address parsing
   address_parsing_url: http://172.20.7.11:3000/xyd_server/AddressParsingServlet
-  ap_system_name: xxxxxx
-  ap_pwd: xxxxxxxx
+  ap_system_name: syhs2022
+  ap_pwd: c2h5eWFkZHJlc3NwYXJzaW5n
   ap_salt: xxxxxxxxxx
