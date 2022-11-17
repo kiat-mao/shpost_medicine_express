@@ -117,7 +117,7 @@ ActiveRecord::Schema.define(version: 2022_11_17_025957) do
     t.string "order_mode"
     t.string "hospital_no"
     t.string "hospital_name"
-    t.boolean "feight"
+    t.boolean "freight"
     t.string "social_no"
     t.string "print_desc"
     t.string "unit_id"

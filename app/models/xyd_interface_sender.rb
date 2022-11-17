@@ -1,7 +1,9 @@
 class XydInterfaceSender < ActiveRecord::Base
 
 	def self.address_parsing_schedule
-		orders = Order.where(address_status: :address_waiting)
+		xydConfig = Rails.application.config_for(:xyd)
+		gy_unit_id = xydConfig[:gy_unit_id]
+		orders = Order.where(address_status: :address_waiting, unit_id: gy_unit_id)
 		orders.each_with_index do |order, i|
 			self.address_parsing_interface_sender_initialize order
 		end
@@ -44,13 +46,7 @@ class XydInterfaceSender < ActiveRecord::Base
 
 		o = package.orders.first
 		# 20221115 区分国药上药
-		if xydConfig[:sy_unit_id] == package.unit_id
-			if !xydConfig[:sender_no].nil?
-				order["sender_no"] = xydConfig[:sy_sender_no]
-				order["sender_type"] = '1'
-			end
-			order["base_product_no"] = xydConfig[:base_product_no_1]
-		elsif xydConfig[:gy_unit_id] == package.unit_id
+		if xydConfig[:gy_unit_id] == package.unit_id
 			if !xydConfig[:sender_no].nil?
 				order["sender_no"] = xydConfig[:gy_sender_no]
 				order["sender_type"] = '1'
@@ -62,7 +58,11 @@ class XydInterfaceSender < ActiveRecord::Base
 				order["base_product_no"] = xydConfig[:base_product_no_1]
 			end
 		else
-			return "非上药,国药机构!"
+			if !xydConfig[:sender_no].nil?
+				order["sender_no"] = xydConfig[:sy_sender_no]
+				order["sender_type"] = '1'
+			end
+			order["base_product_no"] = xydConfig[:base_product_no_1]
 		end
 		sender = {}
 		receiver = {}
@@ -226,7 +226,7 @@ class XydInterfaceSender < ActiveRecord::Base
 							Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_success)
 						else
 							# TODO
-							Order.find(order_id).update(address_status: :address_failed)
+							Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_failed)
 						end
 						return true
 					end
