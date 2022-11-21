@@ -1,7 +1,9 @@
 class TmsInterfaceSender < ActiveRecord::Base
 
 	def self.order_trace_schedule
-		orders = Order.where(interface_status: :need_send)
+		xydConfig = Rails.application.config_for(:xyd)
+		gy_unit_id = xydConfig[:gy_unit_id]
+		orders = Order.where(interface_status: :need_send, unit_id: gy_unit_id)
 		orders.each_with_index do |order, i|
 			self.order_trace_order_interface_sender_initialize order
 		end

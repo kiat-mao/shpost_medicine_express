@@ -236,6 +236,12 @@ class XydInterfaceSender < ActiveRecord::Base
 						return true
 					end
 				end
+			else
+				puts "address parsing failed, error_code:" + error_code.to_s
+				if (!order_id.nil? && order_id.is_a?(Numeric))
+					Order.find(order_id).update(address_status: :address_failed)
+					return true
+				end
 			end
 			return false
 		end
