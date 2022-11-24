@@ -2,8 +2,9 @@ class XydInterfaceSender < ActiveRecord::Base
 
 	def self.address_parsing_schedule
 		xydConfig = Rails.application.config_for(:xyd)
-		gy_unit_id = xydConfig[:gy_unit_id]
-		orders = Order.where(address_status: :address_waiting, unit_id: gy_unit_id)
+		gy_unit_no = xydConfig[:gy_unit_no]
+		gy_units = Unit.where no: gy_unit_no
+		orders = Order.where(address_status: :address_waiting, unit: gy_units)
 		orders.each_with_index do |order, i|
 			self.address_parsing_interface_sender_initialize order
 		end
@@ -46,7 +47,7 @@ class XydInterfaceSender < ActiveRecord::Base
 
 		o = package.orders.first
 		# 20221115 区分国药上药
-		if xydConfig[:gy_unit_id] == package.unit_id
+		if xydConfig[:gy_unit_no] == package.unit.no
 			if !xydConfig[:sender_no].nil?
 				order["sender_no"] = xydConfig[:gy_sender_no]
 				order["sender_type"] = '1'
