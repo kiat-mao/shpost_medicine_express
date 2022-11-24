@@ -23,6 +23,10 @@ every 2.minutes do
   runner "InterfaceSender.schedule_send"
 end
 
+every 2.minutes do
+  runner "XydInterfaceSender.address_parsing_schedule"
+end
+
 every 5.minutes do
   runner "TmsInterfaceSender.order_trace_schedule"
 end
