@@ -326,6 +326,10 @@ zh-CN:
         status: "状态"
         package_id: "箱子号"
         bag_list: "袋子号列表"
+        order_mode: "模式"
+        hospital_name: "医院名称"
+        freight: "是否到付"
+        social_no: "社保号"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"

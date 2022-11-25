@@ -1,0 +1,30 @@
+<%- model_class = Package -%>
+	<% if !@orders.blank? && !@scaned_orders.blank? %>
+	<table class="table table-striped">
+		<tr>
+			<td>订单号</td>
+			<td>袋子号</td>
+			<td>处方号</td>
+			<td>社保号</td>
+			<td>站点编号/合单号</td>
+			<td>收件人电话</td>
+			<td>收件人地址</td>
+		</tr> 
+		<% @orders.each do |o| %>
+		<% if (@scaned_orders.include?o.order_no) && (@order_mode=="B2C") %>
+			<tr style="color: red;">
+		<% else %>
+			<tr>
+		<% end %>
+			<td><%= o.order_no %></td>
+			<td><%= o.bag_list %></td>
+			<td><%= o.prescription_no %></td>
+			<td><%= o.social_no %></td>
+			<td><%= o.site_no %></td>
+			<td><%= o.receiver_phone %> </td>
+			<td><%= o.receiver_addr %> </td>
+		</tr>
+		<% end %>
+	</table>
+	<% end %>
+

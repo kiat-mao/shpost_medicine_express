@@ -13,12 +13,27 @@ class Order < ApplicationRecord
 	enum interface_status: {interface_waiting: 'interface_waiting', need_send: 'need_send', to_send: 'to_send', failed: 'failed', done: 'done'}
 	INTERFACE_STATUS_NAME = {interface_waiting: '待发送', need_send: '可以发送', to_send: '发送队列中', failed: '发送失败', done: '发送成功'}
 
+	ORDER_MODE_NAME =  {B2B: 'B2B', B2C: 'B2C'}
+
+
 	def status_name
 		status.blank? ? "" : Order::STATUS_NAME["#{status}".to_sym]
 	end
 
 	def interface_status_name
 		interface_status.blank? ? "" : Order::INTERFACE_STATUS_NAME["#{interface_status}".to_sym]
+	end
+
+	def order_mode_name
+		order_mode.blank? ? "" : Order::ORDER_MODE_NAME["#{order_mode}".to_sym]
+	end
+
+	def freight_name
+	  if freight
+	    name = "是"
+	  else
+	    name = "否"
+	  end
 	end
 
 	def self.order_push(context_hash, unit = nil)
