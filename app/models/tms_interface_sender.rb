@@ -1,7 +1,10 @@
 class TmsInterfaceSender < ActiveRecord::Base
 
 	def self.order_trace_schedule
-		orders = Order.where(interface_status: :need_send)
+		xydConfig = Rails.application.config_for(:xyd)
+		gy_unit_no = xydConfig[:gy_unit_no]
+		gy_units = Unit.where no: gy_unit_no
+		orders = Order.where(interface_status: :need_send, unit: gy_units)
 		orders.each_with_index do |order, i|
 			self.order_trace_order_interface_sender_initialize order
 		end
@@ -51,9 +54,9 @@ class TmsInterfaceSender < ActiveRecord::Base
 		orderInfo["ecNo"] = order.ec_no
 		orderInfo["waybillNo"] = order.package.express_no
 		orderInfo["operationTime"] = (order.updated_at.to_f*1000).to_i.to_s
-		orderInfo["volume"] = order.volume.to_f #包裹体积（立方厘米）
-		orderInfo["weight"] = order.weight.to_f/1000 #包裹重量（公斤）
-		orderInfo["amount"] = order.price.to_f #元
+		orderInfo["volume"] = order.package.volume.to_f #包裹体积（立方厘米）
+		orderInfo["weight"] = order.package.weight.to_f/1000 #包裹重量（公斤）
+		orderInfo["amount"] = order.package.price.to_f #元
 
 		orderInfo.to_json
 	end

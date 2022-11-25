@@ -56,3 +56,15 @@ zh-CN:
       # object_class: 'Keyclientorder'
       max_times: 5 #default_times: 10
       interval: 1000 #default_interval: 600
+    # address parsing
+    xyd_address_parsing:
+      # url: ''
+      interface_type: 'json'
+      http_type: 'post'
+      callback_class: 'XydInterfaceSender'
+      callback_method: 'address_parsing_callback_method'
+      header: "{\"Content-Type\":\"application/json\"}"
+      parent_class: 'Order'
+      # object_class: 'Keyclientorder'
+      max_times: 1 #default_times: 10
+      interval: 1000 #default_interval: 600

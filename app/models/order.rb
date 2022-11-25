@@ -15,6 +15,8 @@ class Order < ApplicationRecord
 
 	ORDER_MODE_NAME =  {B2B: 'B2B', B2C: 'B2C'}
 
+	enum address_status: {address_waiting: 'address_waiting', address_success: 'address_success', address_failed: 'address_failed', address_noparse: 'address_noparse', address_parseing: 'address_parseing'}
+	ADDRESS_STATUS_NAME = {address_waiting: '待解析', address_success: '解析成功', address_failed: '解析失败', address_noparse: '不解析', address_parseing: '解析中'}
 
 	def status_name
 		status.blank? ? "" : Order::STATUS_NAME["#{status}".to_sym]
@@ -34,6 +36,10 @@ class Order < ApplicationRecord
 	  else
 	    name = "否"
 	  end
+	end
+	
+	def address_status_name
+		address_status.blank? ? "" : Order::ADDRESS_STATUS_NAME["#{address_status}".to_sym]
 	end
 
 	def self.order_push(context_hash, unit = nil)
