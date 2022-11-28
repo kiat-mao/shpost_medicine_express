@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema.define(version: 2022_11_28_021329) do
 
-
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
     t.integer "order_id"
