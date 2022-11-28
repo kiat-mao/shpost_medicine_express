@@ -54,9 +54,11 @@ class StandardInterfaceController < ApplicationController
     return error_builder('0005', "PACKAGES is null") if @context_hash['PACKAGES'].blank?
 
 
-    @context_hash['PACKAGES'].each{|x| 
-      return error_builder('0005', "PACKAGES_NO #{x} exists")  if ! Bag.where.not(order: order).find_by(bag_no: x).blank?
-    }
+    if @unit_no.eql?('0001')
+      @context_hash['PACKAGES'].each{|x| 
+        return error_builder('0005', "PACKAGES_NO #{x} exists")  if ! Bag.where.not(order: order).find_by(bag_no: x).blank?
+      }
+    end
 
     return error_builder('0005', "EC_NO is null") if (@unit_no.eql?('0002') && @context_hash['EC_NO'].blank?)    
 

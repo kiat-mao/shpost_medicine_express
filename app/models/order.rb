@@ -63,6 +63,7 @@ class Order < ApplicationRecord
 			end
 		end
 
+		order.address_status = Order.address_statuses[:address_waiting]
 		order.interface_waiting! 
 		# order.waiting!
 	end

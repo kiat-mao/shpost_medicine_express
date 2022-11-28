@@ -10,6 +10,10 @@ class Package < ApplicationRecord
  	enum status: {waiting: 'waiting', to_send: 'to_send', failed: 'failed', done: 'done', cancelled: 'cancelled'}
  	STATUS_NAME = { waiting: '未发送', to_send: '待发送', failed: '发送失败', done: '已发送', cancelled: '已作废'}
 
+ 	enum pkp: {pkp_waiting: 'pkp_waiting', pkp_done: 'pkp_done'}
+ 	PKP_NAME = {pkp_waiting: '未收寄', pkp_done: '收寄完成'}
+
+
 	# 年月日+用户id+当天该用户装箱计数,Eg:”20220707-3-1”
  	def self.new_package_no(current_user)		
  		new_package_no = Date.today.strftime('%Y%m%d') + "-" + current_user.id.to_s + "-" + self.get_package_no_by_user(current_user).to_s
