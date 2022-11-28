@@ -139,10 +139,10 @@ ActiveRecord::Schema.define(version: 2022_11_28_021329) do
     t.string "order_list", limit: 2000
     t.string "bag_list", limit: 2000
     t.string "unit_id"
-    t.string "pkp"
     t.decimal "weight"
     t.decimal "volume"
     t.decimal "price"
+    t.string "pkp"
     t.index ["express_no"], name: "index_packages_on_express_no"
     t.index ["package_no"], name: "index_packages_on_package_no"
     t.index ["user_id"], name: "index_packages_on_user_id"
