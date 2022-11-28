@@ -63,4 +63,4 @@ production:
   address_parsing_url: http://172.20.7.11:3000/xyd_server/AddressParsingServlet
   ap_system_name: syhs2022
   ap_pwd: c2h5eWFkZHJlc3NwYXJzaW5n
-  ap_salt: xxxxxxxxxx
+  ap_salt: 23e1691cb0a5e42bd8236b4ea794bf0c
