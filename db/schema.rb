@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_24_070604) do
+ActiveRecord::Schema.define(version: 2022_11_28_021329) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 2022_11_24_070604) do
     t.string "order_list", limit: 2000
     t.string "bag_list", limit: 2000
     t.string "unit_id"
+    t.string "pkp"
     t.decimal "weight"
     t.decimal "volume"
     t.decimal "price"
