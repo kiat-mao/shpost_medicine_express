@@ -132,7 +132,7 @@ gy_do_packaged = ->
 				$.ajax({
 					type : 'POST',
 					url : '../packages/gy_do_packaged/',
-					data: { package_id: $('#package_id').val(), scaned_orders: $('#scaned_orders').val(), scaned_bags: $('#scaned_bags').val()},
+					data: { package_id: $('#package_id').val(), scaned_orders: $('#scaned_orders').val(), scaned_bags: $('#scaned_bags').val(), order_mode: $('#order_mode').val()},
 					dataType : 'script'
 				});
 

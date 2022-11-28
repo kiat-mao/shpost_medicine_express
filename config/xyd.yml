@@ -17,8 +17,6 @@ development:
   base_product_no_1: "1" #寄付
   base_product_no_3: "3" #到付
   payment_mode_2: "2"
-  sy_unit_no: "001" #上药unit_no
-  gy_unit_no: "002" #国药unit_no
   # address parsing
   address_parsing_url: http://222.66.108.206:4000/xyd_server/AddressParsingServlet
   ap_system_name: test
@@ -40,8 +38,6 @@ test:
   base_product_no_1: "1" #寄付
   base_product_no_3: "3" #到付
   payment_mode_2: "2"
-  sy_unit_no: "001" #上药unit_no
-  gy_unit_no: "002" #国药unit_no
   # address parsing
   address_parsing_url: http://10.126.22.218:9080/xyd_server/AddressParsingServlet
   ap_system_name: test
@@ -63,8 +59,6 @@ production:
   base_product_no_1: "1" #寄付
   base_product_no_3: "3" #到付
   payment_mode_2: "2"
-  sy_unit_no: "001" #上药unit_no
-  gy_unit_no: "002" #国药unit_no
   # address parsing
   address_parsing_url: http://172.20.7.11:3000/xyd_server/AddressParsingServlet
   ap_system_name: syhs2022
