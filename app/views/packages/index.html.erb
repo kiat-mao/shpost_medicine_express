@@ -3,7 +3,7 @@
 <h1><%=t '.title', :default => [:'helpers.titles.index', '%{model} Manage'], :model => model_class.model_name.human.titleize %></h1>
   <%= render partial: '/layouts/page_size' %>
   <div style="float:right">
-    <% if (can? :send_sy, Package) %>
+    <% if (can? :send_sy, Package) && (current_user.unit.no == I18n.t('unit_no.sy')) %>
     <%= submit_tag "装箱回传上药",:class => 'btn btn-primary', onclick: "form1.action='packages/send_sy';form1.submit();" %>
     <% end %>
     <%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzds" %>
@@ -41,6 +41,16 @@
 
     g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
       package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
+    end
+
+    if current_user.unit.no == I18n.t('unit_no.gy')
+      g.column name: '模式', attribute: 'id',filter: false do |package| 
+        package.orders.blank? ? "" : package.orders.first.order_mode
+      end
+
+      g.column name: '站点编号', attribute: 'id',filter: false do |package| 
+        package.orders.blank? ? "" : package.orders.first.site_no
+      end
     end
 
     g.column do |package|

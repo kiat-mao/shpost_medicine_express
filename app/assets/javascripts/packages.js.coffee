@@ -11,8 +11,10 @@ ready = ->
   $('#reset').click(enterpress2)
   if document.getElementById("bag_no")
   	setInterval("$('#bag_no').focus();",3000);
+  $("#scan_no").keypress(enterpress3)
+  if document.getElementById("scan_no")
+  	setInterval("$('#scan_no').focus();",3000);
   
-
 enterpress = (e) ->
 	e = e || window.event;   
 	if e.keyCode == 13   
@@ -50,6 +52,57 @@ enterpress2 = ->
 	clear()
 	$('#bag_no').focus();
 
+enterpress3 = (e) ->
+	e = e || window.event;   
+	if e.keyCode == 13   
+		if $('#scan_no').val() != ""
+			if ($('#all_scaned').val() != "") && ($('#all_scaned').val() == "true") && ($('#is_packaged').val() != "1")
+				audio = document.getElementById("failed_alert");
+				audio.play();
+				alert("扫描已完成，请装箱");
+				$('#scan_no').val("");
+				return false;
+			else
+				if $('#is_packaged').val() == "1"
+					clear()
+				gy_find_bag_result()
+				return false;
+		else
+			if $('#scaned_orders').val() != "" 
+				if $('#order_mode').val() == "B2B"
+					if confirm("是否装箱完成并发送预收寄信息?")
+						$('#scan_no').blur();
+						showMask()
+						gy_do_packaged()
+						return false;
+				else
+					if $('#all_scaned').val() == "true"
+						if confirm("是否装箱完成并发送预收寄信息?")
+							$('#scan_no').blur();
+							showMask()
+							gy_do_packaged()
+							return false;
+					else
+						audio = document.getElementById("failed_alert");
+						audio.play();
+						alert("请将下方列表中包裹全部扫描完成");
+						$('#scan_no').focus();
+						return false;
+			else
+				if $('#is_packaged').val() == "1"
+					if $('#order_mode').val() != ""
+						if $('#order_mode').val() == "B2B"
+							if confirm("是否打印面单和配货单？")
+								package_id = $('#package_id').val()
+								window.open("../packages/tkzd?package_id="+package_id)
+								window.open("../packages/zxqd?package_id="+package_id)
+						else
+							if confirm("是否打印面单？")
+								package_id = $('#package_id').val()
+								window.open("../packages/tkzd?package_id="+package_id)
+				$('#scan_no').focus();
+				return false;
+
 
 find_bag_result = -> 
 				$.ajax({
@@ -67,6 +120,22 @@ do_packaged = ->
 					dataType : 'script'
 				});
 
+gy_find_bag_result = -> 
+				$.ajax({
+					type : 'POST',
+					url : '../packages/gy_find_bag_result/',
+					data: { scan_no: $('#scan_no').val(), site_no: $('#site_no').val(), bag_amount: $('#bag_amount').text(), order_mode: $('#order_mode').val(), scaned_orders: $('#scaned_orders').val(), scaned_bags: $('#scaned_bags').val(), to_scan_bags: $('#to_scan_bags').val()},
+					dataType : 'script'
+				});
+
+gy_do_packaged = -> 
+				$.ajax({
+					type : 'POST',
+					url : '../packages/gy_do_packaged/',
+					data: { package_id: $('#package_id').val(), scaned_orders: $('#scaned_orders').val(), scaned_bags: $('#scaned_bags').val()},
+					dataType : 'script'
+				});
+
 
 clear = ->
 	$('#site_no').val("");
@@ -79,6 +148,13 @@ clear = ->
 	$('#tkzd').attr('disabled', true);
 	$('#zxqd').attr('disabled', true);
 	$('#bag_amount').text("0");
+	$('#gy_out_results').html("");
+	$('#order_mode').val("");
+	$('#scaned_orders').val("");
+	$('#scaned_bags').val("");
+	$('#all_scaned').val("");
+	$('#to_scan_bags').val("");
+	$('#order_mode_show').text("");
 
 showMask = ->
 	document.getElementById('mid').style.display="block";

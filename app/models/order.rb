@@ -13,6 +13,8 @@ class Order < ApplicationRecord
 	enum interface_status: {interface_waiting: 'interface_waiting', need_send: 'need_send', to_send: 'to_send', failed: 'failed', done: 'done'}
 	INTERFACE_STATUS_NAME = {interface_waiting: '待发送', need_send: '可以发送', to_send: '发送队列中', failed: '发送失败', done: '发送成功'}
 
+	ORDER_MODE_NAME =  {B2B: 'B2B', B2C: 'B2C'}
+
 	enum address_status: {address_waiting: 'address_waiting', address_success: 'address_success', address_failed: 'address_failed', address_noparse: 'address_noparse', address_parseing: 'address_parseing'}
 	ADDRESS_STATUS_NAME = {address_waiting: '待解析', address_success: '解析成功', address_failed: '解析失败', address_noparse: '不解析', address_parseing: '解析中'}
 
@@ -24,6 +26,18 @@ class Order < ApplicationRecord
 		interface_status.blank? ? "" : Order::INTERFACE_STATUS_NAME["#{interface_status}".to_sym]
 	end
 
+	def order_mode_name
+		order_mode.blank? ? "" : Order::ORDER_MODE_NAME["#{order_mode}".to_sym]
+	end
+
+	def freight_name
+	  if freight
+	    name = "是"
+	  else
+	    name = "否"
+	  end
+	end
+	
 	def address_status_name
 		address_status.blank? ? "" : Order::ADDRESS_STATUS_NAME["#{address_status}".to_sym]
 	end

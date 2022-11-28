@@ -20,6 +20,7 @@
 	    }
 	    LODOP.SET_LICENSES("上海市邮政公司信息技术局","452677782688188907989821905623","","");
 	    <% @result.sort_by{|x| x.package_no.upcase}.each do |package| %>
+	    <% if package.orders.first.order_mode.blank? || (package.orders.first.order_mode.eql?"B2B") %>
 	    LODOP.SET_PRINT_PAGESIZE(1,"210mm","297mm","");
 	    LODOP.PRINT_INITA("5mm","2mm","210mm","297mm","打印装箱清单");
 	    LODOP.ADD_PRINT_BARCODE("10mm","20mm","50mm","10mm","128A","<%= package.express_no %>");
@@ -41,14 +42,18 @@
 	    LODOP.ADD_PRINT_TEXT("32mm","157mm","60mm","10mm","合计袋数:<%= package.get_all_bags %>");
 	    LODOP.ADD_PRINT_TEXT("40mm","8mm","200mm","10mm","收货地址:<%= package.orders.first.receiver_addr %>");
 	    h = 175;
-	    <%  package.orders.each do |o| %>
+	    <%  package.orders.order("orders.order_no").each do |o| %>
 		    LODOP.ADD_PRINT_LINE(h,"8mm",h,"200mm",0,2);
 		  	LODOP.SET_PRINT_STYLE("FontSize",10);
 		    LODOP.SET_PRINT_STYLE("Bold",1);  
 		    h += 10;
 		    LODOP.ADD_PRINT_TEXT(h,"8mm","50mm","10mm","顾客姓名:<%= o.customer_name %>");
 		    LODOP.ADD_PRINT_TEXT(h,"50mm","50mm","10mm","联系电话:<%= o.customer_phone %>");
+		    <% if o.unit.no == I18n.t('unit_no.sy') %>
 		    LODOP.ADD_PRINT_TEXT(h,"100mm","50mm","10mm","订单袋数:<%= o.bags.count %>");
+		    <% elsif o.unit.no == I18n.t('unit_no.gy') %>
+		    LODOP.ADD_PRINT_TEXT(h,"100mm","50mm","10mm","订单袋数:1");
+		    <% end %>
 		    LODOP.ADD_PRINT_TEXT(h,"150mm","50mm","10mm","开方日期:<%= o.prescription_date.strftime('%Y-%m-%d') %>");
 		    h += 25;
 		    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","顾客地址:<%= o.customer_addr %>");
@@ -97,6 +102,7 @@
 	    // LODOP.PRINT_DESIGN();
 			// LODOP.PREVIEW();
 			LODOP.PRINT();
+		<% end %>
 		<% end %>
 		};
 

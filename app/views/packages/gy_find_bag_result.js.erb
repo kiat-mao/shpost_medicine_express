@@ -1,0 +1,23 @@
+$('#scan_no').blur();
+<% if !@err_msg.blank? %>
+	var audio = document.getElementById("failed_alert");
+	audio.play();
+	alert("<%= @err_msg %>");
+	$('#scan_no').val("");
+<% else %>
+ 	var audio = document.getElementById("success_alert");
+	audio.play();
+	$('#scan_no').val("");
+	$('#gy_out_results').html(" <%= escape_javascript(render(:partial => 'packages/gy_scan_form')) %> ");
+	$('#site_no').val("<%= @site_no %>");
+	$('#package_no').text("<%= Package.get_package_no_by_user(current_user)%>");
+	$('#bag_amount').text("<%= @bag_amount %>");
+	$('#order_mode').val("<%= @order_mode %>");
+	$('#scaned_orders').val("<%= @scaned_orders %>");
+	$('#scaned_bags').val("<%= @scaned_bags %>");
+	$('#all_scaned').val("<%= @all_scaned %>");
+	$('#to_scan_bags').val("<%= @to_scan_bags %>");
+	$('#scan_no').focus();
+	$('#order_mode_show').text("<%= @order_mode %>");
+<% end %>
+

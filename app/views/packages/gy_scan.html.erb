@@ -1,0 +1,46 @@
+<%- model_class = Package -%>
+<div class="page-header">
+  <h1>扫描装箱</h1>
+</div>
+<%= form_tag('', name: 'form1') do -%>
+<%= hidden_field_tag('site_no', @site_no) %>
+<%= hidden_field_tag('is_packaged', @is_packaged) %>
+<%= hidden_field_tag('package_id', @package_id) %>
+<%= hidden_field_tag('order_mode', @order_mode) %>
+<%= hidden_field_tag('scaned_orders', @scaned_orders) %>
+<%= hidden_field_tag('scaned_bags', @scaned_bags) %>
+<%= hidden_field_tag('all_scaned', @all_scaned) %>
+<%= hidden_field_tag('to_scan_bags', @to_scan_bags) %>
+
+<audio src="<%=asset_path("success.mp3")%>" id="success_alert"></audio>
+<audio src="<%=asset_path("failed.mp3")%>" id="failed_alert"></audio>
+<div>
+	<table>
+		<tr>
+			<td><h3><%= Date.today.strftime('%Y年%m月%d日').to_s+" 第" %></h3></td>
+			<td><font color="red"><h1><%= label_tag 'package_no', @package_no, class: 'control-group', :id => "package_no" %></h1></font></td>
+			<td><h3>箱</h3></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td><h3>模式：</h3></td>
+			<td><font color="red"><h1><%= label_tag 'order_mode_show', @order_mode.blank? ? "" : @order_mode, class: 'control-group', :id => "order_mode_show" %></h1></font></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td><h3>已扫袋数:</h3></td>
+			<td><font color="red"><h1><%= label_tag 'bag_amount', @bag_amount, class: 'control-group', :id => "bag_amount" %></h1></font></td>
+		</tr>
+	</table>
+	<table>
+		<tr class= 'nowrap'>
+ 			<td><%= text_field_tag 'scan_no', nil, class: "controls showmask", size: "50", :id => "scan_no" %></td>
+ 			<td><%= button_tag "重置",:class => 'btn btn-primary', :id => "reset", :type => "button"%></td>
+ 			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
+ 			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>
+ 			<td></td>
+			<td><font color="green"><h3><%= label_tag 'express_no', "", class: 'control-group', :id => "express_no" %></h3></font></td>
+			<td><font color="green"><h3><%= label_tag 'route_code', "", class: 'control-group', :id => "route_code" %></h3></font></td>
+		</tr>
+	</table>
+</div>
+<div id="gy_out_results">
+  <%= render :partial => 'packages/gy_scan_form' %>
+</div>
+<% end %>

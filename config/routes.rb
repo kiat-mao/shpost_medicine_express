@@ -62,6 +62,11 @@ Rails.application.routes.draw do
       get 'send_sy'
       post 'send_sy'
       post 'package_export'
+      get 'gy_scan'
+      post 'gy_scan'
+      get 'gy_find_bag_result'
+      post 'gy_find_bag_result'
+      post 'gy_do_packaged'
     end
     member do
       get 'cancelled'

@@ -31,8 +31,10 @@ class Ability
       can :role, :user
       
       can :manage, UpDownload
-      can :manage, Package
-      can :manage, Order
+      can :manage, Package, unit_id: user.unit_id.to_s
+      cannot :scan, Package if user.unit.no == I18n.t('unit_no.gy')
+      cannot :gy_scan, Package if user.unit.no == I18n.t('unit_no.sy')
+      can :manage, Order, unit_id: user.unit_id.to_s
     else
       can :update, User, id: user.id
       can :read, UserLog, user: {id: user.id}
@@ -40,7 +42,9 @@ class Ability
       can [:read, :up_download_export], UpDownload
       can :manage, Package, user_id: user.id
       cannot [:cancelled, :send_sy, :package_export], Package
-      can :read, Order#, package: {user_id: user.id}
+      cannot :scan, Package if user.unit.no == I18n.t('unit_no.gy')
+      cannot :gy_scan, Package if user.unit.no == I18n.t('unit_no.sy')
+      can :read, Order, unit_id: user.unit_id.to_s
     end
 
     

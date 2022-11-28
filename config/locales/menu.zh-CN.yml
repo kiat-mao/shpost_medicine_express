@@ -59,6 +59,19 @@ zh-CN:
           needrole:
             can: :scan
             role: :Package
+    gy_scan_packages:
+      name: "扫描装箱"
+      needrole:
+        can: :gy_scan
+        role: :Package
+      submenu:
+        gy_sacn_package:
+          name: "扫描装箱"  
+          link: "/packages/gy_scan"
+          need_count: false
+          needrole:
+            can: :gy_scan
+            role: :Package
   
     # up_downloads:
     #   name: "模板管理"
