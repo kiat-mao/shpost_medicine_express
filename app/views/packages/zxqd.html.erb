@@ -30,8 +30,12 @@
 	    // LODOP.ADD_PRINT_TEXT("19mm","20mm","50mm","10mm","邮件号");
 	    LODOP.SET_PRINT_STYLE("FontSize",14);
 	    LODOP.SET_PRINT_STYLE("Bold",1);  
+	    <% if package.unit.no == I18n.t('unit_no.sy') %>
 	    LODOP.ADD_PRINT_TEXT("10mm","79mm","60mm","15mm","上药控股 服务为荣");
 	    LODOP.ADD_PRINT_TEXT("17.3mm","80mm","60mm","10mm","延伸处方装箱清单");
+	    <% else %>
+    	LODOP.ADD_PRINT_TEXT("13mm","80mm","60mm","10mm","延伸处方装箱清单");
+	    <% end %>
 	    LODOP.SET_PRINT_STYLE("FontSize",10);
 	    LODOP.SET_PRINT_STYLE("Bold",1);  
 	    LODOP.ADD_PRINT_TEXT("10mm","150mm","50mm","15mm","站点:<%= package.orders.first.site_no %>");

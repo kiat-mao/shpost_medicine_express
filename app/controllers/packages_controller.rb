@@ -508,6 +508,7 @@ class PackagesController < ApplicationController
   	@is_packaged = "0"
   	@scaned_orders = params[:scaned_orders]
   	@scaned_bags = params[:scaned_bags]
+  	@order_mode = params[:order_mode]
   	
   	if !@package_id.blank?
   		msg = package_send(Package.find(@package_id))
