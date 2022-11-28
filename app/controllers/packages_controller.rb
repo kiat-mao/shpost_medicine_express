@@ -318,7 +318,7 @@ class PackagesController < ApplicationController
       sheet1[count_row,7]=obj.packed_at.strftime('%Y-%m-%d').to_s
       if obj.unit.no == I18n.t('unit_no.sy').to_s
 		    if !obj.orders.blank?
-		    	obj.orders.each do |o|
+		    	obj.orders.order(:order_no).each do |o|
 		    		sheet1[count_row,3]=o.order_no
 		    		if !o.bags.blank?
 		    			o.bags.each do |b|
@@ -333,7 +333,7 @@ class PackagesController < ApplicationController
 		    end  
 	    elsif obj.unit.no == I18n.t('unit_no.gy').to_s		        	    
 	      if !obj.orders.blank?
-	      	obj.orders.each do |o|
+	      	obj.orders.order(:order_no).each do |o|
 	      		sheet1[count_row,3]=o.order_no
 	      		if !o.bag_list.blank?
 	      			sheet1[count_row,4]=o.bag_list
@@ -359,7 +359,6 @@ class PackagesController < ApplicationController
   def gy_find_bag_result
   	@scan_no = params[:scan_no]
   	@site_no = params[:site_no]
-  	@order_bags = params[:order_bags]
   	@err_msg = ""
   	@bag_amount = params[:bag_amount].to_i
   	@order_mode = params[:order_mode]
@@ -370,11 +369,11 @@ class PackagesController < ApplicationController
   	@all_scaned = "false"
   	is_bag_no = nil
 
-  	# 同一箱模式应相同，都为B2B或B2C
+  	# 同一箱模式应相同，即都为B2B或都为B2C
   	if @order_mode.blank?
-  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and bags.bag_no = ?", "waiting", I18n.t('unit_no.gy'), @scan_no)
+  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and bags.bag_no = ? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, "address_success")
   		if @orders.blank?
-  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?)", "waiting", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no)
+  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, "address_success")
   			if !@orders.blank?
   				@order_mode = @orders.first.order_mode
   				is_bag_no = false
@@ -384,9 +383,9 @@ class PackagesController < ApplicationController
   			is_bag_no = true
   		end 		
   	else
-  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and bags.bag_no = ? and orders.order_mode = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @order_mode)
+  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and bags.bag_no = ? and orders.order_mode = ? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @order_mode, "address_success")
   		if @orders.blank?
-  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.order_mode = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, @order_mode)
+  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.order_mode = ? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, @order_mode, "address_success")
   			if !@orders.blank?
   				is_bag_no = false
   			end
@@ -396,10 +395,11 @@ class PackagesController < ApplicationController
 		end
 
 		if @orders.blank?
-			@err_msg = "该站点无此类型的未装箱包裹信息"
+			@err_msg = "该站点无符合模式,未装箱且地址解析成功的包裹信息"
 		else
+			# (第一个扫描的袋子或B2B)或(B2C且袋子号在待扫列表里)
 			if @to_scan_bags.blank? || (@to_scan_bags.include?@orders.first.bag_list)
-		  	# 同一箱B2B的站点应相同
+		  	# 如果是B2B,同一箱的站点应相同
 		  	if @order_mode == "B2B"
 			  	if !@site_no.blank?
 			  		@orders = @orders.where(site_no: @site_no)
@@ -409,10 +409,11 @@ class PackagesController < ApplicationController
 			  end
 
 				if @orders.blank?
-					@err_msg = "该站点无此类型的未装箱包裹信息"
+					@err_msg = "该站点无符合模式,未装箱且地址解析成功的包裹信息"
 				else
 					if @order_mode == "B2B"
 						if is_bag_no
+							# 已扫袋子号不包含当前袋子号
 							if !@scaned_bags.include?@scan_no
 								if @scaned_orders.blank?
 									@scaned_orders = @orders.map{|o| o.order_no}.join(",")
@@ -425,7 +426,7 @@ class PackagesController < ApplicationController
 							end
 						else
 							cur_bags = @orders.map{|o| o.bag_list}.uniq
-							# 非重复扫描
+							# 已扫袋子号不包含当前袋子号
 							if !(cur_bags - @scaned_bags.split(",")).blank?
 								# 处方号、社保号、电话相同的话取未扫描的第一个袋子
 								cur_bag = (cur_bags - @scaned_bags.split(","))[0]
@@ -440,12 +441,17 @@ class PackagesController < ApplicationController
 								@bag_amount += 1
 							end
 						end
-						@orders = Order.where(order_no: @scaned_orders.split(","))
+						# @orders = Order.where(order_no: @scaned_orders.split(","))
+						@orders = []
+						@scaned_orders.split(",").reverse.each do |o|
+							@orders << Order.find_by(order_no: o)
+						end
 						
 					elsif @order_mode == "B2C"
 						sno = @orders.first.site_no
 						if !sno.blank?
 							if is_bag_no
+								# 已扫袋子号不包含当前袋子号
 								if !@scaned_bags.include?@scan_no
 									if @scaned_orders.blank?
 										@scaned_orders = @orders.map{|o| o.order_no}.join(",")
@@ -458,7 +464,7 @@ class PackagesController < ApplicationController
 								end
 							else
 								cur_bags = @orders.map{|o| o.bag_list}.uniq
-								# 非重复扫描
+								# 已扫袋子号不包含当前袋子号
 								if !(cur_bags - @scaned_bags.split(",")).blank?
 									# 处方号、社保号、电话相同的话取未扫描的第一个袋子
 									cur_bag = (cur_bags - @scaned_bags.split(","))[0]
@@ -473,12 +479,13 @@ class PackagesController < ApplicationController
 									@bag_amount += 1
 								end
 							end
-							
-							@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and orders.site_no=? and orders.order_mode=?", "waiting", I18n.t('unit_no.gy'), sno, @order_mode)
+							# 合单，列出站点号相同的所有订单
+							@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and orders.site_no=? and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), sno, @order_mode, "address_success")
 							if @scaned_orders.split(",").count == @orders.count
 								@all_scaned = "true"
 							end
 						else
+							# 站点号为空的情况
 							@scaned_orders = @orders.map{|o| o.order_no}.join(",")
 							@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
 							@all_scaned = "true"

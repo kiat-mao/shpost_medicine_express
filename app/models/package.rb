@@ -23,9 +23,17 @@ class Package < ApplicationRecord
 
  	def get_all_bags
  		all_bags = 0
- 		self.orders.each do |o|
- 			all_bags += o.bags.count
- 		end
+
+ 		if !self.orders.blank?
+	 		if self.unit.no == I18n.t('unit_no.sy')
+		 		self.orders.each do |o|
+		 			all_bags += o.bags.count
+		 		end
+		 	elsif self.unit.no == I18n.t('unit_no.gy')
+		 		all_bags = self.orders.map{|o| o.bag_list}.uniq.count
+		 	end
+		end
+	 			
  		return all_bags
  	end
 
