@@ -1,10 +1,8 @@
 class WaybillSender
 
   def self.waybill_schedule
-    xydConfig = Rails.application.config_for(:xyd)
-    gy_unit_no = xydConfig[:gy_unit_no]
-    gy_units = Unit.where no: gy_unit_no
-    packages = Packaged.pkp_done.where(unit: gy_units)
+    unit = Unit.find_by(no: I18n.t('unit_no.gy').to_s
+    packages = Packaged.pkp_done.where(unit: unit)
     packages.each do |package|
       self.waybill_query package
     end
