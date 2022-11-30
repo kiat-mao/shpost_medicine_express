@@ -14,6 +14,6 @@ Package.update_all(unit_id: Unit.first.id)
 Order.update_all(unit_id: Unit.first.id)
 InterfaceLog.update_all(unit_id: Unit.first.id)
 InterfaceSender.update_all(unit_id: Unit.first.id)
+Unit.first.update(no: '0001')
 unit_gy = Unit.where(no: '0002').first_or_create(name: '国药分公司', short_name: '国药分公司', level:1)
 User.where(username: 'unitadmingy').first_or_create(username: 'unitadmingy', password: 'unitadmingy12345', name: '机构管理员', role: 'unitadmin', unit_id: unit_gy.id)
-Unit.find_by(no:"20000000").update no:"0001"
