@@ -1,0 +1,39 @@
+<%- model_class = Order -%>
+<div class="page-header">
+<h1>订单改址</h1>
+  <div><%= render partial: '/layouts/page_size' %></div>
+</div>
+<div align='right'>
+  <%= form_tag('', name: 'form1') do -%>
+  <%= check_box("checkbox","selected", onclick: "window.location.href='other_province_index?selected='+this.checked", checked: @selected.blank? ? false : (@selected.eql?('false') ? false : true))%><font size="5">筛选异地订单</font>
+  <% end -%>
+</div>
+
+
+
+<%= grid(@orders_grid) do |g|
+	g.column name: model_class.human_attribute_name(:order_no), attribute: 'order_no'
+
+	g.column name: model_class.human_attribute_name(:receiver_province), attribute: 'receiver_province'
+
+	g.column name: model_class.human_attribute_name(:receiver_city), attribute: 'receiver_city'
+
+	g.column name: model_class.human_attribute_name(:receiver_district), attribute: 'receiver_district'
+
+	g.column name: model_class.human_attribute_name(:receiver_addr), attribute: 'receiver_addr'
+
+	g.column name: model_class.human_attribute_name(:receiver_name), attribute: 'receiver_name'
+
+	g.column name: model_class.human_attribute_name(:receiver_phone), attribute: 'receiver_phone'
+
+	g.column name: "订单日期", attribute: 'created_at' do |order|
+    l order.created_at
+  end
+
+  g.column do |order|
+    ActiveSupport::SafeBuffer.new << 
+    (link_to t('.edit', :default => t("helpers.links.edit")), edit_order_path(order), target: '_blank', :class => 'btn btn-xs btn-primary' if (can? :update, order))
+  end
+
+end 
+%>

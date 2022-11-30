@@ -1,0 +1,40 @@
+<br>
+<font face="微软雅黑" color='#006030' size=6>医院订单数量统计</font>   
+<br><br><br>
+ 
+<%= form_tag('order_report', name: 'form1', method: :post) do -%>
+<table>
+    <tr style="line-height: 40px;height: 40px;">
+    	<td><%= label_tag(:create_at_start, "订单日期起始:") %></td>
+        <td><%= text_field(:create_at, :start, name: "create_at_start",value: @create_at_start) %></td>
+        <td><%= label_tag(:create_at_end, "订单日期结束:") %></td>
+        <td><%= text_field(:create_at, :end, name: "create_at_end", value: @create_at_end) %></td>
+    </tr>
+</table>
+    <%= submit_tag "查询",:class => 'btn btn-primary' %>
+    <%= link_to "导出", order_report_export_orders_path(:create_at_start => params[:create_at_start], :create_at_end => params[:create_at_end]),:class => 'btn btn-primary', method: :post%>
+
+    
+       
+<% end -%>
+<br><br>
+
+<% if !@results.blank? %>
+<table border="1" table-layout="fixed" data-toggle="table" data-height="700">
+    <thead>
+      <tr class= 'nowrap'>
+        <th><b>医院名称</b></th>
+        <th><b>数量</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @results.each do |x| %>
+      <tr class= 'nowrap'>
+          <td><%= x[0] %></td>
+          <td><%= x[1] %></td>
+      </tr>
+      <% end %>
+    </tbody>
+</table>
+<% end %>
+<br><br><br><br><br><br>

@@ -116,6 +116,10 @@
     g.column name: model_class.human_attribute_name(:freight), attribute: 'freight' do |order|
       order.freight_name
     end
+
+    g.column name: model_class.human_attribute_name(:address_status), attribute: 'address_status', allow_multiple_selection: false, custom_filter: Order::ADDRESS_STATUS_NAME.invert do |order| 
+      order.address_status_name
+    end
   end
   
   g.column do |order|

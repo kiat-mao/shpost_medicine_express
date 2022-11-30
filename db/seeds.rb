@@ -10,9 +10,10 @@
 # unit = Unit.where(no: '20000000').first_or_create(name: '物流分公司', short_name: '物流分公司', level:1)
 # User.where(username: 'unitadmin').first_or_create(username: 'unitadmin', password: 'unitadmin12345', name: '机构管理员', role: 'unitadmin', unit_id: unit.id, email: 'email@email.com')
 # User.where(username: 'user').first_or_create(username: 'user', password: 'user12345', name: '普通用户', role: 'user', unit_id: unit.id)
-Package.update_all(unit: Unit.first)
-Order.update_all(unit: Unit.first)
+Package.update_all(unit_id: Unit.first.id)
+Order.update_all(unit_id: Unit.first.id)
 InterfaceLog.update_all(unit_id: Unit.first.id)
 InterfaceSender.update_all(unit_id: Unit.first.id)
-unit_gy = Unit.where(no: '20000001').first_or_create(name: '国药分公司', short_name: '国药分公司', level:1)
+unit_gy = Unit.where(no: '0002').first_or_create(name: '国药分公司', short_name: '国药分公司', level:1)
 User.where(username: 'unitadmingy').first_or_create(username: 'unitadmingy', password: 'unitadmingy12345', name: '机构管理员', role: 'unitadmin', unit_id: unit_gy.id)
+Unit.find_by(no:"20000000").update no:"0001"
