@@ -2,7 +2,7 @@ class WaybillSender
 
   def self.waybill_schedule
     unit = Unit.find_by(no: I18n.t('unit_no.gy').to_s
-    packages = Packaged.pkp_done.where(unit: unit)
+    packages = Packaged.pkp_done.where(unit: unit).where(wegith: nil)
     packages.each do |package|
       self.waybill_query package
     end
