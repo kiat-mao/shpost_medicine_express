@@ -45,7 +45,7 @@ zh-CN:
           link: "/orders/order_report"
           need_count: false
           needrole:
-            can: :read
+            can: :order_report
             role: :Order
     packages:
       name: "装箱管理"
