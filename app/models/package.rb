@@ -50,4 +50,8 @@ class Package < ApplicationRecord
 		self.update status: "cancelled"
 	end
 
+	def pkp_name
+ 		pkp.blank? ? "" : Package::PKP_NAME["#{pkp}".to_sym]
+ 	end
+
 end

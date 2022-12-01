@@ -33,6 +33,20 @@ zh-CN:
           needrole:
             can: :read
             role: :Order
+        other_province_order:
+          name: "订单改址"
+          link: "/orders/other_province_index"
+          need_count: false
+          needrole:
+            can: :other_province_index
+            role: :Order
+        report:
+          name: "医院订单数量"
+          link: "/orders/order_report"
+          need_count: false
+          needrole:
+            can: :read
+            role: :Order
     packages:
       name: "装箱管理"
       needrole:

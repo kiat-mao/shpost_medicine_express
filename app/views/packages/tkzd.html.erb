@@ -24,7 +24,11 @@
     LODOP.PRINT_INIT("打印特快专递单");
     LODOP.SET_PRINT_PAGESIZE(1,750,1300,"tkzd");
     LODOP.ADD_PRINT_LINE("2mm","2mm","2mm","74mm",2,1);
+    <% if package.unit.no == I18n.t('unit_no.sy') %>
     LODOP.ADD_PRINT_TEXT("2.4mm","4mm","11.11mm","7.67mm","EMS");
+    <% else %>
+    LODOP.ADD_PRINT_TEXT("2.4mm","4mm","20mm","7.67mm","<%= (!package.orders.first.freight.blank? && package.orders.first.freight) ? "到付" : "" %>");
+    <% end %>
     LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
@@ -79,7 +83,7 @@
     <% if package.unit.no == I18n.t('unit_no.sy') %>
     LODOP.ADD_PRINT_TEXT("67.4mm","3mm","72mm","4mm","寄件人地址: <%= package.orders.first.sender_addr %>");
     <% else %>
-    LODOP.ADD_PRINT_TEXT("67.4mm","3mm","72mm","4mm","寄件人地址: 百色路128号");
+    LODOP.ADD_PRINT_TEXT("67.4mm","3mm","72mm","4mm","寄件人地址: 百色路1218号");
     <% end %>
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
@@ -111,6 +115,7 @@
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
     LODOP.ADD_PRINT_LINE("84.2mm","2mm","84.2mm","74mm",2,1);
     LODOP.ADD_PRINT_LINE("87.2mm","2mm","87.2mm","74mm",2,1);
+    <% if package.unit.no == I18n.t('unit_no.sy') %>
     LODOP.ADD_PRINT_TEXT("89mm","3mm","49mm","4mm","贵重物品，当面交接");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
@@ -139,6 +144,9 @@
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+    <% else %>
+    LODOP.ADD_PRINT_TEXT("89mm","3mm","47mm","20mm","处方药品为特殊管理商品，根据相关管理要求，药品配送后如非损坏等质量问题需先完成收货后，再与相关互联网诊疗医院沟通后续事项。");
+    <% end %>
     LODOP.ADD_PRINT_TEXT("94mm","49.2mm","25mm","4mm","打印时间:<%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);

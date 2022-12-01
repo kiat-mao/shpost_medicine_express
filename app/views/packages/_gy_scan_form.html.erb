@@ -11,8 +11,8 @@
 			<td>收件人地址</td>
 		</tr> 
 		<% @orders.each do |o| %>
-		<% if (@scaned_orders.include?o.order_no) && (@order_mode=="B2C") %>
-			<tr style="color: red;">
+		<% if @scaned_orders.include?o.order_no %>
+			<tr style="color: green;">
 		<% else %>
 			<tr>
 		<% end %>

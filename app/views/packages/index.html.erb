@@ -6,6 +6,9 @@
     <% if (can? :send_sy, Package) && (current_user.unit.no == I18n.t('unit_no.sy')) %>
     <%= submit_tag "装箱回传上药",:class => 'btn btn-primary', onclick: "form1.action='packages/send_sy';form1.submit();" %>
     <% end %>
+    <% if (can? :send_finish, Package) && (current_user.unit.no == I18n.t('unit_no.gy')) %>
+    <%= submit_tag "收寄完成",:class => 'btn btn-primary', onclick: "form1.action='packages/send_finish';form1.submit();" %>
+    <% end %>
     <%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzds" %>
     <%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqds" %>
     <% if (can? :package_export, Package) %>
@@ -41,6 +44,10 @@
 
     g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
       package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
+    end
+
+    g.column name: model_class.human_attribute_name(:pkp), attribute: 'pkp', allow_multiple_selection: false, custom_filter: Package::PKP_NAME.invert do |package| 
+      package.pkp_name
     end
 
     if current_user.unit.no == I18n.t('unit_no.gy')

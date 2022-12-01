@@ -1,0 +1,26 @@
+<%- model_class = Order -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:order_no) %>:</strong></dt>
+  <dd><%= @order.order_no %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:receiver_province) %>:</strong></dt>
+  <dd><%= @order.receiver_province %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:receiver_city) %>:</strong></dt>
+  <dd><%= @order.receiver_city %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:receiver_district) %>:</strong></dt>
+  <dd><%= @order.receiver_district %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:receiver_addr) %>:</strong></dt>
+  <dd><%= @order.receiver_addr %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:receiver_name) %>:</strong></dt>
+  <dd><%= @order.receiver_name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:receiver_phone) %>:</strong></dt>
+  <dd><%= @order.receiver_phone %></dd>
+</dl>
+
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_order_path(@order), :class => 'btn btn-default' %>
+<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            (params['referer'].blank? ? request.referer : params['referer']), :class => 'btn btn-default' %>

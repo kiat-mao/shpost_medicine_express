@@ -67,6 +67,8 @@ Rails.application.routes.draw do
       get 'gy_find_bag_result'
       post 'gy_find_bag_result'
       post 'gy_do_packaged'
+      get 'send_finish'
+      post 'send_finish'
     end
     member do
       get 'cancelled'
@@ -74,7 +76,17 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :orders
+  resources :orders do
+    collection do 
+      get 'other_province_index'
+      get 'order_report'
+      post 'order_report'
+      post 'order_report_export'
+    end
+  end
+
+
+
   match "/standard_interface/order_push" => "standard_interface#order_push", via: [:get, :post]
   end
 end

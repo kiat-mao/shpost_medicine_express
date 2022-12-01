@@ -301,6 +301,7 @@ zh-CN:
         user_id: "处理用户"
         order_list: "订单号列表"
         bag_list: "袋子号列表"
+        pkp: "收寄状态"
       order:
         order_no: "订单号"
         prescription_no: "处方号"
@@ -330,6 +331,7 @@ zh-CN:
         hospital_name: "医院名称"
         freight: "是否到付"
         social_no: "社保号"
+        address_status: "地址解析状态"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"

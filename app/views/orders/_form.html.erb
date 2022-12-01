@@ -1,0 +1,51 @@
+<%= form_for @order, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :order_no, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :order_no, :class => 'text_field', disabled: true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :receiver_province, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :receiver_province, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :receiver_city, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :receiver_city, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :receiver_district, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :receiver_district, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :receiver_addr, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :receiver_addr, :class => 'text_field', disabled: true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :receiver_name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :receiver_name, :class => 'text_field', disabled: true %>
+    </div>
+  </div>
+   <div class="control-group">
+    <%= f.label :receiver_phone, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :receiver_phone, :class => 'text_field', disabled: true %>
+    </div>
+  </div>
+  
+  
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <% if can? :other_province_index, Order %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+              other_province_index_orders_path, :class => 'btn btn-default' %>
+  <% end %>
+<% end %>
