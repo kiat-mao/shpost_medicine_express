@@ -69,7 +69,10 @@ zh-CN:
       max_times: 1 #default_times: 10
       interval: 1000 #default_interval: 600
     waybill_query:
-      url: 'http://localhost:3000/shpost_package/standard_interface/waybill_query_in_local'
+      #production
+      url: 'http://172.16.205.114:3000/shpost_package/standard_interface/waybill_query_in_local'
+      #development
+      # url: 'http://localhost:3000/shpost_package/standard_interface/waybill_query_in_local'
       interface_type: 'http'
       http_type: 'post'
       callback_class: 'WaybillSender'
