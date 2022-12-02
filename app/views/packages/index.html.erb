@@ -51,11 +51,15 @@
     end
 
     if current_user.unit.no == I18n.t('unit_no.gy')
-      g.column name: '模式', attribute: 'id',filter: false do |package| 
+      g.column name: model_class.human_attribute_name(:weight), attribute: 'weight'
+
+      g.column name: model_class.human_attribute_name(:price), attribute: 'price'
+    
+      g.column name: '模式', attribute: 'order_mode', assoc: :orders, custom_filter: Order::ORDER_MODE_NAME.invert  do |package|
         package.orders.blank? ? "" : package.orders.first.order_mode
       end
 
-      g.column name: '站点编号', attribute: 'id',filter: false do |package| 
+      g.column name: '站点编号', attribute: 'site_no', assoc: :orders do |package| 
         package.orders.blank? ? "" : package.orders.first.site_no
       end
     end

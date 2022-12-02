@@ -39,7 +39,7 @@
 	    LODOP.SET_PRINT_STYLE("FontSize",10);
 	    LODOP.SET_PRINT_STYLE("Bold",1);  
 	    LODOP.ADD_PRINT_TEXT("10mm","150mm","50mm","15mm","站点:<%= package.orders.first.site_no %>");
-	    LODOP.ADD_PRINT_TEXT("16mm","155mm","50mm","15mm","<%= package.orders.first.site_id.blank? ? "" : package.orders.first.site_id.to_s + package.orders.first.site_name.blank? ? "" : package.orders.first.site_name %>");
+	    LODOP.ADD_PRINT_TEXT("16mm","155mm","50mm","15mm","<%= package.orders.first.site_id.blank? ? "" : package.orders.first.site_id.to_s + (package.orders.first.site_name.blank? ? "" : package.orders.first.site_name) %>");
 	    LODOP.ADD_PRINT_TEXT("32mm","8mm","45mm","10mm","收货人:<%= package.orders.first.receiver_name %>");
 	    LODOP.ADD_PRINT_TEXT("32mm","52mm","60mm","10mm","收货电话:<%= package.orders.first.receiver_phone %>");
 	    LODOP.ADD_PRINT_TEXT("32mm","107mm","60mm","10mm","订单数:<%= package.orders.count %>");
