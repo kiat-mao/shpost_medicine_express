@@ -69,6 +69,7 @@ Rails.application.routes.draw do
       post 'gy_do_packaged'
       get 'send_finish'
       post 'send_finish'
+      post 'index'
     end
     member do
       get 'cancelled'

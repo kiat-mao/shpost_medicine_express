@@ -5,10 +5,15 @@ class PackagesController < ApplicationController
   # GET /packages
   # GET /packages.json
   def index
-  	@packages = Package.accessible_by(current_ability)
-  	if params[:grid].blank?
-	  	@packages = @packages.where("packed_at>=?", Date.today)
-	  end
+  	@no = params[:no]
+  	if @no.blank?
+	  	@packages = Package.accessible_by(current_ability)
+	  	if params[:grid].blank?
+		  	@packages = @packages.where("packed_at>=?", Date.today)
+		  end
+		else
+			@packages = Package.accessible_by(current_ability).joins(:orders).where("orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?", @no, @no, @no)	
+		end
 	  
     @packages_grid = initialize_grid(@packages,
          :order => 'packed_at',
@@ -588,6 +593,7 @@ class PackagesController < ApplicationController
     end
 	end
 
+	
 	private
 
 	def package_params

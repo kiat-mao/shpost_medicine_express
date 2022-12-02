@@ -15,7 +15,18 @@
     <%= submit_tag "导出",:class => 'btn btn-primary', onclick: "form1.action='packages/package_export.xls';form1.submit();" %>
     <% end %>
   </div>
-</div>  
+</div> 
+<% if current_user.unit.no == I18n.t('unit_no.gy') %>
+  <div style="float:left">
+    <%= form_tag(packages_path, name: 'form2', method: :post) do %>
+    处方号/社保号/收件人电话:<input type=text id='no' name='no' value='<%= @no %>'/>
+    <%= submit_tag "查询", :class => 'btn btn-primary'%>
+    <% end %>
+  </div>  
+  <br><br><br>
+<% end %> 
+
+<div>
 <%= form_tag('', :method => "post", name: 'form1') do %>
   <%= grid(@packages_grid) do |g|
     g.action_column select_all_buttons: true do |package|
@@ -73,4 +84,4 @@
   end 
   %>
 <% end %>
-
+</div>
