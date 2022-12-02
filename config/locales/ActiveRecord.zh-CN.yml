@@ -302,6 +302,8 @@ zh-CN:
         order_list: "订单号列表"
         bag_list: "袋子号列表"
         pkp: "收寄状态"
+        weight: "重量"
+        price: "价格"
       order:
         order_no: "订单号"
         prescription_no: "处方号"
