@@ -86,7 +86,7 @@
 			    h += 35;
 			    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","生产厂家:<%= c.manufacture %>");
 			    h += 20;
-			    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","生产日期:<%= c.produced_at.strftime('%Y-%m-%d').to_s %>                                       有效期:<%= c.expiration_date.strftime('%Y-%m-%d').to_s %>");
+			    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","生产日期:<%= c.produced_at.blank? ? "" : c.produced_at.strftime('%Y-%m-%d').to_s %>                                       有效期:<%= c.expiration_date.blank? ? "" : c.expiration_date.strftime('%Y-%m-%d').to_s %>");
 			    h += 15;	    
 		  	<% end %>
 	  	<% #if !orders.blank? %>
