@@ -426,10 +426,10 @@ class PackagesController < ApplicationController
 						# 已扫袋子号不包含当前袋子号
 						if !@scaned_bags.include?@scan_no
 							if @scaned_orders.blank?
-								@scaned_orders = @orders.map{|o| o.order_no}.join(",")
+								@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
 								@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
 							else
-								@scaned_orders += ","+ @orders.map{|o| o.order_no}.join(",")
+								@scaned_orders += ","+ @orders.map{|o| o.order_no}.uniq.join(",")
 								@scaned_bags += ","+ @orders.map{|o| o.bag_list}.uniq.join(",")
 							end
 							@bag_amount += 1
@@ -442,10 +442,10 @@ class PackagesController < ApplicationController
 							cur_bag = (cur_bags - @scaned_bags.split(","))[0]
 							cur_orders = @orders.where(bag_list: cur_bag)
 							if @scaned_orders.blank?
-								@scaned_orders = cur_orders.map{|o| o.order_no}.join(",")
+								@scaned_orders = cur_orders.map{|o| o.order_no}.uniq.join(",")
 								@scaned_bags = cur_bag
 							else
-								@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.join(",")
+								@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.uniq.join(",")
 								@scaned_bags += ","+ cur_bag
 							end
 							@bag_amount += 1
@@ -460,7 +460,7 @@ class PackagesController < ApplicationController
 					sno = @orders.first.site_no
 					if sno.blank?
 						# 站点号为空的情况
-						@scaned_orders = @orders.map{|o| o.order_no}.join(",")
+						@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
 						@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
 						@all_scaned = "true"
 						@bag_amount += 1
@@ -500,10 +500,10 @@ class PackagesController < ApplicationController
 								if @to_scan_bags.include?cur_bag
 									cur_orders = @orders.where(bag_list: cur_bag)
 									if @scaned_orders.blank?
-										@scaned_orders = cur_orders.map{|o| o.order_no}.join(",")
+										@scaned_orders = cur_orders.map{|o| o.order_no}.uniq.join(",")
 										@scaned_bags = cur_bag
 									else
-										@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.join(",")
+										@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.uniq.join(",")
 										@scaned_bags += ","+ cur_bag
 									end
 									@bag_amount += 1
