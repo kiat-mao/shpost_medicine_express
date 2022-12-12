@@ -31,7 +31,10 @@ every 5.minutes do
   runner "TmsInterfaceSender.order_trace_schedule"
 end
 
-every 5.minutes do
-  runner "WaybillSender.waybill_schedule"
-end
+# every 5.minutes do
+#   runner "WaybillSender.waybill_schedule"
+# end
 
+every 2.minutes do
+  runner "WaybillSender.waybill_schedule_offline"
+end
