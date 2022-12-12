@@ -1,6 +1,7 @@
 <% if !@err_msg.blank? %>
 	alert("<%= @err_msg %>");
 	document.getElementById('mid').style.display='none';
+	$('#bag_no').removeAttr('disabled');
 	$('#bag_no').val("");
 	$('#bag_no').focus();
 	$('#package_id').val("<%= @package_id %>");
@@ -8,6 +9,7 @@
 <% else %>
 	// alert("装箱已完成，请继续打印面单和配货单");
 	document.getElementById('mid').style.display='none';
+	$('#bag_no').removeAttr('disabled');
 	$('#tkzd').removeAttr('disabled');
 	$('#zxqd').removeAttr('disabled');				
 	$('#site_no').val("");

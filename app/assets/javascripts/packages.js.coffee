@@ -36,6 +36,7 @@ enterpress = (e) ->
 					$('#bag_no').blur();
 					showMask()
 					do_packaged()
+					$('#bag_no').attr("disabled","disabled");
 					return false;
 			else
 				if $('#is_packaged').val() == "1"

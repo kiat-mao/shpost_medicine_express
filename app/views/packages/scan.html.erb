@@ -22,7 +22,7 @@
 	</table>
 	<table>
 		<tr class= 'nowrap'>
- 			<td><%= text_field_tag 'bag_no', nil, class: "controls showmask", size: "50", :id => "bag_no" %></td>
+ 			<td><%= text_field_tag 'bag_no', nil, class: "controls showmask", size: "50", :id => "bag_no", :disabled => false %></td>
  			<td><%= button_tag "重置",:class => 'btn btn-primary', :id => "reset", :type => "button"%></td>
  			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
 			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>
