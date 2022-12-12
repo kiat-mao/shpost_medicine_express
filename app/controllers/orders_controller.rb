@@ -20,6 +20,7 @@ class OrdersController < ApplicationController
 	def update
     respond_to do |format|
       if @order.update(order_params)
+        @order.update no_modify: true
         format.html { redirect_to @order, notice: I18n.t('controller.update_success_notice', model: '订单')}
         format.json { head :no_content }
       else
@@ -30,11 +31,11 @@ class OrdersController < ApplicationController
   end
 
   def other_province_index
-  	@orders = @orders.accessible_by(current_ability).where(status: "waiting")
+  	@orders = @orders.accessible_by(current_ability).where(status: "waiting", no_modify: false)
 
   	@selected = params[:selected].blank? ? 'false' : params[:selected]
     if !@selected.blank? && @selected.eql?('true')
-      @orders = @orders.where("receiver_province not like (?) or receiver_province = ? or receiver_city = ? or receiver_district = ?", "上海%", nil, nil, nil)
+      @orders = @orders.where("(receiver_province not like (?) or receiver_province = ? or receiver_city = ? or receiver_district = ?) and no_modify = ?", "上海%", nil, nil, nil, false)
     end
 
     @orders_grid = initialize_grid(@orders,
@@ -127,6 +128,27 @@ class OrdersController < ApplicationController
     return date
   end
 
+  def set_no_modify
+    if params[:grid] && params[:grid][:selected]
+      selected = params[:grid][:selected]
+         
+      until selected.blank? do 
+        orders = Order.where(id:selected.pop(1000))
+        orders.each do |o|
+          o.update no_modify: true
+        end
+      end
+      flash[:notice] = "已设置成功"      
+    else
+      flash[:alert] = "请勾选订单"
+    end   
+    
+    respond_to do |format|
+      format.html { redirect_to request.referer }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
@@ -135,6 +157,6 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:receiver_province, :receiver_city, :receiver_district)
+      params.require(:order).permit(:receiver_province, :receiver_city, :receiver_district, :receiver_addr)
     end
 end

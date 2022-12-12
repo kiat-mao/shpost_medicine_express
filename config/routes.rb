@@ -84,6 +84,8 @@ Rails.application.routes.draw do
       get 'order_report'
       post 'order_report'
       post 'order_report_export'
+      get 'set_no_modify'
+      post 'set_no_modify'
     end
   end
 

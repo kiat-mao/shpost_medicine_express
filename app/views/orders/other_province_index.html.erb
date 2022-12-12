@@ -4,14 +4,15 @@
   <div><%= render partial: '/layouts/page_size' %></div>
 </div>
 <div align='right'>
-  <%= form_tag('', name: 'form1') do -%>
+  <%= submit_tag "无需修改",:class => 'btn btn-primary', onclick: "form1.action='set_no_modify';form1.submit();" %>
   <%= check_box("checkbox","selected", onclick: "window.location.href='other_province_index?selected='+this.checked", checked: @selected.blank? ? false : (@selected.eql?('false') ? false : true))%><font size="5">筛选异地订单</font>
-  <% end -%>
 </div>
 
 
-
+<%= form_tag('', name: 'form1') do %>
 <%= grid(@orders_grid) do |g|
+  g.action_column select_all_buttons: true
+
 	g.column name: model_class.human_attribute_name(:order_no), attribute: 'order_no'
 
 	g.column name: model_class.human_attribute_name(:receiver_province), attribute: 'receiver_province'
@@ -37,3 +38,4 @@
 
 end 
 %>
+<% end %>

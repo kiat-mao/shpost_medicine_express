@@ -59,11 +59,11 @@
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("46mm","38mm","25mm","7mm","收件人电话:");
+    LODOP.ADD_PRINT_TEXT("46mm","36mm","25mm","7mm","收件人电话:");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("46mm","57mm","20mm","7mm","<%= package.orders.first.receiver_phone %>");
+    LODOP.ADD_PRINT_TEXT("46mm","55mm","20mm","9mm","<%= package.orders.first.receiver_phone %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
@@ -169,8 +169,8 @@
     //设置某个打印机
     LODOP.SET_PRINTER_INDEXA("<%= current_user.hot_printer.blank? ? I18n.t('printer.hot_printer') : current_user.hot_printer %>");
     // LODOP.PRINT_DESIGN();
-    // LODOP.PREVIEW();
-    LODOP.PRINT();
+    LODOP.PREVIEW();
+    // LODOP.PRINT();
     <% end %>
     };
 

@@ -74,6 +74,7 @@ enterpress3 = (e) ->
 						$('#scan_no').blur();
 						showMask()
 						gy_do_packaged()
+						$('#scan_no').attr("disabled","disabled");
 						return false;
 				else
 					if $('#all_scaned').val() == "true"
@@ -81,6 +82,7 @@ enterpress3 = (e) ->
 							$('#scan_no').blur();
 							showMask()
 							gy_do_packaged()
+							$('#scan_no').attr("disabled","disabled");
 							return false;
 					else
 						audio = document.getElementById("failed_alert");
