@@ -73,6 +73,11 @@
   end
 
   g.action_column select_all_buttons: true
+
+  g.column do |order|
+    ActiveSupport::SafeBuffer.new << 
+    button_tag("详细信息", class: "btn btn-xs btn-primary", name: 'detail')
+  end
   
   g.column name: model_class.human_attribute_name(:order_no), attribute: 'order_no'
 
@@ -115,6 +120,8 @@
 
     g.column name: model_class.human_attribute_name(:hospital_name), attribute: 'hospital_name'
 
+    g.column name: model_class.human_attribute_name(:customer_name), attribute: 'customer_name'
+
     g.column name: model_class.human_attribute_name(:freight), attribute: 'freight' do |order|
       order.freight_name
     end
@@ -124,10 +131,7 @@
     end
   end
   
-  g.column do |order|
-    ActiveSupport::SafeBuffer.new << 
-    button_tag("详细信息", class: "btn btn-xs btn-primary", name: 'detail')
-  end
+  
 end 
 %>
 

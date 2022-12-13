@@ -61,9 +61,9 @@
 
 
     if current_user.unit.no == I18n.t('unit_no.gy')
-      # g.column name: model_class.human_attribute_name(:pkp), attribute: 'pkp', allow_multiple_selection: false, custom_filter: Package::PKP_NAME.invert do |package| 
-      #   package.pkp_name
-      # end
+      g.column name: model_class.human_attribute_name(:pkp), attribute: 'pkp', allow_multiple_selection: false, custom_filter: Package::PKP_NAME.invert do |package| 
+        package.pkp_name
+      end
 
       g.column name: model_class.human_attribute_name(:weight), attribute: 'weight'
 
