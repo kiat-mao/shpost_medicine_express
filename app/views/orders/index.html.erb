@@ -13,7 +13,7 @@
       # 	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
         buffer = content_tag(:dt,"寄件人地址:")
-        buffer += content_tag(:dd,order.try(:sender_addr))
+        buffer += content_tag(:dd,order.try(:sender_addr), style: 'white-space:normal')
         raw buffer                   
       	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
@@ -33,7 +33,7 @@
       # 	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
         buffer = content_tag(:dt,"收件人地址:")
-        buffer += content_tag(:dd,order.try(:receiver_addr))
+        buffer += content_tag(:dd,order.try(:receiver_addr), style: 'white-space:normal')
         raw buffer                   
       	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
@@ -48,7 +48,7 @@
       	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
         buffer = content_tag(:dt,"顾客地址:")
-        buffer += content_tag(:dd,order.try(:customer_addr))
+        buffer += content_tag(:dd,order.try(:customer_addr), style: 'white-space:normal')
         raw buffer                   
       	end)) + 
       content_tag(:td, content_tag(:div, content_tag(:dl) do
