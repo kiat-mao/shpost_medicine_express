@@ -5,7 +5,16 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders_grid = initialize_grid(@orders.accessible_by(current_ability),
+    @orders = @orders.accessible_by(current_ability)
+
+    if  !current_user.unit.blank? && (current_user.unit.no == I18n.t('unit_no.gy'))
+      if !params[:grid].blank? && !params[:grid][:f].blank? && !params[:grid][:f][:site_no].blank?
+        site_no = params[:grid][:f][:site_no]
+        @orders = @orders.where(site_no: site_no)
+      end
+    end
+
+    @orders_grid = initialize_grid(@orders,
          :order => 'order_no',
          :order_direction => 'asc', 
          :per_page => params[:page_size])

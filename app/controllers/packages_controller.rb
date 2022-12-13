@@ -458,16 +458,19 @@ class PackagesController < ApplicationController
 					end						
 				elsif @order_mode == "B2C"
 					sno = @orders.first.site_no
-					if sno.blank?
+					receiver_phone = @orders.first.receiver_phone
+					receiver_addr = @orders.first.receiver_addr
+					hospital_name = @orders.first.hospital_name
+					# if sno.blank?
 						# 站点号为空的情况
-						@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
-						@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
-						@all_scaned = "true"
-						@bag_amount += 1
-						@to_scan_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
-					else
-						# 合单，列出站点号相同的所有订单
-						@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and orders.site_no=? and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), sno, @order_mode, "address_success")
+					# 	@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
+					# 	@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
+					# 	@all_scaned = "true"
+					# 	@bag_amount += 1
+					# 	@to_scan_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
+					# else
+						# 合单，列出站点号相同或医院名称，收件人电话，收件人地址相同的所有订单
+						@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and (orders.site_no=? or (orders.receiver_phone = ? and orders.receiver_addr = ? and orders.hospital_name = ?)) and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), sno, receiver_phone, receiver_addr, hospital_name, @order_mode, "address_success")
 						@to_scan_bags = @to_scan_bags.blank? ? @orders.map{|o| o.bag_list}.uniq.join(",") : @to_scan_bags
 
 						if is_bag_no
@@ -516,7 +519,7 @@ class PackagesController < ApplicationController
 								end	
 							end
 						end	
-					end
+					# end
 				end
 			end
 		end
