@@ -1,4 +1,10 @@
 $('#scan_no').blur();
+
+<% if !@tmp_save_msg.blank? %>
+	$('#tmp_package_msg').text("<%= @tmp_save_msg %>");
+	$("#tmp_msg").show();
+<% end %>
+
 <% if !@err_msg.blank? %>
 	var audio = document.getElementById("failed_alert");
 	audio.play();
@@ -20,4 +26,3 @@ $('#scan_no').blur();
 	$('#scan_no').focus();
 	$('#order_mode_show').text("<%= @order_mode %>");
 <% end %>
-

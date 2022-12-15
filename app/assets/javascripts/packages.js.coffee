@@ -14,6 +14,7 @@ ready = ->
   $("#scan_no").keypress(enterpress3)
   if document.getElementById("scan_no")
   	setInterval("$('#scan_no').focus();",3000);
+  $('#tmp_save').click(enterpress4)
   
 enterpress = (e) ->
 	e = e || window.event;   
@@ -50,8 +51,10 @@ enterpress = (e) ->
 
 enterpress2 = ->	
 	$('#bag_no').val("");
+	$('#scan_no').val("");
 	clear()
 	$('#bag_no').focus();
+	$('#scan_no').focus();
 
 enterpress3 = (e) ->
 	e = e || window.event;   
@@ -106,6 +109,13 @@ enterpress3 = (e) ->
 				$('#scan_no').focus();
 				return false;
 
+enterpress4 = ->
+	tmp_save()
+	$('#scan_no').val("");
+	clear()
+	$('#scan_no').focus();
+
+
 
 find_bag_result = -> 
 				$.ajax({
@@ -158,9 +168,18 @@ clear = ->
 	$('#all_scaned').val("");
 	$('#to_scan_bags').val("");
 	$('#order_mode_show').text("");
+	$('#tmp_package_msg').text("");
+	$("#tmp_msg").hide();
 
 showMask = ->
 	document.getElementById('mid').style.display="block";
 	#setTimeout("document.getElementById('mid').style.display='none';$('#bag_no').focus();",10000);
 
+tmp_save = -> 
+				$.ajax({
+					type : 'POST',
+					url : '../packages/tmp_save/',
+					data: { scaned_orders: $('#scaned_orders').val(), site_no: $('#site_no').val()},
+					dataType : 'script'
+				});
 

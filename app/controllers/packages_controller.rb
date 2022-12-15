@@ -373,6 +373,7 @@ class PackagesController < ApplicationController
   	@scaned_bags = params[:scaned_bags]
   	@all_scaned = "false"
   	is_bag_no = nil
+  	@tmp_save_msg = ""
 
   	# 同一箱模式应相同，即都为B2B或都为B2C
   	# 扫第一个，order_mode为空
@@ -457,11 +458,11 @@ class PackagesController < ApplicationController
 						@orders << Order.find_by(order_no: o)
 					end						
 				elsif @order_mode == "B2C"
-					sno = @orders.first.site_no
+					@site_no = @orders.first.site_no
 					receiver_phone = @orders.first.receiver_phone
 					receiver_addr = @orders.first.receiver_addr
 					hospital_name = @orders.first.hospital_name
-					# if sno.blank?
+					# if @site_no.blank?
 						# 站点号为空的情况
 					# 	@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
 					# 	@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
@@ -470,7 +471,7 @@ class PackagesController < ApplicationController
 					# 	@to_scan_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
 					# else
 						# 合单，列出站点号相同或医院名称，收件人电话，收件人地址相同的所有订单
-						@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and (orders.site_no=? or (orders.receiver_phone = ? and orders.receiver_addr = ? and orders.hospital_name = ?)) and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), sno, receiver_phone, receiver_addr, hospital_name, @order_mode, "address_success")
+						@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and (orders.site_no=? or (orders.receiver_phone = ? and orders.receiver_addr = ? and orders.hospital_name = ?)) and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @site_no, receiver_phone, receiver_addr, hospital_name, @order_mode, "address_success")
 						@to_scan_bags = @to_scan_bags.blank? ? @orders.map{|o| o.bag_list}.uniq.join(",") : @to_scan_bags
 
 						if is_bag_no
@@ -521,6 +522,13 @@ class PackagesController < ApplicationController
 						end	
 					# end
 				end
+			
+				ods = Order.where("status = ? and updated_at>=? and site_no = ?", "waiting", Date.today, @site_no).where.not(tmp_package: nil)
+				if !ods.blank?
+					num = ods.map{|o| o.bag_list}.uniq.count
+					tmp_package_no = ods.first.tmp_package
+					@tmp_save_msg = "站点#{@site_no}暂存箱号#{tmp_package_no}共有#{num}袋"
+				end
 			end
 		end
 	end
@@ -540,13 +548,18 @@ class PackagesController < ApplicationController
 			@is_packaged = "1"
   	else
 	  	if !@scaned_orders.blank? && !@scaned_bags.blank?
-				package_no = Package.new_package_no(current_user)
-				@package = Package.create package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: @scaned_orders.split(","), bag_list: @scaned_bags.split(","), unit_id: current_user.unit_id
-				@package_id = @package.id
-				Order.where(order_no: @scaned_orders.split(",")).update_all package_id: @package.id, status: "packaged"
-				@is_packaged = "1"
-				msg = package_send(@package)
-				@err_msg = msg if !msg.eql?"成功"	
+	  		statuses = Order.where(order_no: @scaned_orders.split(",")).map{|o| o.status}.uniq
+	  		if statuses.include?""
+	  			@err_msg = "已拦截不允许装箱"
+	  		else
+		  		package_no = Package.new_package_no(current_user)
+					@package = Package.create package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: @scaned_orders.split(","), bag_list: @scaned_bags.split(","), unit_id: current_user.unit_id
+					@package_id = @package.id
+					Order.where(order_no: @scaned_orders.split(",")).update_all package_id: @package.id, status: "packaged", tmp_package: nil
+					@is_packaged = "1"
+					msg = package_send(@package)
+					@err_msg = msg if !msg.eql?"成功"	
+				end
 			end
 		end
 	end
@@ -594,6 +607,39 @@ class PackagesController < ApplicationController
       format.html { redirect_to request.referer }
       format.json { head :no_content }
     end
+	end
+
+	def tmp_save
+		@scaned_orders = params[:scaned_orders]
+		site_no = params[:site_no]
+		tmp_package_no = ""
+		@msg = ""
+		
+		if !@scaned_orders.blank?
+			orders = Order.where("status = ? and updated_at>=? and site_no = ?", "waiting", Date.today, site_no).where.not(tmp_package: nil)
+	
+			ActiveRecord::Base.transaction do
+				begin
+					if !orders.blank?
+						tmp_package_no = orders.first.tmp_package
+					else
+						tmp_package_no = get_new_tmp_package_no
+					end
+					Order.where(order_no: @scaned_orders.split(",")).update_all tmp_package: tmp_package_no
+
+					@msg = "该袋子已暂存至箱子#{tmp_package_no}"
+				rescue Exception => e
+          flash[:alert] = e.message 
+          raise ActiveRecord::Rollback
+        end
+      end
+		end
+	end
+
+	def get_new_tmp_package_no
+		order =  Order.where("status = ? and updated_at>=?", "waiting", Date.today).where.not(tmp_package: nil).last
+
+ 		new_tmp_package_no = order.blank? ? (Date.today.day.to_s + "_"+"1".rjust(3, '0')) : (Date.today.day.to_s + "_"+((order.tmp_package.split("_")[1].to_i) +1).to_s.rjust(3, '0'))
 	end
 
 	

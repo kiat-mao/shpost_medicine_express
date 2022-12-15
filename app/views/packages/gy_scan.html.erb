@@ -28,10 +28,12 @@
 			<td><font color="red"><h1><%= label_tag 'bag_amount', @bag_amount, class: 'control-group', :id => "bag_amount" %></h1></font></td>
 		</tr>
 	</table>
+	<div id="tmp_msg"><h3><font color="red"><%= label_tag 'tmp_package_msg', "", class: 'control-group', :id => "tmp_package_msg" %></font></h3></div>
 	<table>
 		<tr class= 'nowrap'>
  			<td><%= text_field_tag 'scan_no', nil, class: "controls showmask", size: "50", :id => "scan_no", :disabled => false %></td>
  			<td><%= button_tag "重置",:class => 'btn btn-primary', :id => "reset", :type => "button"%></td>
+ 			<td><%= button_tag "暂存",:class => 'btn btn-primary', :id => "tmp_save", :type => "button"%></td>
  			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
  			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>
  			<td></td>
