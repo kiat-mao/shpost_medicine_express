@@ -35,7 +35,7 @@ class Ability
       cannot :scan, Package if user.unit.no == I18n.t('unit_no.gy')
       cannot :gy_scan, Package if user.unit.no == I18n.t('unit_no.sy')
       can :manage, Order, unit_id: user.unit_id.to_s
-      cannot [:other_province_index, :order_report, :order_report_export], Order if user.unit.no == I18n.t('unit_no.sy')
+      cannot [:other_province_index, :order_report, :order_report_export, :cancel], Order if user.unit.no.eql?(I18n.t('unit_no.sy'))
     else
       can :update, User, id: user.id
       can :read, UserLog, user: {id: user.id}
@@ -46,7 +46,7 @@ class Ability
       cannot :scan, Package if user.unit.no == I18n.t('unit_no.gy')
       cannot :gy_scan, Package if user.unit.no == I18n.t('unit_no.sy')
       can [:read, :order_report, :order_report_export], Order, unit_id: user.unit_id.to_s
-      cannot [:order_report, :order_report_export], Order if user.unit.no == I18n.t('unit_no.sy')
+      cannot [:order_report, :order_report_export, :cancel], Order if user.unit.no.eql?(I18n.t('unit_no.sy'))
     end
 
     

@@ -39,6 +39,15 @@ class OrdersController < ApplicationController
     end
   end
 
+  def cancel
+    @order.cancel_order!
+
+    respond_to do |format|
+      format.html { redirect_to request.referer }
+      format.json { head :no_content }
+    end
+  end
+
   def other_province_index
   	@orders = @orders.accessible_by(current_ability).where(status: "waiting", no_modify: false)
 

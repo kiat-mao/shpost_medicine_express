@@ -7,8 +7,8 @@ class Order < ApplicationRecord
 	validates_presence_of :order_no, :message => '订单号不能为空'
 	validates_uniqueness_of :order_no, :message => '订单号已存在'
 
-	enum status: {waiting: 'waiting', packaged: 'packaged'}
-	STATUS_NAME = { waiting: '未装箱', packaged: '已装箱'}
+	enum status: {waiting: 'waiting', packaged: 'packaged', cancelled: 'cancelled'}
+	STATUS_NAME = { waiting: '未装箱', packaged: '已装箱', cancelled: '已取消'}
 
 	enum interface_status: {interface_waiting: 'interface_waiting', need_send: 'need_send', to_send: 'to_send', failed: 'failed', done: 'done'}
 	INTERFACE_STATUS_NAME = {interface_waiting: '待发送', need_send: '可以发送', to_send: '发送队列中', failed: '发送失败', done: '发送成功'}
@@ -36,6 +36,14 @@ class Order < ApplicationRecord
 	  else
 	    name = "否"
 	  end
+	end
+
+	def cancel_order!
+		if order_mode.eql? 'B2B'
+			cancelled! if waiting?
+		elsif order_mode.eql? 'B2C'
+			Order.waiting.where(site_no: site_no).where(order_mode: 'B2C').update_all(status: Order::statuses[:cancelled])
+		end
 	end
 	
 	def address_status_name

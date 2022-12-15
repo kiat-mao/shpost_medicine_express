@@ -76,7 +76,8 @@
 
   g.column do |order|
     ActiveSupport::SafeBuffer.new << 
-    button_tag("详细信息", class: "btn btn-xs btn-primary", name: 'detail')
+    button_tag("详细信息", class: "btn btn-xs btn-primary", name: 'detail')<< ' ' <<
+    (link_to t('.cancel', :default => '拦截'), cancel_order_path(order),method: 'post', data: {confirm:'拦截后不可恢复！确定操作？'}, :class => 'btn btn-xs btn-danger' if can? :cancel, order) 
   end
   
   g.column name: model_class.human_attribute_name(:order_no), attribute: 'order_no'

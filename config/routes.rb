@@ -87,6 +87,9 @@ Rails.application.routes.draw do
       get 'set_no_modify'
       post 'set_no_modify'
     end
+    member do
+      post 'cancel'
+    end
   end
 
 
