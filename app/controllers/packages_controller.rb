@@ -411,15 +411,18 @@ class PackagesController < ApplicationController
 		if @orders.blank?
 			@err_msg = "该站点无符合模式,未装箱且地址解析成功的包裹信息"
 		else
+                  if !@orders.where("receiver_province is ? or receiver_city is ? or receiver_district is ?", nil, nil, nil).blank?
+                    @err_msg = "有订单省市区为空，请去订单改址页面修改"
+                  else
 			# 如果是B2B,同一箱的站点应相同
-	  	if @order_mode == "B2B"
+	  	    if @order_mode == "B2B"
 		  	if !@site_no.blank?
 		  		@orders = @orders.where(site_no: @site_no)
 		  	else
 		  		@site_no = @orders.first.site_no
 		  	end
-		  end
-		  if @orders.blank?
+		    end
+		    if @orders.blank?
 				@err_msg = "该站点无符合模式,未装箱且地址解析成功的包裹信息"
 			else
 				if @order_mode == "B2B"
@@ -532,6 +535,7 @@ class PackagesController < ApplicationController
 					@tmp_save_msg = "站点#{@site_no}暂存箱号#{tmp_package_no}共有#{num}袋"
 				end
 			end
+                  end
 		end
 	end
 
