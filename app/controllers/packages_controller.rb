@@ -471,8 +471,10 @@ class PackagesController < ApplicationController
 					# 	@to_scan_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
 					# else
 						# 合单，列出站点号相同或医院名称，收件人电话，收件人地址相同的所有订单
-						@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and (orders.site_no=? or (orders.receiver_phone = ? and orders.receiver_addr = ? and orders.hospital_name = ?)) and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @site_no, receiver_phone, receiver_addr, hospital_name, @order_mode, "address_success")
-						@to_scan_bags = @to_scan_bags.blank? ? @orders.map{|o| o.bag_list}.uniq.join(",") : @to_scan_bags
+						#@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and (orders.site_no=? or (orders.receiver_phone = ? and orders.receiver_addr = ? and orders.hospital_name = ?)) and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @site_no, receiver_phone, receiver_addr, hospital_name, @order_mode, "address_success")
+					       	@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and orders.site_no=? and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @site_no, @order_mode, "address_success")
+
+                                                @to_scan_bags = @to_scan_bags.blank? ? @orders.map{|o| o.bag_list}.uniq.join(",") : @to_scan_bags
 
 						if is_bag_no
 							if @to_scan_bags.include?@scan_no
@@ -615,8 +617,11 @@ class PackagesController < ApplicationController
 		tmp_package_no = ""
 		@msg = ""
 		
+		scaned_orders = Order.where(order_no: @scaned_orders.split(","))
 		if !@scaned_orders.blank?
 			orders = Order.where("status = ? and updated_at>=? and site_no = ?", "waiting", Date.today, site_no).where.not(tmp_package: nil)
+
+			#orders = Order.where("status = ? and updated_at>=? and receiver_addr = ? and receiver_phone = ? and hospital_name = ?", "waiting", Date.today, scaned_orders.first.receiver_addr, scaned_orders.first.receiver_phone, scaned_orders.first.hospital_name ).where.not(tmp_package: nil)
 	
 			ActiveRecord::Base.transaction do
 				begin
@@ -625,7 +630,7 @@ class PackagesController < ApplicationController
 					else
 						tmp_package_no = get_new_tmp_package_no
 					end
-					Order.where(order_no: @scaned_orders.split(",")).update_all tmp_package: tmp_package_no
+					Order.where(order_no: @scaned_orders.split(",")).update_all tmp_package: tmp_package_no, updated_at: Time.now
 
 					@msg = "该袋子已暂存至箱子#{tmp_package_no}"
 				rescue Exception => e
@@ -637,7 +642,7 @@ class PackagesController < ApplicationController
 	end
 
 	def get_new_tmp_package_no
-		order =  Order.where("status = ? and updated_at>=?", "waiting", Date.today).where.not(tmp_package: nil).last
+		order =  Order.where("status = ? and updated_at>=?", "waiting", Date.today).where.not(tmp_package: nil).order(:tmp_package).last
 
  		new_tmp_package_no = order.blank? ? (Date.today.day.to_s + "_"+"1".rjust(3, '0')) : (Date.today.day.to_s + "_"+((order.tmp_package.split("_")[1].to_i) +1).to_s.rjust(3, '0'))
 	end
