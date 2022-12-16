@@ -69,6 +69,8 @@ enterpress3 = (e) ->
 			else
 				if $('#is_packaged').val() == "1"
 					clear()
+				$('#tmp_package_msg').text("");
+				$("#tmp_msg").hide();
 				gy_find_bag_result()
 				return false;
 		else
