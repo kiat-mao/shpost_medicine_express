@@ -38,6 +38,7 @@ class OrdersController < ApplicationController
           format.json { render json: @order.errors, status: :unprocessable_entity }
         end
       else
+        flash[:alert] = "收件人省市区不能为空"
         format.html { render action: 'edit' }
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
@@ -56,10 +57,13 @@ class OrdersController < ApplicationController
   def other_province_index
   	@orders = @orders.accessible_by(current_ability).where(status: "waiting", no_modify: false)
 
-  	@selected = params[:selected].blank? ? 'false' : params[:selected]
-    if !@selected.blank? && @selected.eql?('true')
+    if !params[:abnormal].blank? && (params[:abnormal].eql?"true")
       @orders = @orders.where("(receiver_province not like (?) or ((receiver_province is ? or receiver_city is ? or receiver_district is ?) and address_status = ?) or address_status= ?) and no_modify = ?", "上海%", nil, nil, nil, "address_success", "address_failed", false)
     end
+  	# @selected = params[:selected].blank? ? 'false' : params[:selected]
+   #  if !@selected.blank? && @selected.eql?('true')
+   #    @orders = @orders.where("(receiver_province not like (?) or ((receiver_province is ? or receiver_city is ? or receiver_district is ?) and address_status = ?) or address_status= ?) and no_modify = ?", "上海%", nil, nil, nil, "address_success", "address_failed", false)
+   #  end
 
     @orders_grid = initialize_grid(@orders,
          :order => 'order_no',

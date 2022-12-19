@@ -556,7 +556,7 @@ class PackagesController < ApplicationController
 	  	if !@scaned_orders.blank? && !@scaned_bags.blank?
 	  		statuses = Order.where(order_no: @scaned_orders.split(",")).map{|o| o.status}.uniq
 	  		if statuses.include?"cancelled"
-	  			@err_msg = "有订单已被拦截,无法装箱"
+	  			@err_msg = "此单已拦截"
 	  		else
 		  		package_no = Package.new_package_no(current_user)
 					@package = Package.create package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: @scaned_orders.split(","), bag_list: @scaned_bags.split(","), unit_id: current_user.unit_id

@@ -81,6 +81,7 @@ Rails.application.routes.draw do
   resources :orders do
     collection do 
       get 'other_province_index'
+      post 'other_province_index'
       get 'order_report'
       post 'order_report'
       post 'order_report_export'
