@@ -90,7 +90,7 @@ class Order < ApplicationRecord
 		# order.waiting!
 	end
 
-	def self.fix_address
+	def self.fix_address(filename)
 		instance=nil
 		rowarr = [] 
 		direct = "#{Rails.root}/public/download/"
@@ -98,16 +98,16 @@ class Order < ApplicationRecord
     if !File.exist?(direct)
       Dir.mkdir(direct)          
     end
-    filename = "待匹配数据.xlsx"
+    
     file_path = direct + filename
 
-    # if file_path.try :end_with?, '.xlsx'
+    if file_path.try :end_with?, '.xlsx'
       instance= Roo::Excelx.new(file_path)
-    # elsif file_path.try :end_with?, '.xls'
-    #   instance= Roo::Excel.new(file_path)
-    # elsif file_path.try :end_with?, '.csv'
-    #   instance= Roo::CSV.new(file_path)
-    # end
+    elsif file_path.try :end_with?, '.xls'
+      instance= Roo::Excel.new(file_path)
+    elsif file_path.try :end_with?, '.csv'
+      instance= Roo::CSV.new(file_path)
+    end
 
     instance.default_sheet = instance.sheets.first
 
@@ -125,6 +125,33 @@ class Order < ApplicationRecord
         line = line + 1
       end
     end
+	end
+
+	def self.export_address(start_no, end_no)
+		direct = "#{Rails.root}/public/download/"
+		file_path = direct + "fix_address_#{Time.now.strftime("%Y%m%d")}.xls"
+		start_id = Order.find_by(order_no: start_no).id
+		end_id = Order.find_by(order_no: end_no).id
+		orders = Order.where("id>=? and id<=?", start_id, end_id)
+
+		book = Spreadsheet::Workbook.new  
+    sheet1 = book.create_worksheet :name => "sheet1"  
+  
+    blue = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 10  
+    sheet1.row(0).default_format = blue  
+
+    sheet1.row(0).concat %w{体检号 修正 省 市 区（县）}  
+    count_row = 1
+    orders.each do |obj|  
+    	sheet1[count_row,0]=obj.order_no
+    	sheet1[count_row,1]=obj.receiver_addr
+    	sheet1[count_row,2]=obj.receiver_province
+    	sheet1[count_row,3]=obj.receiver_city
+    	sheet1[count_row,4]=obj.receiver_district
+    	count_row += 1
+    end
+    book.write file_path
+
 	end
 
 	
