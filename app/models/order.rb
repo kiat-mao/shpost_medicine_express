@@ -89,4 +89,43 @@ class Order < ApplicationRecord
 		order.interface_waiting! 
 		# order.waiting!
 	end
+
+	def self.fix_address
+		instance=nil
+		rowarr = [] 
+		direct = "#{Rails.root}/public/download/"
+
+    if !File.exist?(direct)
+      Dir.mkdir(direct)          
+    end
+    filename = "待匹配数据.xlsx"
+    file_path = direct + filename
+
+    # if file_path.try :end_with?, '.xlsx'
+      instance= Roo::Excelx.new(file_path)
+    # elsif file_path.try :end_with?, '.xls'
+    #   instance= Roo::Excel.new(file_path)
+    # elsif file_path.try :end_with?, '.csv'
+    #   instance= Roo::CSV.new(file_path)
+    # end
+
+    instance.default_sheet = instance.sheets.first
+
+    2.upto(instance.last_row) do |line|
+      begin
+      	rowarr = instance.row(line)
+      	order_no = rowarr[0].to_s.split('.0')[0]
+      	address = rowarr[2]
+
+      	Order.create! order_no: order_no, receiver_addr:address
+
+      rescue => e
+        raise e
+      ensure
+        line = line + 1
+      end
+    end
+	end
+
+	
 end

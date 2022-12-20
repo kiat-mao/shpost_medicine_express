@@ -99,8 +99,10 @@ gem 'bootstrap-table-rails', '~> 1.13', '>= 1.13.4'
 
 gem 'whenever', '~> 1.0'
 
-########Oracle##############
-gem 'ruby-oci8', '2.2.8'
+gem 'roo'
 
-gem 'activerecord-oracle_enhanced-adapter', '6.0.3'
+########Oracle##############
+# gem 'ruby-oci8', '2.2.8'
+
+# gem 'activerecord-oracle_enhanced-adapter', '6.0.3'
 ############################
