@@ -102,7 +102,7 @@ gem 'whenever', '~> 1.0'
 gem 'roo'
 
 ########Oracle##############
-# gem 'ruby-oci8', '2.2.8'
+gem 'ruby-oci8', '2.2.8'
 
-# gem 'activerecord-oracle_enhanced-adapter', '6.0.3'
+gem 'activerecord-oracle_enhanced-adapter', '6.0.3'
 ############################

@@ -90,7 +90,7 @@ class Order < ApplicationRecord
 		# order.waiting!
 	end
 
-	def self.fix_address(filename)
+	def self.fix_address(filename, unit_id)
 		instance=nil
 		rowarr = [] 
 		direct = "#{Rails.root}/public/download/"
@@ -117,7 +117,7 @@ class Order < ApplicationRecord
       	order_no = rowarr[0].to_s.split('.0')[0]
       	address = rowarr[2]
 
-      	Order.create! order_no: order_no, receiver_addr:address
+      	Order.create! order_no: order_no, receiver_addr:address, unit_id: unit_id
 
       rescue => e
         raise e
