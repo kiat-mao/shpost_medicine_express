@@ -127,12 +127,13 @@ class Order < ApplicationRecord
     end
 	end
 
-	def self.export_address(start_no, end_no)
+	def self.export_address(unit_id)
 		direct = "#{Rails.root}/public/download/"
 		file_path = direct + "fix_address_#{Time.now.strftime("%Y%m%d")}.xls"
-		start_id = Order.find_by(order_no: start_no).id
-		end_id = Order.find_by(order_no: end_no).id
-		orders = Order.where("id>=? and id<=?", start_id, end_id)
+		#start_id = Order.find_by(order_no: start_no).id
+		#end_id = Order.find_by(order_no: end_no).id
+		#orders = Order.where("id>=? and id<=?", start_id, end_id)
+		orders = Order.where(unit_id: unit_id).order(:order_no)
 
 		book = Spreadsheet::Workbook.new  
     sheet1 = book.create_worksheet :name => "sheet1"  
