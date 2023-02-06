@@ -160,9 +160,12 @@ class PackagesController < ApplicationController
   	@is_packaged = "0"
   	
   	if !@package_id.blank?
-  		msg = package_send(Package.find(@package_id))
-			@err_msg = msg if !msg.eql?"成功"	
-			@is_packaged = "1"
+  		package = Package.find(@package_id)
+  		if !package.blank? && package.express_no.blank?
+	  		msg = package_send(package)
+				@err_msg = msg if !msg.eql?"成功"	
+				@is_packaged = "1"
+			end
   	else
 	  	if !@order_bags.blank?
 		  	uneql_order_no = uneql_order_no(@order_bags)
@@ -549,9 +552,12 @@ class PackagesController < ApplicationController
   	@order_mode = params[:order_mode]
 
   	if !@package_id.blank?
-  		msg = package_send(Package.find(@package_id))
-			@err_msg = msg if !msg.eql?"成功"	
-			@is_packaged = "1"
+  		package = Package.find(@package_id)
+  		if !package.blank? && package.express_no.blank?
+	  		msg = package_send(package)
+				@err_msg = msg if !msg.eql?"成功"	
+				@is_packaged = "1"
+			end
   	else
 	  	if !@scaned_orders.blank? && !@scaned_bags.blank?
 	  		statuses = Order.where(order_no: @scaned_orders.split(",")).map{|o| o.status}.uniq
