@@ -334,6 +334,7 @@ zh-CN:
         freight: "是否到付"
         social_no: "社保号"
         address_status: "地址解析状态"
+        original_receiver_addr: "原收件人地址"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"
