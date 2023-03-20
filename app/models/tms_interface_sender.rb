@@ -6,6 +6,9 @@ class TmsInterfaceSender < ActiveRecord::Base
 		gy_units = Unit.where no: gy_unit_no
 		orders = Order.where(interface_status: :need_send, unit: gy_units)
 		orders.each_with_index do |order, i|
+			if order.package.blank?
+				next
+			end
 			self.order_trace_order_interface_sender_initialize order
 		end
 	end
