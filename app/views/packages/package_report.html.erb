@@ -1,0 +1,42 @@
+<br>
+<font face="微软雅黑" color='#006030' size=6>装箱对账单</font>   
+<br><br><br>
+ 
+<%= form_tag('package_report', name: 'form1', method: :post) do -%>
+<table>
+    <tr style="line-height: 40px;height: 40px;">
+    	<td><%= label_tag(:create_at_start, "装箱日期起始:") %></td>
+        <td><%= text_field(:create_at, :start, name: "create_at_start",value: @create_at_start) %></td>
+        <td><%= label_tag(:create_at_end, "装箱日期结束:") %></td>
+        <td><%= text_field(:create_at, :end, name: "create_at_end", value: @create_at_end) %></td>
+    </tr>
+</table>
+    <%= submit_tag "查询",:class => 'btn btn-primary' %>
+    <%= link_to "导出", package_report_export_packages_path(:create_at_start => params[:create_at_start], :create_at_end => params[:create_at_end]),:class => 'btn btn-primary', method: :post%>
+
+    
+       
+<% end -%>
+<br><br>
+
+<% if !@results.blank? %>
+<table border="1" table-layout="fixed" data-toggle="table" data-height="700">
+    <thead>
+      <tr class= 'nowrap'>
+        <th><b>所属医院名称</b></th>
+        <th><b>装箱数量</b></th>
+        <th><b>装箱袋数</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @results.each do |k,v| %>
+      <tr class= 'nowrap'>
+          <td><%= k %></td>
+          <td><%= v[0] %></td>
+          <td><%= v[1] %></td>
+      </tr>
+      <% end %>
+    </tbody>
+</table>
+<% end %>
+<br><br><br><br><br><br>

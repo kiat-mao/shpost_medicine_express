@@ -33,48 +33,62 @@
       !package.express_no.blank? && !package.route_code.blank? && !(package.status.eql?"cancelled")
     end 
 
-    g.column name: model_class.human_attribute_name(:package_no), attribute: 'package_no'
-
-    g.column name: model_class.human_attribute_name(:express_no), attribute: 'express_no'
-
-    g.column name: model_class.human_attribute_name(:route_code), attribute: 'route_code'
-
-    g.column name: model_class.human_attribute_name(:order_list), attribute: 'order_list' do |package|
-      [package.order_list.try(:truncate, 100), {height: '50px', width: '100px', style: 'white-space:normal', title: package.order_list}]
-    end
-
-    g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
-      [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
-    end
-
     if current_user.unit.no == I18n.t('unit_no.sy')
+      g.column name: model_class.human_attribute_name(:package_no), attribute: 'package_no'
+
+      g.column name: model_class.human_attribute_name(:express_no), attribute: 'express_no'
+
+      g.column name: model_class.human_attribute_name(:route_code), attribute: 'route_code'
+
+      g.column name: model_class.human_attribute_name(:order_list), attribute: 'order_list' do |package|
+        [package.order_list.try(:truncate, 100), {height: '50px', width: '100px', style: 'white-space:normal', title: package.order_list}]
+      end
+
+      g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
+        [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
+      end
+
       g.column name: model_class.human_attribute_name(:status), attribute: 'status', allow_multiple_selection: false, custom_filter: Package::STATUS_NAME.invert do |package| 
         package.status_name
       end
-    end
 
-    g.column name: model_class.human_attribute_name(:user_id), attribute: 'name', assoc: :user
+      g.column name: model_class.human_attribute_name(:user_id), attribute: 'name', assoc: :user
 
-    g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
-      package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
-    end
-
-
-    if current_user.unit.no == I18n.t('unit_no.gy')
-      g.column name: model_class.human_attribute_name(:pkp), attribute: 'pkp', allow_multiple_selection: false, custom_filter: Package::PKP_NAME.invert do |package| 
-        package.pkp_name
+      g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
+        package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
       end
 
-      g.column name: model_class.human_attribute_name(:weight), attribute: 'weight'
+    elsif current_user.unit.no == I18n.t('unit_no.gy')
+      g.column name: model_class.human_attribute_name(:express_no), attribute: 'express_no'
 
-      g.column name: model_class.human_attribute_name(:price), attribute: 'price'
-    
+      g.column name: '站点编号', attribute: 'site_no', assoc: :orders do |package| 
+        package.orders.blank? ? "" : package.orders.first.site_no
+      end
+
+      g.column name: '处方号', attribute: 'prescription_no', assoc: :orders do |package| 
+        package.orders.blank? ? "" : package.orders.first.prescription_no
+      end
+
+      g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
+        [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
+      end
+
+      g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
+        package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
+      end
+
+      g.column name: model_class.human_attribute_name(:user_id), attribute: 'name', assoc: :user
+
       g.column name: '模式', attribute: 'order_mode', assoc: :orders, custom_filter: Order::ORDER_MODE_NAME.invert  do |package|
         package.orders.blank? ? "" : package.orders.first.order_mode
       end
 
-      g.column name: '站点编号', attribute: 'site_no', assoc: :orders do |package| 
-        package.orders.blank? ? "" : package.orders.first.site_no
+      g.column name: model_class.human_attribute_name(:pkp), attribute: 'pkp', allow_multiple_selection: false, custom_filter: Package::PKP_NAME.invert do |package| 
+        package.pkp_name
+      end
+
+      g.column name: '医院名称', attribute: 'hospital_name', assoc: :orders do |package| 
+        package.orders.blank? ? "" : package.orders.first.hospital_name
       end
     end
 

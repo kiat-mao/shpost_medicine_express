@@ -60,6 +60,13 @@ zh-CN:
           needrole:
             can: :read
             role: :Package
+        package_report:
+          name: "装箱对账单"
+          link: "/packages/package_report"
+          need_count: false
+          needrole:
+            can: :package_report
+            role: :Package
     scan_packages:
       name: "扫描装箱"
       needrole:

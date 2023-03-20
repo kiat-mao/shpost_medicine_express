@@ -76,20 +76,18 @@ enterpress3 = (e) ->
 		else
 			if $('#scaned_orders').val() != "" 
 				if $('#order_mode').val() == "B2B"
-					if confirm("是否装箱完成并发送预收寄信息?")
+					$('#scan_no').blur();
+					showMask()
+					gy_do_packaged()
+					$('#scan_no').attr("disabled","disabled");
+					return false;
+				else
+					if $('#all_scaned').val() == "true"
 						$('#scan_no').blur();
 						showMask()
 						gy_do_packaged()
 						$('#scan_no').attr("disabled","disabled");
 						return false;
-				else
-					if $('#all_scaned').val() == "true"
-						if confirm("是否装箱完成并发送预收寄信息?")
-							$('#scan_no').blur();
-							showMask()
-							gy_do_packaged()
-							$('#scan_no').attr("disabled","disabled");
-							return false;
 					else
 						audio = document.getElementById("failed_alert");
 						audio.play();
@@ -97,25 +95,15 @@ enterpress3 = (e) ->
 						$('#scan_no').focus();
 						return false;
 			else
-				if $('#is_packaged').val() == "1"
-					if $('#order_mode').val() != ""
-						if $('#order_mode').val() == "B2B"
-							if confirm("是否打印面单和配货单？")
-								package_id = $('#package_id').val()
-								window.open("../packages/tkzd?package_id="+package_id)
-								window.open("../packages/zxqd?package_id="+package_id)
-						else
-							if confirm("是否打印面单？")
-								package_id = $('#package_id').val()
-								window.open("../packages/tkzd?package_id="+package_id)
-				$('#scan_no').focus();
 				return false;
+
 
 enterpress4 = ->
 	tmp_save()
 	$('#scan_no').val("");
 	clear()
 	$('#scan_no').focus();
+
 
 
 
