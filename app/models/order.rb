@@ -133,12 +133,17 @@ class Order < ApplicationRecord
     end
 
     instance.default_sheet = instance.sheets.first
+    # title_row = instance.row(1)
+    # order_no_index = title_row.index("体检号").blank? ? 0 : title_row.index("体检号")
+    # address_index = title_row.index("地址").blank? ? 2 : title_row.index("地址")
 
     2.upto(instance.last_row) do |line|
       begin
       	rowarr = instance.row(line)
       	order_no = rowarr[0].to_s.split('.0')[0]
       	address = rowarr[2]
+      	# order_no = rowarr[order_no_index].to_s.split('.0')[0]
+      	# address = rowarr[address_index]
 
       	Order.create! order_no: order_no, receiver_addr:address, unit_id: unit_id
 

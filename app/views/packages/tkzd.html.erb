@@ -145,17 +145,18 @@
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
     <% else %>
-    LODOP.ADD_PRINT_TEXT("91mm","3mm","47mm","20mm","处方药品为特殊管理商品，根据相关管理要求，药品配送后如非损坏等质量问题需先完成收货后，再与相关互联网诊疗医院沟通后续事项。");
+    LODOP.ADD_PRINT_TEXT("91mm","3mm","47mm","28mm","处方药品为特殊管理商品，根据相关管理要求，药品配送后如非损坏等质量问题需先完成收货后，再与相关互联网诊疗医院沟通后续事项。退件请退至上海市徐汇区百色路1218号。");
+    LODOP.ADD_PRINT_TEXT("118mm","3mm","47mm","20mm","所属医院名称: <%= package.orders.first.try('hospital_name').to_s %>");
     <% end %>
-    LODOP.ADD_PRINT_TEXT("96mm","49.2mm","25mm","4mm","打印时间:<%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %>");
+    LODOP.ADD_PRINT_TEXT("96mm","49.2mm","28mm","4mm","打印时间:<%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("104mm","49.2mm","25mm","4mm","编号: <%= package.package_no.split('-').last %>");
+    LODOP.ADD_PRINT_TEXT("104mm","49.2mm","28mm","4mm","编号: <%= package.package_no.split('-').last %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("112mm","49.2mm","25mm","4mm","打印账号: <%= current_user.name %>");
+    LODOP.ADD_PRINT_TEXT("112mm","49.2mm","28mm","4mm","打印账号: <%= current_user.name %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");

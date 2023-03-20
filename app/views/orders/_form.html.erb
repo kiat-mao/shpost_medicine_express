@@ -49,3 +49,16 @@
               other_province_index_orders_path, :class => 'btn btn-default' %>
   <% end %>
 <% end %>
+
+<SCRIPT LANGUAGE="JavaScript">
+  is_close = function ()  
+    {  
+      if($('#is_updated').val() == '1'){  
+        window.opener.location.reload();
+        window.top.close();
+      }  
+    }
+  setTimeout("is_close()",1000);
+
+</SCRIPT>
+

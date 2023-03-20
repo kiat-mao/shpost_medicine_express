@@ -71,6 +71,9 @@ Rails.application.routes.draw do
       post 'send_finish'
       get 'tmp_save'
       post 'tmp_save'
+      get 'package_report'
+      post 'package_report'
+      post 'package_report_export'
     end
     member do
       get 'cancelled'

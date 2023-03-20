@@ -307,7 +307,58 @@ class PackagesController < ApplicationController
 	  return packages
 	end
 
-	def package_xls_content_for(objs)  
+	# def package_xls_content_for(objs)  
+ #    xls_report = StringIO.new  
+ #    book = Spreadsheet::Workbook.new  
+ #    sheet1 = book.create_worksheet :name => "装箱数据"  
+  
+ #    blue = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 10  
+ #    sheet1.row(0).default_format = blue  
+
+ #    sheet1.row(0).concat %w{箱号 邮件号 格口码 订单号 袋子号 状态 处理用户 装箱日期}  
+ #    count_row = 1
+ #    objs.each do |obj|  
+ #      sheet1[count_row,0]=obj.package_no
+ #      sheet1[count_row,1]=obj.express_no
+ #      sheet1[count_row,2]=obj.route_code
+ #      sheet1[count_row,5]=obj.status_name
+ #      sheet1[count_row,6]=obj.user.try(:name)
+ #      sheet1[count_row,7]=obj.packed_at.strftime('%Y-%m-%d').to_s
+ #      if obj.unit.no == I18n.t('unit_no.sy').to_s
+	# 	    if !obj.orders.blank?
+	# 	    	obj.orders.order(:order_no).each do |o|
+	# 	    		sheet1[count_row,3]=o.order_no
+	# 	    		if !o.bags.blank?
+	# 	    			o.bags.each do |b|
+	# 	    				sheet1[count_row,3]=o.order_no
+	# 	    				sheet1[count_row,4]=b.bag_no
+	# 	    				count_row += 1
+	# 	    			end
+	# 	    		end
+	# 	    	end
+	# 	    else
+	# 	    	count_row += 1
+	# 	    end  
+	#     elsif obj.unit.no == I18n.t('unit_no.gy').to_s		        	    
+	#       if !obj.orders.blank?
+	#       	obj.orders.order(:order_no).each do |o|
+	#       		sheet1[count_row,3]=o.order_no
+	#       		if !o.bag_list.blank?
+	#       			sheet1[count_row,4]=o.bag_list
+	#       			count_row += 1
+	#       		end
+	#       	end
+	#       else
+	#       	count_row += 1
+	#       end
+	#     end
+ #    end
+
+ #    book.write xls_report  
+ #    xls_report.string  
+ #  end
+
+  def package_xls_content_for(objs)  
     xls_report = StringIO.new  
     book = Spreadsheet::Workbook.new  
     sheet1 = book.create_worksheet :name => "装箱数据"  
@@ -315,15 +366,18 @@ class PackagesController < ApplicationController
     blue = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 10  
     sheet1.row(0).default_format = blue  
 
-    sheet1.row(0).concat %w{箱号 邮件号 格口码 订单号 袋子号 状态 处理用户 装箱日期}  
+    sheet1.row(0).concat %w{邮件号 站点编号 处方号 订单号 袋子号 装箱日期 处理用户 模式 收件人姓名 医院名称}  
     count_row = 1
     objs.each do |obj|  
-      sheet1[count_row,0]=obj.package_no
-      sheet1[count_row,1]=obj.express_no
-      sheet1[count_row,2]=obj.route_code
-      sheet1[count_row,5]=obj.status_name
+      sheet1[count_row,0]=obj.express_no
+      sheet1[count_row,1]=obj.orders.first.try(:site_no)
+      sheet1[count_row,2]=obj.orders.first.try(:prescription_no)
+      sheet1[count_row,5]=obj.packed_at.strftime('%Y-%m-%d').to_s
       sheet1[count_row,6]=obj.user.try(:name)
-      sheet1[count_row,7]=obj.packed_at.strftime('%Y-%m-%d').to_s
+      sheet1[count_row,7]=obj.orders.first.try(:order_mode)
+      sheet1[count_row,8]=obj.orders.first.try(:receiver_name)
+      sheet1[count_row,9]=obj.orders.first.try(:hospital_name)
+
       if obj.unit.no == I18n.t('unit_no.sy').to_s
 		    if !obj.orders.blank?
 		    	obj.orders.order(:order_no).each do |o|
@@ -358,6 +412,7 @@ class PackagesController < ApplicationController
     xls_report.string  
   end
 
+
   def gy_scan
   	@package_no = Package.get_package_no_by_user(current_user)
   	@bag_amount = 0
@@ -382,13 +437,13 @@ class PackagesController < ApplicationController
   	# 扫第一个，order_mode为空
   	if @order_mode.blank?
   		# 用袋子号查
-  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and bags.bag_no = ? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, "address_success").order("bags.bag_no, orders.order_no")
+  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and bags.bag_no = ?", I18n.t('unit_no.gy'), @scan_no).order("bags.bag_no, orders.order_no")
   		if !@orders.blank?
   			@order_mode = @orders.first.order_mode
   			is_bag_no = true  			
   		else
   			# 用处方号，社保号，收件人电话查
-  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, "address_success").order("bags.bag_no, orders.order_no")
+  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?)", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no).order("bags.bag_no, orders.order_no")
   			b_list = @orders.map{|o| o.bag_list}.uniq
   			@orders = Order.where(bag_list: b_list)
   			if !@orders.blank?
@@ -398,11 +453,11 @@ class PackagesController < ApplicationController
   		end 		
   	else
   		# order_mode不为空
-  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and bags.bag_no = ? and orders.order_mode = ? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @order_mode, "address_success").order("bags.bag_no, orders.order_no")
+  		@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and bags.bag_no = ? and orders.order_mode = ?", I18n.t('unit_no.gy'), @scan_no, @order_mode).order("bags.bag_no, orders.order_no")
   		if !@orders.blank?
   			is_bag_no = true  			
 			else
-				@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("orders.status = ? and units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.order_mode = ? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, @order_mode, "address_success").order("bags.bag_no, orders.order_no")
+				@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.order_mode = ?", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, @order_mode).order("bags.bag_no, orders.order_no")
 				b_list = @orders.map{|o| o.bag_list}.uniq
   			@orders = Order.where(bag_list: b_list)
   			if !@orders.blank?
@@ -412,133 +467,143 @@ class PackagesController < ApplicationController
 		end
 
 		if @orders.blank?
-			@err_msg = "该站点无符合模式,未装箱且地址解析成功的包裹信息"
+			@err_msg = "无邮件信息"
 		else
-                  if !@orders.where("receiver_province is ? or receiver_city is ? or receiver_district is ?", nil, nil, nil).blank?
-                    @err_msg = "有订单省市区为空，请去订单改址页面修改"
-                  else
-			# 如果是B2B,同一箱的站点应相同
-	  	    if @order_mode == "B2B"
-		  	if !@site_no.blank?
-		  		@orders = @orders.where(site_no: @site_no)
-		  	else
-		  		@site_no = @orders.first.site_no
-		  	end
-		    end
-		    if @orders.blank?
-				@err_msg = "该站点无符合模式,未装箱且地址解析成功的包裹信息"
+			@orders = @orders.where(status: "waiting")
+			if @orders.blank?
+				@err_msg = "重复装箱"
 			else
-				if @order_mode == "B2B"
-					if is_bag_no
-						# 已扫袋子号不包含当前袋子号
-						if !@scaned_bags.include?@scan_no
-							if @scaned_orders.blank?
-								@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
-								@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
-							else
-								@scaned_orders += ","+ @orders.map{|o| o.order_no}.uniq.join(",")
-								@scaned_bags += ","+ @orders.map{|o| o.bag_list}.uniq.join(",")
-							end
-							@bag_amount += 1
-						end
-					else
-						cur_bags = @orders.map{|o| o.bag_list}.uniq
-						# 已扫袋子号不包含当前袋子号
-						if !(cur_bags - @scaned_bags.split(",")).blank?
-							# 处方号、社保号、电话相同的话取未扫描的第一个袋子
-							cur_bag = (cur_bags - @scaned_bags.split(","))[0]
-							cur_orders = @orders.where(bag_list: cur_bag)
-							if @scaned_orders.blank?
-								@scaned_orders = cur_orders.map{|o| o.order_no}.uniq.join(",")
-								@scaned_bags = cur_bag
-							else
-								@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.uniq.join(",")
-								@scaned_bags += ","+ cur_bag
-							end
-							@bag_amount += 1
-						end
-					end
-					# @orders = Order.where(order_no: @scaned_orders.split(","))
-					@orders = []
-					@scaned_orders.split(",").reverse.each do |o|
-						@orders << Order.find_by(order_no: o)
-					end						
-				elsif @order_mode == "B2C"
-					@site_no = @orders.first.site_no
-					receiver_phone = @orders.first.receiver_phone
-					receiver_addr = @orders.first.receiver_addr
-					hospital_name = @orders.first.hospital_name
-					# if @site_no.blank?
-						# 站点号为空的情况
-					# 	@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
-					# 	@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
-					# 	@all_scaned = "true"
-					# 	@bag_amount += 1
-					# 	@to_scan_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
-					# else
-						# 合单，列出站点号相同或医院名称，收件人电话，收件人地址相同的所有订单
-						#@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and (orders.site_no=? or (orders.receiver_phone = ? and orders.receiver_addr = ? and orders.hospital_name = ?)) and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @site_no, receiver_phone, receiver_addr, hospital_name, @order_mode, "address_success")
-					       	@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and orders.site_no=? and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @site_no, @order_mode, "address_success")
-
-                                                @to_scan_bags = @to_scan_bags.blank? ? @orders.map{|o| o.bag_list}.uniq.join(",") : @to_scan_bags
-
-						if is_bag_no
-							if @to_scan_bags.include?@scan_no
-								# 已扫袋子号不包含当前袋子号
-								if @scaned_bags.blank? || (!@scaned_bags.include?@scan_no)
-									if @scaned_orders.blank?
-										@scaned_orders = @orders.where(bag_list: @scan_no).map{|o| o.order_no}.join(",")
-										@scaned_bags = @scan_no
-									else
-										@scaned_orders += ","+ @orders.where(bag_list: @scan_no).map{|o| o.order_no}.join(",")
-										@scaned_bags += ","+ @scan_no
-									end
-									@bag_amount += 1
-
-									if !@scaned_bags.blank? && (@scaned_bags.split(",").count == @to_scan_bags.split(",").count)
-										@all_scaned = "true"
-									end
-								end
-							else
-								@err_msg = "请扫描下方列表中包裹"
-								@orders = Order.where(bag_list: @to_scan_bags.split(","))
-							end
+				@orders = @orders.where(address_status: "address_success")
+				if @orders.blank?
+					@err_msg = "地址解析不成功"
+				else
+				  if !@orders.where("receiver_province is ? or receiver_city is ? or receiver_district is ?", nil, nil, nil).blank?
+		        @err_msg = "有订单省市区为空，请去订单改址页面修改"
+		      else
+						# 如果是B2B,同一箱的站点应相同
+				    if @order_mode == "B2B"
+					  	if !@site_no.blank?
+					  		@orders = @orders.where(site_no: @site_no)
+					  	else
+					  		@site_no = @orders.first.site_no
+					  	end
+				    end
+				    if @orders.blank?
+							@err_msg = "非同一站点"
 						else
-							cur_bags = @orders.map{|o| o.bag_list}.uniq
-							# 已扫袋子号不包含当前袋子号
-							if @scaned_bags.blank? || !(cur_bags - @scaned_bags.split(",")).blank?
-								# 处方号、社保号、电话相同的话取未扫描的第一个袋子
-								cur_bag = (cur_bags - @scaned_bags.split(","))[0]
-								if @to_scan_bags.include?cur_bag
-									cur_orders = @orders.where(bag_list: cur_bag)
-									if @scaned_orders.blank?
-										@scaned_orders = cur_orders.map{|o| o.order_no}.uniq.join(",")
-										@scaned_bags = cur_bag
-									else
-										@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.uniq.join(",")
-										@scaned_bags += ","+ cur_bag
-									end
-									@bag_amount += 1
-									if !@scaned_bags.blank? && (@scaned_bags.split(",").count == @to_scan_bags.split(',').count)
-										@all_scaned = "true"
+							if @order_mode == "B2B"
+								if is_bag_no
+									# 已扫袋子号不包含当前袋子号
+									if !@scaned_bags.include?@scan_no
+										if @scaned_orders.blank?
+											@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
+											@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
+										else
+											@scaned_orders += ","+ @orders.map{|o| o.order_no}.uniq.join(",")
+											@scaned_bags += ","+ @orders.map{|o| o.bag_list}.uniq.join(",")
+										end
+										@bag_amount += 1
 									end
 								else
-									@err_msg = "请扫描下方列表中包裹"
-									@orders = Order.where(bag_list: @to_scan_bags.split(","))
-								end	
+									cur_bags = @orders.map{|o| o.bag_list}.uniq
+									# 已扫袋子号不包含当前袋子号
+									if !(cur_bags - @scaned_bags.split(",")).blank?
+										# 处方号、社保号、电话相同的话取未扫描的第一个袋子
+										cur_bag = (cur_bags - @scaned_bags.split(","))[0]
+										cur_orders = @orders.where(bag_list: cur_bag)
+										if @scaned_orders.blank?
+											@scaned_orders = cur_orders.map{|o| o.order_no}.uniq.join(",")
+											@scaned_bags = cur_bag
+										else
+											@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.uniq.join(",")
+											@scaned_bags += ","+ cur_bag
+										end
+										@bag_amount += 1
+									end
+								end
+								# @orders = Order.where(order_no: @scaned_orders.split(","))
+								@orders = []
+								@scaned_orders.split(",").reverse.each do |o|
+									@orders << Order.find_by(order_no: o)
+								end						
+							elsif @order_mode == "B2C"
+								@site_no = @orders.first.site_no
+								receiver_phone = @orders.first.receiver_phone
+								receiver_addr = @orders.first.receiver_addr
+								hospital_name = @orders.first.hospital_name
+								# if @site_no.blank?
+									# 站点号为空的情况
+								# 	@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
+								# 	@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
+								# 	@all_scaned = "true"
+								# 	@bag_amount += 1
+								# 	@to_scan_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
+								# else
+									# 合单，列出站点号相同或医院名称，收件人电话，收件人地址相同的所有订单
+									#@orders = Order.joins(:unit).where("orders.status = ? and units.no = ? and (orders.site_no=? or (orders.receiver_phone = ? and orders.receiver_addr = ? and orders.hospital_name = ?)) and orders.order_mode=? and orders.address_status = ?", "waiting", I18n.t('unit_no.gy'), @site_no, receiver_phone, receiver_addr, hospital_name, @order_mode, "address_success")
+						       	@orders = Order.joins(:unit).where(units: {no:I18n.t('unit_no.gy')}, status: "waiting", site_no: @site_no, order_mode: @order_mode, address_status: "address_success")
+
+		                @to_scan_bags = @to_scan_bags.blank? ? @orders.map{|o| o.bag_list}.uniq.join(",") : @to_scan_bags
+
+									if is_bag_no
+										if @to_scan_bags.include?@scan_no
+											# 已扫袋子号不包含当前袋子号
+											if @scaned_bags.blank? || (!@scaned_bags.include?@scan_no)
+												if @scaned_orders.blank?
+													@scaned_orders = @orders.where(bag_list: @scan_no).map{|o| o.order_no}.join(",")
+													@scaned_bags = @scan_no
+												else
+													@scaned_orders += ","+ @orders.where(bag_list: @scan_no).map{|o| o.order_no}.join(",")
+													@scaned_bags += ","+ @scan_no
+												end
+												@bag_amount += 1
+
+												if !@scaned_bags.blank? && (@scaned_bags.split(",").count == @to_scan_bags.split(",").count)
+													@all_scaned = "true"
+												end
+											end
+										else
+											@err_msg = "请扫描下方列表中包裹"
+											@orders = Order.where(bag_list: @to_scan_bags.split(","))
+										end
+									else
+										cur_bags = @orders.map{|o| o.bag_list}.uniq
+										# 已扫袋子号不包含当前袋子号
+										if @scaned_bags.blank? || !(cur_bags - @scaned_bags.split(",")).blank?
+											# 处方号、社保号、电话相同的话取未扫描的第一个袋子
+											cur_bag = (cur_bags - @scaned_bags.split(","))[0]
+											if @to_scan_bags.include?cur_bag
+												cur_orders = @orders.where(bag_list: cur_bag)
+												if @scaned_orders.blank?
+													@scaned_orders = cur_orders.map{|o| o.order_no}.uniq.join(",")
+													@scaned_bags = cur_bag
+												else
+													@scaned_orders += ","+ cur_orders.map{|o| o.order_no}.uniq.join(",")
+													@scaned_bags += ","+ cur_bag
+												end
+												@bag_amount += 1
+												if !@scaned_bags.blank? && (@scaned_bags.split(",").count == @to_scan_bags.split(',').count)
+													@all_scaned = "true"
+												end
+											else
+												@err_msg = "请扫描下方列表中包裹"
+												@orders = Order.where(bag_list: @to_scan_bags.split(","))
+											end	
+										end
+									end	
+								# end
 							end
-						end	
-					# end
-				end
-			
-				ods = Order.where("status = ? and updated_at>=? and site_no = ?", "waiting", Date.today, @site_no).where.not(tmp_package: nil)
-				if !ods.blank?
-					num = ods.map{|o| o.bag_list}.uniq.count
-					tmp_package_no = ods.first.tmp_package
-					@tmp_save_msg = "站点#{@site_no}暂存箱号#{tmp_package_no}共有#{num}袋"
-				end
-			end
-                  end
+						
+							ods = Order.where("status = ? and updated_at>=? and site_no = ?", "waiting", Date.today, @site_no).where.not(tmp_package: nil)
+							if !ods.blank?
+								num = ods.map{|o| o.bag_list}.uniq.count
+								tmp_package_no = ods.first.tmp_package
+								@tmp_save_msg = "站点#{@site_no}暂存箱号#{tmp_package_no}共有#{num}袋"
+							end
+						end
+		      end
+		    end
+	    end
 		end
 	end
 
@@ -656,6 +721,102 @@ class PackagesController < ApplicationController
 
  		new_tmp_package_no = order.blank? ? (Date.today.day.to_s + "_"+"1".rjust(3, '0')) : (Date.today.day.to_s + "_"+((order.tmp_package.split("_")[1].to_i) +1).to_s.rjust(3, '0'))
 	end
+
+	def package_report
+  	@create_at_start = !params[:create_at_start].blank? ? params[:create_at_start] : nil
+    @create_at_end = !params[:create_at_end].blank? ? params[:create_at_end] : nil
+    @results = nil
+
+    unless request.get?
+      if @create_at_start.blank? && @create_at_end.blank?
+      	flash[:alert] = "请选择装箱日期"
+        redirect_to request.referer
+      else
+      	@results = init_result(@create_at_start, @create_at_end)
+	    end
+    end
+  end
+
+  def init_result(create_at_start, create_at_end)
+  	results = {}
+  	orders = Order.accessible_by(current_ability).where(status: "packaged")
+
+    if !create_at_start.blank?
+      orders = orders.joins(:package).where("packed_at >= ?", to_date(create_at_start))
+    end
+
+    if !create_at_end.blank?
+      orders = orders.joins(:package).where("packed_at <= ?", to_date(create_at_end)+1.minute)
+    end
+    hospitals = Order.group(:hospital_name).map{|o| o.hospital_name}.compact.uniq
+    hospitals.each do |h|
+    	package_amount = orders.where(hospital_name: h).map{|o| o.package_id}.compact.uniq.count
+    	bag_amount = orders.where(hospital_name: h).map{|o| o.bag_list}.compact.uniq.count
+    	results[h] = [package_amount, bag_amount]
+    end
+
+    return results
+  end
+
+  def package_report_export
+  	@create_at_start = !params[:create_at_start].blank? ? params[:create_at_start] : nil
+  	@create_at_end = !params[:create_at_end].blank? ? params[:create_at_end] : nil
+
+  	if @create_at_start.blank? && @create_at_end.blank?
+    	flash[:alert] = "请先查询"
+      redirect_to request.referer
+    else
+  		@results = init_result(@create_at_start, @create_at_end)
+
+	  	if @results.blank?
+	      flash[:alert] = "无数据"
+	      redirect_to request.referer
+	    else
+	    	send_data(report_xls_content_for(@create_at_start, @create_at_end, @results),:type => "text/excel;charset=utf-8; header=present",:filename => "报表_#{Time.now.strftime("%Y%m%d")}.xls")  
+	    end
+	  end
+  end
+
+  def report_xls_content_for(create_at_start, create_at_end, results) 
+    xls_report = StringIO.new  
+    book = Spreadsheet::Workbook.new  
+    sheet1 = book.create_worksheet :name => "报表"  
+    
+    title = Spreadsheet::Format.new :weight => :bold, :size => 14
+    filter = Spreadsheet::Format.new :size => 12
+    body = Spreadsheet::Format.new :size => 13, :border => :thin, :align => :center
+    
+    sheet1.row(0).default_format = filter
+    sheet1[0,0] = "装箱日期：#{create_at_start}至#{create_at_end}"
+
+    sheet1.row(2).default_format = title
+    sheet1.row(2).concat %w{所属医院名称 装箱数量 装箱袋数}
+    
+    count_row = 3
+    
+    results.each do |k, v|
+      sheet1[count_row,0] = k
+      sheet1[count_row,1] = v[0]
+      sheet1[count_row,2] = v[1]
+
+      0.upto(2) do |x|
+        sheet1.row(count_row).set_format(x, body)
+      end 
+
+      count_row += 1
+    end
+
+    book.write xls_report  
+    xls_report.string
+  end
+
+  
+
+  def to_date(time)
+    date = Date.civil(time.split(/-|\//)[0].to_i,time.split(/-|\//)[1].to_i,time.split(/-|\//)[2].to_i)
+    return date
+  end
+
 
 	
 	private

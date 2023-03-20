@@ -34,9 +34,11 @@
 
   g.column do |order|
     ActiveSupport::SafeBuffer.new << 
-    (link_to t('.edit', :default => t("helpers.links.edit")), edit_order_path(order), target: '_blank', :class => 'btn btn-xs btn-primary' if (can? :update, order))
+    # (link_to t('.edit', :default => t("helpers.links.edit")), edit_order_path(order), target: '_blank', :class => 'btn btn-xs btn-primary' if (can? :update, order))
+    (link_to t('.edit', :default => t("helpers.links.edit")), edit_order_path(order), onclick: "window.open('../orders/#{order.id}/edit', '_blank');return false;", :class => 'btn btn-xs btn-primary' if (can? :update, order))
   end
 
 end 
 %>
 <% end %>
+

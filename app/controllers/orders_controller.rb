@@ -21,24 +21,31 @@ class OrdersController < ApplicationController
   end
 
   def edit
+    @is_updated = params[:is_updated].blank? ? "0" : params[:is_updated]
   end
 
   def show
   end
 
 	def update
-    respond_to do |format|
-      if !order_params[:receiver_province].blank? && !order_params[:receiver_city].blank? && !order_params[:receiver_district].blank?
-      	if @order.update(order_params)
-          #@order.update address_status: "address_success"
-          format.html { redirect_to @order, notice: I18n.t('controller.update_success_notice', model: '订单')}
-          format.json { head :no_content }
-        else
+    @is_updated = "0"
+    if !order_params[:receiver_province].blank? && !order_params[:receiver_city].blank? && !order_params[:receiver_district].blank?
+    	if @order.update(order_params)
+        #@order.update address_status: "address_success"
+        # format.html { redirect_to @order, notice: I18n.t('controller.update_success_notice', model: '订单')}
+        # format.json { head :no_content }
+        @is_updated = "1"
+
+        redirect_to edit_order_path(is_updated: @is_updated)
+      else
+        respond_to do |format|
           format.html { render action: 'edit' }
           format.json { render json: @order.errors, status: :unprocessable_entity }
         end
-      else
-        flash[:alert] = "收件人省市区不能为空"
+      end
+    else
+      flash[:alert] = "收件人省市区不能为空"
+      respond_to do |format|
         format.html { render action: 'edit' }
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
