@@ -50,6 +50,23 @@ class Order < ApplicationRecord
 		address_status.blank? ? "" : Order::ADDRESS_STATUS_NAME["#{address_status}".to_sym]
 	end
 
+	def self.squeeze_addr(addr)
+		if addr.include?('上海市')
+			addr.gsub!('上海市', '')
+			addr.gsub!('市辖区', '')
+
+			area = addr[0..addr.index('区')]
+
+			if (area.length.eql?(3) || area.length.eql?(4))
+				addr.gsub!(area, '')
+				return addr = "上海市#{area}#{addr}"
+			else
+				return addr = "上海市#{addr}"
+			end
+		end
+		return addr
+	end
+
 	def self.order_push(context_hash, unit = nil)
 		order = Order.find_or_initialize_by(order_no: context_hash['ORDER_NO'], unit: unit)
 
@@ -57,6 +74,12 @@ class Order < ApplicationRecord
 
 		context_hash.keys.each do |key|
 			next if key.eql? "COMMODITIES"
+
+			if key.eql? "RECEIVER_ADDR"
+				order.original_receiver_addr = context_hash[key]
+				order.receiver_addr = squeeze_addr(context_hash[key])
+				next
+			end
 
 			if order.respond_to? "#{key.downcase}="
 				order.send "#{key.downcase}=", context_hash[key]

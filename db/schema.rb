@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_28_021329) do
+ActiveRecord::Schema.define(version: 2023_03_20_021446) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -123,6 +123,9 @@ ActiveRecord::Schema.define(version: 2022_11_28_021329) do
     t.string "unit_id"
     t.string "interface_status"
     t.string "address_status"
+    t.boolean "no_modify", default: false
+    t.string "tmp_package"
+    t.string "original_receiver_addr"
     t.index ["order_no"], name: "index_orders_on_order_no"
     t.index ["package_id"], name: "index_orders_on_package_id"
   end
@@ -139,10 +142,10 @@ ActiveRecord::Schema.define(version: 2022_11_28_021329) do
     t.string "order_list", limit: 2000
     t.string "bag_list", limit: 2000
     t.string "unit_id"
+    t.string "pkp"
     t.decimal "weight"
     t.decimal "volume"
     t.decimal "price"
-    t.string "pkp"
     t.index ["express_no"], name: "index_packages_on_express_no"
     t.index ["package_no"], name: "index_packages_on_package_no"
     t.index ["user_id"], name: "index_packages_on_user_id"
