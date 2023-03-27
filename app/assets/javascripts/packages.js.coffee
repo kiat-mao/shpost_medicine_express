@@ -76,11 +76,12 @@ enterpress3 = (e) ->
 		else
 			if $('#scaned_orders').val() != "" 
 				if $('#order_mode').val() == "B2B"
-					$('#scan_no').blur();
-					showMask()
-					gy_do_packaged()
-					$('#scan_no').attr("disabled","disabled");
-					return false;
+					if confirm("是否装箱完成并打印?")
+						$('#scan_no').blur();
+						showMask()
+						gy_do_packaged()
+						$('#scan_no').attr("disabled","disabled");
+						return false;
 				else
 					if $('#all_scaned').val() == "true"
 						$('#scan_no').blur();

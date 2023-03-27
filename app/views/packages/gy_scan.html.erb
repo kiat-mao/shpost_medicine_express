@@ -37,6 +37,8 @@
  			<td><%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzd", :disabled => true, onclick: "window.open('/packages/tkzd', '_blank');" %></td>
  			<td><%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqd", :disabled => true, onclick: "window.open('/packages/zxqd', '_blank');" %></td>
  			<td></td>
+ 		</tr>
+ 		<tr class= 'nowrap'>
 			<td><font color="green"><h3><%= label_tag 'express_no', "", class: 'control-group', :id => "express_no" %></h3></font></td>
 			<td><font color="green"><h3><%= label_tag 'route_code', "", class: 'control-group', :id => "route_code" %></h3></font></td>
 		</tr>
