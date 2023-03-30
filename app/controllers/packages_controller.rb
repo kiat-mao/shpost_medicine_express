@@ -748,7 +748,7 @@ class PackagesController < ApplicationController
     if !create_at_end.blank?
       orders = orders.joins(:package).where("packed_at <= ?", to_date(create_at_end)+1.minute)
     end
-    hospitals = Order.all.map{|o| o.hospital_name}.compact.uniq
+    hospitals = Order.group(:hospital_name).count.map{|k,v| k}.compact.uniq
     hospitals.each do |h|
     	package_amount = orders.where(hospital_name: h).map{|o| o.package_id}.compact.uniq.count
     	bag_amount = orders.where(hospital_name: h).map{|o| o.bag_list}.compact.uniq.count
