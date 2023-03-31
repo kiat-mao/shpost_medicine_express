@@ -50,18 +50,18 @@ class Order < ApplicationRecord
 		address_status.blank? ? "" : Order::ADDRESS_STATUS_NAME["#{address_status}".to_sym]
 	end
 
-	def self.squeeze_addr(addr)
-		if addr.include?('上海市')
-			addr.gsub!('上海市', '')
-			addr.gsub!('市辖区', '')
+	def self.squeeze_addr(_addr)
+		addr = _addr
+		if _addr.include?('上海市')
+			addr = addr.gsub('上海市', '').gsub('市辖区', '')
 
 			area = addr[0..addr.index('区')]
 
 			if (area.length.eql?(3) || area.length.eql?(4))
 				addr.gsub!(area, '')
-				return addr = "上海市#{area}#{addr}"
+				return "上海市#{area}#{addr}"
 			else
-				return addr = "上海市#{addr}"
+				return "上海市#{addr}"
 			end
 		end
 		return addr
