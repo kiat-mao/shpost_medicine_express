@@ -739,6 +739,8 @@ class PackagesController < ApplicationController
 
   def init_result(create_at_start, create_at_end)
   	results = {}
+  	package_hj = 0
+  	bag_hj = 0
   	orders = Order.accessible_by(current_ability).where(status: "packaged")
 
     if !create_at_start.blank?
@@ -746,15 +748,17 @@ class PackagesController < ApplicationController
     end
 
     if !create_at_end.blank?
-      orders = orders.joins(:package).where("packed_at <= ?", to_date(create_at_end)+1.minute)
+      orders = orders.joins(:package).where("packed_at <= ?", to_date(create_at_end)+1.days)
     end
-    hospitals = Order.group(:hospital_name).map{|o| o.hospital_name}.compact.uniq
+    hospitals = Order.group(:hospital_name).count.map{|k,v| k}.compact.uniq
     hospitals.each do |h|
     	package_amount = orders.where(hospital_name: h).map{|o| o.package_id}.compact.uniq.count
+    	package_hj += package_amount
     	bag_amount = orders.where(hospital_name: h).map{|o| o.bag_list}.compact.uniq.count
+    	bag_hj += bag_amount
     	results[h] = [package_amount, bag_amount]
     end
-
+    results["合计"] = [package_hj, bag_hj]
     return results
   end
 
