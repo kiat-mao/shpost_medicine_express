@@ -219,6 +219,10 @@
     g.column name: "装箱日期", attribute: 'package_id', assoc: :package, attribute: 'packed_at' do |order|
       order.package.blank? ? "" : order.package.packed_at.strftime('%Y-%m-%d %H:%M:%S').to_s
     end  
+
+    g.column name: model_class.human_attribute_name(:interface_status), attribute: 'interface_status', allow_multiple_selection: false, custom_filter: Order::INTERFACE_STATUS_NAME.invert do |order| 
+      order.interface_status_name
+    end
   end %>
 <% end %>
   

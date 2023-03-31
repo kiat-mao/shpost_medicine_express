@@ -335,6 +335,7 @@ zh-CN:
         social_no: "社保号"
         address_status: "地址解析状态"
         original_receiver_addr: "原收件人地址"
+        interface_status: "发送状态"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"
