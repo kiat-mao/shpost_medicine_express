@@ -223,6 +223,9 @@
     g.column name: model_class.human_attribute_name(:interface_status), attribute: 'interface_status', allow_multiple_selection: false, custom_filter: Order::INTERFACE_STATUS_NAME.invert do |order| 
       order.interface_status_name
     end
+
+    g.column name: model_class.human_attribute_name(:social_no), attribute: 'social_no'
+
   end %>
 <% end %>
   
