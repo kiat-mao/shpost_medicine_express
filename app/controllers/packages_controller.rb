@@ -91,7 +91,11 @@ class PackagesController < ApplicationController
 	end
 
 	def cancelled
-		if ["waiting", "failed", "to_send"].include?@package.status
+		if (current_user.unit.no == I18n.t('unit_no.gy'))
+			if @package.pkp.eql?"pkp_done"
+				@package.cancelled
+			end
+		else
 			@package.cancelled
 		end
 
