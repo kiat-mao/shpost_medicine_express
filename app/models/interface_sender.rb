@@ -159,7 +159,7 @@ class InterfaceSender < ActiveRecord::Base
     self.last_time = Time.now
     self.send_times += 1
 
-    if self.send_times > (self.max_times || 5)
+    if self.send_times >= (self.max_times || 5)
       self.next_time = nil
       self.failed
     else

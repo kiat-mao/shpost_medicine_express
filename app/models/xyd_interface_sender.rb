@@ -20,6 +20,7 @@ class XydInterfaceSender < ActiveRecord::Base
 		args[:url] = xydConfig[:order_create_url]
 		args[:parent_id] = package.id
 		args[:unit_id] = package.unit_id
+		args[:next_time] = Time.now + 600
 		InterfaceSender.interface_sender_initialize("xyd_order_create", body, args)
 	end
 
