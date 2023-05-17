@@ -370,6 +370,7 @@ class PackagesController < ApplicationController
     blue = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 10  
     sheet1.row(0).default_format = blue  
 
+    # sheet1.row(0).concat %w{邮件号 站点编号 处方号 订单号 袋子号 装箱日期 处理用户 模式 收件人姓名 收件人电话 医院名称} 
     sheet1.row(0).concat %w{邮件号 站点编号 处方号 订单号 袋子号 装箱日期 处理用户 模式 收件人姓名 医院名称}  
     count_row = 1
     objs.each do |obj|  
@@ -380,6 +381,7 @@ class PackagesController < ApplicationController
       sheet1[count_row,6]=obj.user.try(:name)
       sheet1[count_row,7]=obj.orders.first.try(:order_mode)
       sheet1[count_row,8]=obj.orders.first.try(:receiver_name)
+      # sheet1[count_row,9]=obj.orders.first.try(:receiver_phone)
       sheet1[count_row,9]=obj.orders.first.try(:hospital_name)
 
       if obj.unit.no == I18n.t('unit_no.sy').to_s
