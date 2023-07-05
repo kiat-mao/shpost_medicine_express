@@ -497,25 +497,27 @@ class PackagesController < ApplicationController
 							@err_msg = "非同一站点"
 						else
 							if @order_mode == "B2B"
+								@orders = Order.joins(:unit).where(units: {no:I18n.t('unit_no.gy')}, site_no: @site_no, order_mode: @order_mode, address_status: "address_success")
+								waiting_orders = @orders.where(status: "waiting")
 								if is_bag_no
 									# 已扫袋子号不包含当前袋子号
 									if !@scaned_bags.include?@scan_no
 										if @scaned_orders.blank?
-											@scaned_orders = @orders.map{|o| o.order_no}.uniq.join(",")
-											@scaned_bags = @orders.map{|o| o.bag_list}.uniq.join(",")
+											@scaned_orders = waiting_orders.where(bag_list: @scan_no).map{|o| o.order_no}.uniq.join(",")
+											@scaned_bags = @scan_no
 										else
-											@scaned_orders += ","+ @orders.map{|o| o.order_no}.uniq.join(",")
-											@scaned_bags += ","+ @orders.map{|o| o.bag_list}.uniq.join(",")
+											@scaned_orders += ","+ waiting_orders.where(bag_list: @scan_no).map{|o| o.order_no}.uniq.join(",")
+											@scaned_bags += ","+ @scan_no
 										end
 										@bag_amount += 1
 									end
 								else
-									cur_bags = @orders.map{|o| o.bag_list}.uniq
+									cur_bags = waiting_orders.where("orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?", @scan_no, @scan_no, @scan_no).map{|o| o.bag_list}.uniq
 									# 已扫袋子号不包含当前袋子号
 									if !(cur_bags - @scaned_bags.split(",")).blank?
 										# 处方号、社保号、电话相同的话取未扫描的第一个袋子
 										cur_bag = (cur_bags - @scaned_bags.split(","))[0]
-										cur_orders = @orders.where(bag_list: cur_bag)
+										cur_orders = waiting_orders.where(bag_list: cur_bag)
 										if @scaned_orders.blank?
 											@scaned_orders = cur_orders.map{|o| o.order_no}.uniq.join(",")
 											@scaned_bags = cur_bag
@@ -526,11 +528,11 @@ class PackagesController < ApplicationController
 										@bag_amount += 1
 									end
 								end
-								# @orders = Order.where(order_no: @scaned_orders.split(","))
-								@orders = []
-								@scaned_orders.split(",").reverse.each do |o|
-									@orders << Order.find_by(order_no: o)
-								end						
+								
+								# @orders = []
+								# @scaned_orders.split(",").reverse.each do |o|
+								# 	@orders << Order.find_by(order_no: o)
+								# end						
 							elsif @order_mode == "B2C"
 								@site_no = @orders.first.site_no
 								receiver_phone = @orders.first.receiver_phone
