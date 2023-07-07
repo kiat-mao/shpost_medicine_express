@@ -527,11 +527,14 @@ class PackagesController < ApplicationController
 									end
 								end
 								
-								# @orders = []
-								# @scaned_orders.split(",").reverse.each do |o|
-								# 	@orders << Order.find_by(order_no: o)
-								# end		
-								@orders = Order.joins(:unit).where(units: {no:I18n.t('unit_no.gy')}, site_no: @site_no, order_mode: @order_mode, address_status: "address_success")				
+								@orders = []
+								@scaned_orders.split(",").reverse.each do |o|
+									@orders << Order.find_by(order_no: o)
+								end		
+								waiting_orders = Order.joins(:unit).where(units: {no:I18n.t('unit_no.gy')}, site_no: @site_no, order_mode: @order_mode, address_status: "address_success", status: "waiting").where("orders.created_at >= ? and orders.created_at < ?", Date.yesterday, Date.tomorrow).where.not(order_no: @scaned_orders.split(","))	
+								waiting_orders.each do |w|
+									@orders << w
+								end
 							elsif @order_mode == "B2C"
 								@site_no = @orders.first.site_no
 								receiver_phone = @orders.first.receiver_phone

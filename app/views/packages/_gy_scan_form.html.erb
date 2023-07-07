@@ -11,9 +11,7 @@
 			<td>收件人地址</td>
 		</tr> 
 		<% @orders.each do |o| %>
-		<% if o.status.eql?"packaged" %>
-			<tr style="color: red;">
-		<% elsif @scaned_orders.include?o.order_no %>
+		<% if @scaned_orders.include?o.order_no %>
 			<tr style="color: green;">
 		<% else %>
 			<tr>
