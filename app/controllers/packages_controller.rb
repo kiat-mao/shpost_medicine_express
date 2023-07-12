@@ -448,9 +448,9 @@ class PackagesController < ApplicationController
   			is_bag_no = true  			
   		else
   			# 用处方号，社保号，收件人电话查
-  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?)", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no).order("bags.bag_no, orders.order_no")
+  			@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?)", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no)
   			b_list = @orders.map{|o| o.bag_list}.uniq
-  			@orders = Order.where(bag_list: b_list)
+  			@orders = Order.where(bag_list: b_list).order("orders.created_at desc")
   			if !@orders.blank?
   				@order_mode = @orders.first.order_mode
   				is_bag_no = false
@@ -462,9 +462,9 @@ class PackagesController < ApplicationController
   		if !@orders.blank?
   			is_bag_no = true  			
 			else
-				@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.order_mode = ?", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, @order_mode).order("bags.bag_no, orders.order_no")
+				@orders = Order.joins("left outer join bags on orders.bag_list like bags.bag_no").joins(:unit).where("units.no = ? and (orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?) and orders.order_mode = ?", I18n.t('unit_no.gy'), @scan_no, @scan_no, @scan_no, @order_mode)
 				b_list = @orders.map{|o| o.bag_list}.uniq
-  			@orders = Order.where(bag_list: b_list)
+  			@orders = Order.where(bag_list: b_list).order("orders.created_at desc")
   			if !@orders.blank?
   				is_bag_no = false
   			end
