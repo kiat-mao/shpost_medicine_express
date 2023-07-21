@@ -757,7 +757,7 @@ class PackagesController < ApplicationController
     end
 
     if !create_at_end.blank?
-      orders = orders.joins(:package).where("packed_at <= ?", to_date(create_at_end)+1.days)
+      orders = orders.joins(:package).where("packed_at < ?", to_date(create_at_end)+1.days)
     end
     hospitals = orders.group(:hospital_name).count.map{|k,v| k}.compact.uniq
     hospitals.each do |h|
@@ -768,6 +768,7 @@ class PackagesController < ApplicationController
     	results[h] = [package_amount, bag_amount]
     end
     results["合计"] = [package_hj, bag_hj]
+    results["合计单量"] = [orders.where.not(hospital_name: nil).group(:package_id).count.size, ""]
     return results
   end
 
