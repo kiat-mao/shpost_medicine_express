@@ -55,6 +55,7 @@
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
     LODOP.ADD_PRINT_LINE("45mm","2mm","45mm","74mm",2,1);
+    <% if package.unit.no == I18n.t('unit_no.sy') %>
     LODOP.ADD_PRINT_TEXT("45.5mm","3mm","73mm","8mm","收件人姓名: <%= package.orders.first.receiver_name %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
@@ -63,6 +64,22 @@
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+    <% else %>
+    <%  receiver_name = package.orders.first.receiver_name
+        receiver_name.length>2 ? (receiver_name[1, receiver_name.length-2] = "*") : (receiver_name[1, receiver_name.length-1] = "*")
+    %>
+    LODOP.ADD_PRINT_TEXT("45.5mm","3mm","73mm","8mm","收件人姓名: <%= receiver_name %>");
+    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+    <%  receiver_phone = package.orders.first.receiver_phone
+        receiver_phone[3, receiver_phone.length-7] = "****"
+    %>
+    LODOP.ADD_PRINT_TEXT("53mm","3mm","72mm","4mm","收件人电话: <%= receiver_phone %>");
+    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+    <% end %>
     LODOP.ADD_PRINT_TEXT("57mm","3mm","73mm","11mm","收件人地址: <%= package.orders.first.receiver_addr.tr("\n", "") %>");
     LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
