@@ -51,7 +51,8 @@ class Order < ApplicationRecord
 	end
 
 	def self.squeeze_addr(_addr)
-		addr = _addr
+		addr = _addr.gsub('+','').gsub('＋','').gsub('。','').gsub('*','')
+		
 		if _addr.include?('上海市')
 			addr = addr.gsub('上海市', '').gsub('市辖区', '')
 
