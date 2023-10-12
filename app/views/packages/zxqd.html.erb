@@ -32,9 +32,13 @@
 	    LODOP.SET_PRINT_STYLE("Bold",1);  
 	    <% if package.unit.no == I18n.t('unit_no.sy') %>
 	    LODOP.ADD_PRINT_TEXT("10mm","79mm","60mm","15mm","上药控股 服务为荣");
-	    LODOP.ADD_PRINT_TEXT("17.3mm","80mm","60mm","10mm","延伸处方装箱清单");
+		    <% if !package.orders.first.site_no.blank? && (package.orders.first.site_no.eql?"1172040000") %>
+		    LODOP.ADD_PRINT_TEXT("17.3mm","79mm","60mm","10mm","互联网医院装箱清单");
+		    <% else %>
+		    LODOP.ADD_PRINT_TEXT("17.3mm","79mm","60mm","10mm","延伸处方装箱清单");
+		    <% end %>
 	    <% else %>
-    	LODOP.ADD_PRINT_TEXT("13mm","80mm","60mm","10mm","延伸处方装箱清单");
+    	LODOP.ADD_PRINT_TEXT("13mm","79mm","60mm","10mm","延伸处方装箱清单");
 	    <% end %>
 	    LODOP.SET_PRINT_STYLE("FontSize",10);
 	    LODOP.SET_PRINT_STYLE("Bold",1);  
@@ -93,6 +97,20 @@
 	  	// LODOP.NewPage();
 	  	// LODOP.NEWPAGEA();
 	  	<% #end %>
+	  	<% end %>
+	  	<% if (package.unit.no == I18n.t('unit_no.sy')) && !package.orders.first.site_no.blank? && (package.orders.first.site_no.eql?"1172040000") %>
+	  	h += 40;
+	  	LODOP.SET_PRINT_STYLE("FontSize",10);
+	    LODOP.SET_PRINT_STYLE("Bold",1);  
+	    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","我已仔细核对，确认无误，并知晓一旦签收，概不退换。");
+	    LODOP.SET_PRINT_STYLE("FontSize",12);
+	    LODOP.SET_PRINT_STYLE("Bold",1);  
+	    h += 40;
+	    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","取药人签名:");
+	    h += 40;
+	    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","取药时间:");
+	    h += 40;
+	    LODOP.ADD_PRINT_TEXT(h,"8mm","200mm","10mm","发药人签名:");
 	  	<% end %>
 	  	LODOP.SET_PRINT_STYLE("ItemType",1);
 	    LODOP.ADD_PRINT_TEXT("97.4%","160mm","80mm","30mm","打包日期：<%= Time.now.strftime('%Y-%m-%d') %>");
