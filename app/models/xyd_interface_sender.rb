@@ -235,7 +235,7 @@ class XydInterfaceSender < ActiveRecord::Base
 				else
 					if (!order_id.nil? && order_id.is_a?(Numeric))
 						Order.find(order_id).update(address_status: :address_failed)
-						return true
+						return false
 					end
 				end
 			else

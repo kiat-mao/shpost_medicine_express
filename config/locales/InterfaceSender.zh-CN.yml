@@ -66,8 +66,8 @@ zh-CN:
       header: "{\"Content-Type\":\"application/json\"}"
       parent_class: 'Order'
       # object_class: 'Keyclientorder'
-      max_times: 1 #default_times: 10
-      interval: 1000 #default_interval: 600
+      max_times: 6 #default_times: 10
+      interval: 600 #default_interval: 600
     waybill_query:
       #production
       url: 'http://172.16.205.114:3000/shpost_package/standard_interface/waybill_query_in_local'
