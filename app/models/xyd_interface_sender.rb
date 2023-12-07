@@ -197,11 +197,16 @@ class XydInterfaceSender < ActiveRecord::Base
 		prov_name = nil
 		city_name = nil
 		county_name = nil
+		order = nil
 		if callback_params.nil?
 			puts 'callback_params:'
 		else
 			puts 'callback_params:' + callback_params.to_s
 			order_id = callback_params["order_id"]
+			if (!order_id.nil? && order_id.is_a?(Numeric))
+				order = Order.find order_id
+			end
+			return false if order.blank?	
 		end
 		if response.nil?
 			puts 'response:'
@@ -223,27 +228,21 @@ class XydInterfaceSender < ActiveRecord::Base
 					puts '省:' + prov_name.to_s
 					puts '市:' + city_name.to_s
 					puts '区:' + county_name.to_s
-					if (!order_id.nil? && order_id.is_a?(Numeric))
-						if (!prov_name.nil? && !city_name.nil? && !county_name.nil? && !prov_name.empty? && !city_name.empty? && !county_name.empty?)
-							Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_success)
-						else
-							# TODO
-							Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_failed)
-						end
-						return true
+					if (!prov_name.nil? && !city_name.nil? && !county_name.nil? && !prov_name.empty? && !city_name.empty? && !county_name.empty?)
+						Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_success) if ! order.no_modify
+					else
+						# TODO
+						Order.find(order_id).update(receiver_province: prov_name, receiver_city: city_name, receiver_district: county_name, address_status: :address_failed) if ! order.no_modify
 					end
+					return true
 				else
-					if (!order_id.nil? && order_id.is_a?(Numeric))
-						Order.find(order_id).update(address_status: :address_failed)
-						return false
-					end
+					Order.find(order_id).update(address_status: :address_failed) if ! order.no_modify
+					return false
 				end
 			else
 				puts "address parsing failed, error_code:" + error_code.to_s
-				if (!order_id.nil? && order_id.is_a?(Numeric))
-					Order.find(order_id).update(address_status: :address_failed)
-					return true
-				end
+				Order.find(order_id).update(address_status: :address_failed) if ! order.no_modify
+				return true
 			end
 			return false
 		end
