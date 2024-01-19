@@ -28,7 +28,7 @@ zh-CN:
       submenu:
         order:
           name: "订单管理"
-          link: "/orders"
+          link: "/orders?grid[f][created_at][fr]="
           need_count: false
           needrole:
             can: :read

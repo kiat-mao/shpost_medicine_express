@@ -644,8 +644,8 @@ class PackagesController < ApplicationController
 		if !@orders.blank?
 			is_bag_no = true  			
 		else
-			# 用处方号，收件人电话查
-			@orders = Order.where("unit_id = ? and (orders.prescription_no = ? or orders.receiver_phone = ?)", unit_id, @scan_no, @scan_no)
+			# 用处方号，收件人电话, 社保号查
+			@orders = Order.where("unit_id = ? and (orders.prescription_no = ? or orders.receiver_phone = ? or orders.social_no = ?)", unit_id, @scan_no, @scan_no, @scan_no)
 			b_list = @orders.map{|o| o.bag_list}.uniq
 			@orders = Order.where(bag_list: b_list).order("orders.created_at desc")
 			if @order_mode.blank?
@@ -661,11 +661,17 @@ class PackagesController < ApplicationController
 			return
 		end
 		
-		@orders = @orders.map{|o| (o.status=="waiting") ? o : nil}.compact
-		if @orders.blank?
+		if !@orders.map{|o| (o.status=="packaged") ? o : nil}.compact.blank?
 			@err_msg = "重复装箱"
 			return
 		end
+
+		if !@orders.map{|o| (o.status=="cancelled") ? o : nil}.compact.blank?
+			@err_msg = "已拦截"
+			return
+		end
+
+		@orders = @orders.map{|o| (o.status=="waiting") ? o : nil}.compact
 			
 		@orders = @orders.map{|o| (o.address_status=="address_success") ? o : nil}.compact
 		if @orders.blank?
@@ -675,6 +681,11 @@ class PackagesController < ApplicationController
 		
 		if !@orders.map{|o| (o.receiver_province.blank? || o.receiver_city.blank? || o.receiver_district.blank?) ? o : nil}.compact.blank?
       @err_msg = "有订单省市区为空，请去订单改址页面修改"
+      return
+    end
+
+    if !@orders.map{|o| (!(o.receiver_province.start_with?'上海') && !o.no_modify) ? o : nil}.compact.blank?
+      @err_msg = "外省邮件，地址未确认"
       return
     end
 		      
@@ -924,24 +935,38 @@ class PackagesController < ApplicationController
   	results = {}
   	package_hj = 0
   	bag_hj = 0
-  	orders = Order.accessible_by(current_ability).where(status: "packaged")
-
+  	hd_hj = 0
+  	
+  	unit_id = Unit.find_by(no: I18n.t('unit_no.gy')).id
+    
+    where_sql = "orders.unit_id = #{unit_id} and orders.status = 'packaged'"
     if !create_at_start.blank?
-      orders = orders.joins(:package).where("packed_at >= ?", to_date(create_at_start))
+      where_sql += " and packed_at >= '#{create_at_start.to_date}'"
+    end
+    if !create_at_end.blank?
+      where_sql += " and packed_at < '#{create_at_end.to_date+1.days}'"
     end
 
-    if !create_at_end.blank?
-      orders = orders.joins(:package).where("packed_at < ?", to_date(create_at_end)+1.days)
-    end
+    orders = Order.joins(:package).where(where_sql)
+
     hospitals = orders.group(:hospital_name).count.map{|k,v| k}.compact.uniq
     hospitals.each do |h|
-    	package_amount = orders.where(hospital_name: h).map{|o| o.package_id}.compact.uniq.count
+    	package_amount = orders.map{|o| (o.hospital_name == h) ? o.package_id : nil}.compact.uniq.count
     	package_hj += package_amount
-    	bag_amount = orders.where(hospital_name: h).map{|o| o.bag_list}.compact.uniq.count
+    	bag_amount = orders.map{|o| (o.hospital_name == h) ? o.bag_list : nil}.compact.uniq.count
     	bag_hj += bag_amount
-    	results[h] = [package_amount, bag_amount]
+    	# 合单箱数,同一站点号袋子数量大于1的即为有合单,合单箱数记1,以此类推
+    	bag_site = Bag.left_joins(:order).joins(:package).where(where_sql).where("orders.hospital_name= ?", h).group("orders.site_no, bags.bag_no").select("orders.site_no, bags.bag_no")
+    	hd_amount = Bag.select("*").from("(#{bag_site.to_sql}) as bag_site").group("site_no").having("count(*) > 1").count.count
+
+    	# o=orders.where("orders.hospital_name= ?", h).group(:site_no,:bag_list).select(:site_no,:bag_list)
+    	# hd_amount = Order.select("*").from("(#{o.to_sql}) as bag_site").group("site_no").having("count(*) > 1").count.count
+
+    	hd_hj += hd_amount
+
+    	results[h] = [package_amount, bag_amount, hd_amount]
     end
-    results["合计"] = [package_hj, bag_hj]
+    results["合计"] = [package_hj, bag_hj, hd_hj]
     results["合计单量"] = [orders.where.not(hospital_name: nil).group(:package_id).count.size, ""]
     return results
   end
@@ -978,7 +1003,7 @@ class PackagesController < ApplicationController
     sheet1[0,0] = "装箱日期：#{create_at_start}至#{create_at_end}"
 
     sheet1.row(2).default_format = title
-    sheet1.row(2).concat %w{所属医院名称 装箱数量 装箱袋数}
+    sheet1.row(2).concat %w{所属医院名称 装箱数量 装箱袋数 合单箱数}
     
     count_row = 3
     
@@ -986,8 +1011,9 @@ class PackagesController < ApplicationController
       sheet1[count_row,0] = k
       sheet1[count_row,1] = v[0]
       sheet1[count_row,2] = v[1]
+      sheet1[count_row,3] = v[2]
 
-      0.upto(2) do |x|
+      0.upto(3) do |x|
         sheet1.row(count_row).set_format(x, body)
       end 
 

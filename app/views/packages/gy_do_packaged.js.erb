@@ -26,7 +26,7 @@
 	window.open("../packages/tkzd?package_id=<%= @package_id %>");
 	<% if @order_mode=="B2B" %>
 	$('#zxqd').attr('onclick', "window.open('../packages/zxqd?package_id=<%= @package_id %>', '_blank');return false;");
-	window.open("../packages/zxqd?package_id=<%= @package_id %>");
+	//window.open("../packages/zxqd?package_id=<%= @package_id %>");
 	<% end %>
 	$('#scan_no').removeAttr('disabled');
 	$('#tkzd').removeAttr('disabled');

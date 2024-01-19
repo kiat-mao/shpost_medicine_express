@@ -225,6 +225,8 @@
 
     g.column name: model_class.human_attribute_name(:receiver_name), attribute: 'receiver_name'
 
+    g.column name: model_class.human_attribute_name(:receiver_phone), attribute: 'receiver_phone'
+
     g.column name: model_class.human_attribute_name(:address_status), attribute: 'address_status', allow_multiple_selection: false, custom_filter: Order::ADDRESS_STATUS_NAME.invert do |order| 
       order.address_status_name
     end

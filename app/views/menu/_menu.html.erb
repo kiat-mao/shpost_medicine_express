@@ -46,6 +46,8 @@
                             <a data-toggle="collapse" data-parent="#menu-group-0-<%=l1+1%>" >
                               <% if sm[sk][:link].include?"grid[f][packed_at][fr]" %>
                               <a href="/shangyao<%=sm[sk][:link]+Date.today.to_s%>">
+                              <% elsif sm[sk][:link].include?"grid[f][created_at][fr]" %>
+                              <a href="/shangyao<%=sm[sk][:link]+(Date.today-2.days).to_s%>">  
                               <% else %>
                               <a href="/shangyao<%=sm[sk][:link]%>">
                               <% end %>
