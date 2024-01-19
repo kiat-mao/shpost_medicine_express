@@ -194,12 +194,10 @@ class XydInterfaceSender < ActiveRecord::Base
       order = Order.find callback_params['order_id']
     rescue StandardError => e
       Rails.logger.error e.message
-      return true
+      return false
     ensure
-      return false if order.blank?
-
       if order.no_modify
-        Order.address_success!
+        order.address_success!
         return true
       end
     end
