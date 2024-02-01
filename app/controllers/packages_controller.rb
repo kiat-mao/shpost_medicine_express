@@ -957,7 +957,7 @@ class PackagesController < ApplicationController
     	bag_hj += bag_amount
     	# 合单箱数,同一站点号袋子数量大于1的即为有合单,合单箱数记1,以此类推
     	bag_site = Bag.left_joins(:order).joins(:package).where(where_sql).where("orders.hospital_name= ?", h).group("orders.site_no, bags.bag_no").select("orders.site_no, bags.bag_no")
-    	hd_amount = Bag.select("*").from("(#{bag_site.to_sql}) as bag_site").group("site_no").having("count(*) > 1").count.count
+			hd_amount = Bag.select("site_no").from("(#{bag_site.to_sql}) bag_site").group("site_no").having("count(*) > 1").count.count
 
     	# o=orders.where("orders.hospital_name= ?", h).group(:site_no,:bag_list).select(:site_no,:bag_list)
     	# hd_amount = Order.select("*").from("(#{o.to_sql}) as bag_site").group("site_no").having("count(*) > 1").count.count
