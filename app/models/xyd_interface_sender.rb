@@ -52,12 +52,23 @@ class XydInterfaceSender < ActiveRecord::Base
         order['sender_no'] = xydConfig[:gy_sender_no]
         order['sender_type'] = '1'
       end
-      if !o.nil? && o.freight == true
+      if o.freight == true
         order['base_product_no'] = xydConfig[:base_product_no_3]
         order['payment_mode'] = xydConfig[:payment_mode_2]
+
+        if o.pay_mode.eql? '10'
+          order['biz_product_no'] = xydConfig[:biz_product_no_1]
+        elsif o.pay_mode.eql? '11'
+          order['biz_product_no'] = xydConfig[:biz_product_no_2]
+        end
       else
         order['base_product_no'] = xydConfig[:base_product_no_1]
+
+        if o.pay_mode.eql? '11'
+          order['biz_product_no'] = xydConfig[:biz_product_no_3]
+        end
       end
+      
     else
       unless xydConfig[:sender_no].nil?
         order['sender_no'] = xydConfig[:sy_sender_no]

@@ -55,10 +55,13 @@ production:
   ecommerce_no: SHYIYAO
   inner_channel: "0"
   sy_sender_no: "1030001771000"
-  gy_sender_no: "1100128414327"
+  gy_sender_no: "1100147699604"
   base_product_no_1: "1" #寄付
   base_product_no_3: "3" #到付
   payment_mode_2: "2"
+  biz_product_no_1: "112104300000992"
+  biz_product_no_2: "112104302300992"
+  biz_product_no_3: "112104302300991"
   # address parsing
   address_parsing_url: http://172.20.7.11:3000/xyd_server/AddressParsingServlet
   ap_system_name: syhs2022
