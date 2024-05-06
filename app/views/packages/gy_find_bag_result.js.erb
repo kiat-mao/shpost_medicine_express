@@ -11,6 +11,9 @@ $('#scan_no').blur();
 	alert("<%= @err_msg %>");
 	$('#scan_no').val("");
 <% else %>
+	<% if !@bj_msg.blank? %>
+		alert("<%= @bj_msg %>");
+	<% end %>
  	var audio = document.getElementById("success_alert");
 	audio.play();
 	$('#scan_no').val("");

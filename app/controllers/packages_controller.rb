@@ -631,6 +631,7 @@ class PackagesController < ApplicationController
   	@tmp_save_msg = ""
   	cur_bag = ""
   	cur_orders = ""
+  	@bj_msg = ""  #保价提示
   	
   	unit_id = Unit.find_by(no: I18n.t('unit_no.gy')).id
   	# 用袋子号查
@@ -716,6 +717,10 @@ class PackagesController < ApplicationController
 					cur_orders = @orders.map{|o| (o.bag_list==cur_bag) ? o.order_no : nil}.compact.uniq.join(",")
 				end
 			end
+			# B2B每次扫描是保价订单,弹框提示
+			os = @orders.map{|o| (cur_orders.split(",").include?o.order_no) ? o : nil}.compact.uniq
+			vos = os.map{|o| (!o.valuation_amount.blank? && o.valuation_amount > 0) ? o : nil}.compact.uniq
+			@bj_msg = "有保价订单!" if !vos.blank?
 
 			# 组装@scaned_orders, @scaned_bags, 已扫袋数+1
 			scan_result = get_scaned_orders_bags(@scaned_orders, @scaned_bags, cur_bag, cur_orders, @bag_amount, @to_scan_bags)
@@ -731,6 +736,12 @@ class PackagesController < ApplicationController
      	@orders = Order.where(unit_id: unit_id, status: "waiting", site_no: @site_no, order_mode: @order_mode, address_status: "address_success").where.not(receiver_province: nil, receiver_city: nil, receiver_district: nil)
 
       @to_scan_bags = @to_scan_bags.blank? ? @orders.map{|o| o.bag_list}.uniq.join(",") : @to_scan_bags
+
+      # B2C合并站点后所有订单中有保价订单,首次扫描时弹框提示
+      if @scaned_bags.blank?
+				vos = @orders.map{|o| (!o.valuation_amount.blank? && o.valuation_amount > 0) ? o : nil}.compact.uniq
+				@bj_msg = "当前箱有保价订单!" if !vos.blank?
+			end
 
 			if is_bag_no
 				if @to_scan_bags.include?@scan_no

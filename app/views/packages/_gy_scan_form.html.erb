@@ -9,6 +9,7 @@
 			<td>站点编号/合单号</td>
 			<td>收件人电话</td>
 			<td>收件人地址</td>
+			<td>保价金额</td>
 		</tr> 
 		<% @orders.each do |o| %>
 		<% if @scaned_orders.include?o.order_no %>
@@ -21,8 +22,9 @@
 			<td><%= o.prescription_no %></td>
 			<td><%= o.social_no %></td>
 			<td><%= o.site_no %></td>
-			<td><%= o.receiver_phone %> </td>
-			<td><%= o.receiver_addr %> </td>
+			<td><%= o.receiver_phone %></td>
+			<td><%= o.receiver_addr %></td>
+			<td><%= o.valuation_amount %></td>
 		</tr>
 		<% end %>
 	</table>
