@@ -661,17 +661,16 @@ class PackagesController < ApplicationController
 			return
 		end
 		
-		if !@orders.map{|o| (o.status=="packaged") ? o : nil}.compact.blank?
-			@err_msg = "重复装箱"
-			return
-		end
-
 		if !@orders.map{|o| (o.status=="cancelled") ? o : nil}.compact.blank?
 			@err_msg = "已拦截"
 			return
 		end
 
 		@orders = @orders.map{|o| (o.status=="waiting") ? o : nil}.compact
+		if @orders.blank?
+			@err_msg = "重复装箱"
+			return
+		end
 			
 		@orders = @orders.map{|o| (o.address_status=="address_success") ? o : nil}.compact
 		if @orders.blank?
