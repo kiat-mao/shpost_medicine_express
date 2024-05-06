@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_20_021446) do
+ActiveRecord::Schema.define(version: 2024_04_29_081213) do
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -126,8 +126,18 @@ ActiveRecord::Schema.define(version: 2023_03_20_021446) do
     t.boolean "no_modify", default: false
     t.string "tmp_package"
     t.string "original_receiver_addr"
+    t.string "pay_mode"
+    t.decimal "valuation_amount", default: "0.0"
+    t.index ["address_status"], name: "index_orders_on_address_status"
+    t.index ["bag_list"], name: "index_orders_on_bag_list"
+    t.index ["order_mode"], name: "index_orders_on_order_mode"
     t.index ["order_no"], name: "index_orders_on_order_no"
     t.index ["package_id"], name: "index_orders_on_package_id"
+    t.index ["prescription_no"], name: "index_orders_on_prescription_no"
+    t.index ["receiver_phone"], name: "index_orders_on_receiver_phone"
+    t.index ["site_no"], name: "index_orders_on_site_no"
+    t.index ["social_no"], name: "index_orders_on_social_no"
+    t.index ["status"], name: "index_orders_on_status"
   end
 
   create_table "packages", force: :cascade do |t|
