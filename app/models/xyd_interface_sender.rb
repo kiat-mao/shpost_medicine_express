@@ -98,7 +98,7 @@ class XydInterfaceSender < ActiveRecord::Base
     insurance_amount = package.orders.sum(:valuation_amount)
 
     if insurance_amount > 0
-      order['insurance_flag'] = 2 
+      order['insurance_flag'] = '2'
       order['insurance_amount'] = insurance_amount
     end 
 
