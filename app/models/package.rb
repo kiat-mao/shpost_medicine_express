@@ -60,7 +60,7 @@ class Package < ApplicationRecord
  	def get_sorting_code
  		sorting_code = ""
  		if !self.route_code.blank?
- 			rcode = self.route_code.split("-").last
+ 			rcode = self.route_code.split("-")[self.route_code.split("-").length-2]
  			I18n.t('sorting_code').each do |k,v|
  				if v.include?rcode
  					sorting_code = k
