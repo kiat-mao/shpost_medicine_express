@@ -57,10 +57,10 @@ class Package < ApplicationRecord
  	end
 
   # 面单打印分拣码
- 	def get_sorting_code
+ 	def self.get_sorting_code(route_code)
  		sorting_code = ""
- 		if !self.route_code.blank?
- 			rcode = self.route_code.split("-")[self.route_code.split("-").length-2]
+ 		if !route_code.blank?
+ 			rcode = route_code.split("-")[2]
  			I18n.t('sorting_code').each do |k,v|
  				if v.include?rcode
  					sorting_code = k

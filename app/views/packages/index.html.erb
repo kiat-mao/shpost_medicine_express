@@ -4,16 +4,21 @@
   <%= render partial: '/layouts/page_size' %>
   <div style="float:right">
     <% if (can? :send_sy, Package) && (current_user.unit.no == I18n.t('unit_no.sy')) %>
-    <%= submit_tag "装箱回传上药",:class => 'btn btn-primary', onclick: "form1.action='packages/send_sy';form1.submit();" %>
+      <%= submit_tag "装箱回传上药",:class => 'btn btn-primary', onclick: "form1.action='packages/send_sy';form1.submit();" %>
     <% end %>
     <% if (can? :send_finish, Package) && (current_user.unit.no == I18n.t('unit_no.gy')) %>
-    <% submit_tag "收寄完成",:class => 'btn btn-primary', onclick: "form1.action='packages/send_finish';form1.submit();" %>
+      <% submit_tag "收寄完成",:class => 'btn btn-primary', onclick: "form1.action='packages/send_finish';form1.submit();" %>
     <% end %>
     <%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzds" %>
     <%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqds" %>
-    <% if (can? :package_export, Package) %>
-    <%= submit_tag "导出",:class => 'btn btn-primary', onclick: "form1.action='packages/package_export.xls';form1.submit();" %>
-    <% end %>
+    <button class="btn btn-primary wg-external-csv-export-button" data-grid-name="packages">导出</button>
+    <% if current_user.unit.no == I18n.t('unit_no.gy') %>
+    <br>
+    <div style="float:right">
+      <% url = (request.url.include?"selected=true") ? request.url : (request.url+'&selected=true') %>
+      <p style="font-weight: bold;"><%= check_box("checkbox","show_valuation_package", onclick: "window.location.href='#{url}'", checked: @selected.blank? ? false : (@selected.eql?('false') ? false : true))%>显示保价邮件</p>
+    </div>
+  <% end %>
   </div>
 </div> 
 <% if current_user.unit.no == I18n.t('unit_no.gy') %>
@@ -23,82 +28,11 @@
     <%= submit_tag "查询", :class => 'btn btn-primary'%>
     <% end %>
   </div>  
-  <br><br><br>
+  <br>
 <% end %> 
 
 <div>
-<%= form_tag('', :method => "post", name: 'form1') do %>
-  <%= grid(@packages_grid) do |g|
-    g.action_column select_all_buttons: true do |package|
-      !package.express_no.blank? && !package.route_code.blank? && !(package.status.eql?"cancelled")
-    end 
-
-    if current_user.unit.no == I18n.t('unit_no.sy')
-      g.column name: model_class.human_attribute_name(:package_no), attribute: 'package_no'
-
-      g.column name: model_class.human_attribute_name(:express_no), attribute: 'express_no'
-
-      g.column name: model_class.human_attribute_name(:route_code), attribute: 'route_code'
-
-      g.column name: model_class.human_attribute_name(:order_list), attribute: 'order_list' do |package|
-        [package.order_list.try(:truncate, 100), {height: '50px', width: '100px', style: 'white-space:normal', title: package.order_list}]
-      end
-
-      g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
-        [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
-      end
-
-      g.column name: model_class.human_attribute_name(:status), attribute: 'status', allow_multiple_selection: false, custom_filter: Package::STATUS_NAME.invert do |package| 
-        package.status_name
-      end
-
-      g.column name: model_class.human_attribute_name(:user_id), attribute: 'name', assoc: :user
-
-      g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
-        package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
-      end
-
-    elsif current_user.unit.no == I18n.t('unit_no.gy')
-      g.column name: model_class.human_attribute_name(:express_no), attribute: 'express_no'
-
-      g.column name: '站点编号', attribute: 'site_no', assoc: :orders do |package| 
-        package.orders.blank? ? "" : package.orders.first.site_no
-      end
-
-      g.column name: '处方号', attribute: 'prescription_no', assoc: :orders do |package| 
-        package.orders.blank? ? "" : package.orders.first.prescription_no
-      end
-
-      g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
-        [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
-      end
-
-      g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
-        package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
-      end
-
-      g.column name: model_class.human_attribute_name(:user_id), attribute: 'name', assoc: :user
-
-      g.column name: '模式', attribute: 'order_mode', assoc: :orders, custom_filter: Order::ORDER_MODE_NAME.invert  do |package|
-        package.orders.blank? ? "" : package.orders.first.order_mode
-      end
-
-      g.column name: model_class.human_attribute_name(:pkp), attribute: 'pkp', allow_multiple_selection: false, custom_filter: Package::PKP_NAME.invert do |package| 
-        package.pkp_name
-      end
-
-      g.column name: '医院名称', attribute: 'hospital_name', assoc: :orders do |package| 
-        package.orders.blank? ? "" : package.orders.first.hospital_name
-      end
-    end
-
-    g.column do |package|
-      ActiveSupport::SafeBuffer.new << 
-      (link_to "作废", cancelled_package_path(package), :data => { :confirm => "确定作废吗?" }, :class => 'btn btn-xs btn-danger' if (can? :cancelled, package) && (package.pkp.eql?"pkp_done") && (current_user.unit.no == I18n.t('unit_no.gy'))) << ' ' << 
-      (link_to "作废", cancelled_package_path(package), :data => { :confirm => "确定作废吗?" }, :class => 'btn btn-xs btn-danger' if (can? :cancelled, package) && (["waiting", "to_send", "failed"].include?package.status) && (current_user.unit.no == I18n.t('unit_no.sy'))) << ' ' << 
-      (link_to "获取邮件号", send_xyd_package_path(package), :class => 'btn btn-xs btn-primary' if (can? :send_xyd, package) && (package.express_no.blank? && package.route_code.blank?) && (package.status.eql?"waiting"))
-    end
-  end 
-  %>
+<%= form_tag('', :method => "post", name: 'form1') do %> 
+  <%= render partial: 'packages_grid' %>
 <% end %>
 </div>

@@ -2,6 +2,12 @@
 <div class="page-header">
 <h1><%=t '.title', :default => [:'helpers.titles.index', '%{model} Manage'], :model => model_class.model_name.human.titleize %></h1>
   <div><%= render partial: '/layouts/page_size' %></div>
+  <% if current_user.unit.no == I18n.t('unit_no.gy') %>
+    <div style="float:right">
+      <% url = (request.url.include?"selected=true") ? request.url : (request.url+'&selected=true') %>
+      <p style="font-weight: bold;"><%= check_box("checkbox","show_valuation_order", onclick: "window.location.href='#{url}'", checked: @selected.blank? ? false : (@selected.eql?('false') ? false : true))%>显示保价订单</p>
+    </div>
+  <% end %>
 </div>
 <% if current_user.unit.no == I18n.t('unit_no.sy') %>
   <%= grid(@orders_grid) do |g|
@@ -242,6 +248,8 @@
     end
 
     g.column name: model_class.human_attribute_name(:social_no), attribute: 'social_no'
+
+    g.column name: model_class.human_attribute_name(:valuation_amount), attribute: 'valuation_amount'
 
   end %>
 <% end %>

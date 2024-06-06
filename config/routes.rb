@@ -61,7 +61,6 @@ Rails.application.routes.draw do
       post 'zxqd'
       get 'send_sy'
       post 'send_sy'
-      post 'package_export'
       get 'gy_scan'
       post 'gy_scan'
       get 'gy_find_bag_result'
@@ -74,6 +73,9 @@ Rails.application.routes.draw do
       get 'package_report'
       post 'package_report'
       post 'package_report_export'
+      get 'sorting_code_report'
+      post 'sorting_code_report'
+      post 'sorting_code_report_export'
     end
     member do
       get 'cancelled'

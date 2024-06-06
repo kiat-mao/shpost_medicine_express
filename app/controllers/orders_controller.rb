@@ -5,9 +5,15 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
+    @selected = nil
     @orders = @orders.accessible_by(current_ability)
 
     if  !current_user.unit.blank? && (current_user.unit.no == I18n.t('unit_no.gy'))
+      # 显示保价订单
+      if !params[:selected].blank? && (params[:selected].eql?"true")
+        @orders = @orders.where("valuation_amount>0")
+        @selected = params[:selected]
+      end
       if !params[:grid].blank? && !params[:grid][:f].blank? && !params[:grid][:f][:site_no].blank?
         site_no = params[:grid][:f][:site_no]
         @orders = @orders.where(site_no: site_no)
