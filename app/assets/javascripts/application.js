@@ -26,13 +26,13 @@ var ready;
 ready = function() {
 	$('#tkzds').click(function(){
 		var vals = [];
-		$("input[name='grid[selected][]']:checked").each(function(index, item){vals.push($(this).val())});
+		$("input[name='packages[selected][]']:checked").each(function(index, item){vals.push($(this).val())});
 		window.open("packages/tkzd?selected="+vals, '_blank');
 	});
 
 	$('#zxqds').click(function(){
 		var vals = [];
-		$("input[name='grid[selected][]']:checked").each(function(index, item){vals.push($(this).val())});
+		$("input[name='packages[selected][]']:checked").each(function(index, item){vals.push($(this).val())});
 		window.open("packages/zxqd?selected="+vals, '_blank');
 	});
 }
