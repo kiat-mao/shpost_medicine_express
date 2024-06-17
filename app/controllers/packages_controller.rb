@@ -80,8 +80,8 @@ class PackagesController < ApplicationController
 	def send_sy
 		packages = []
 
-		if params[:grid] && params[:grid][:selected]
-  		selected = params[:grid][:selected]
+		if params[:packages] && params[:packages][:selected]
+  		selected = params[:packages][:selected]
 	       
 	    until selected.blank? do 
 	      packages = Package.where(id:selected.pop(1000))

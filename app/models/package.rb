@@ -60,15 +60,20 @@ class Package < ApplicationRecord
  	def self.get_sorting_code(route_code)
  		sorting_code = ""
  		if !route_code.blank?
+ 			rcode_pre = route_code.split("-")[0]
  			rcode = route_code.split("-")[2]
- 			I18n.t('sorting_code').each do |k,v|
- 				if v.include?rcode
- 					sorting_code = k
- 					break
- 				end
- 			end
+ 			# 格口码第一栏090,091表示是上海的，只有090,091开头才记分拣码,否则为空
+ 			if ["090","091"].include?rcode_pre
+	 			I18n.t('sorting_code').each do |k,v|
+	 				if v.include?rcode
+	 					sorting_code = k
+	 					break
+	 				end
+	 			end
+	 		end
  		end
  		return sorting_code
  	end
+
 
 end
