@@ -56,4 +56,19 @@ class Package < ApplicationRecord
  		pkp.blank? ? "" : Package::PKP_NAME["#{pkp}".to_sym]
  	end
 
+  # 面单打印分拣码
+ 	def self.get_sorting_code(route_code)
+ 		sorting_code = ""
+ 		if !route_code.blank?
+ 			rcode = route_code.split("-")[2]
+ 			I18n.t('sorting_code').each do |k,v|
+ 				if v.include?rcode
+ 					sorting_code = k
+ 					break
+ 				end
+ 			end
+ 		end
+ 		return sorting_code
+ 	end
+
 end

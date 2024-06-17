@@ -173,6 +173,13 @@
     LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
     LODOP.SET_PRINT_STYLEA(0,"Bold",1);
     LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+    // 分拣码
+    <% if package.unit.no == I18n.t('unit_no.gy') %>
+    LODOP.ADD_PRINT_TEXT("118mm","49.2mm","28mm","4mm","<%= package.sorting_code %>");
+    LODOP.SET_PRINT_STYLEA(0,"FontSize",22);
+    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+    <% end %>
     LODOP.ADD_PRINT_LINE("126mm","2mm","126mm","74mm",2,1);
     LODOP.ADD_PRINT_LINE("129mm","2mm","129mm","74mm",2,1);
     // 竖线

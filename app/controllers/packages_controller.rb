@@ -5,20 +5,32 @@ class PackagesController < ApplicationController
   # GET /packages
   # GET /packages.json
   def index
+  	@selected = nil
   	@no = params[:no]
-  	if @no.blank?
-	  	@packages = Package.accessible_by(current_ability)
-	  	if params[:grid].blank?
-		  	@packages = @packages.where("packed_at>=?", Date.today)
-		  end
-		else
-			@packages = Package.accessible_by(current_ability).joins(:orders).where("orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?", @no, @no, @no)	
+
+  	# 根据处方号/社保号/收件人电话查询
+    @packages = Package.accessible_by(current_ability)
+		if !@no.blank?
+	  	@packages = Package.accessible_by(current_ability).joins(:orders).where("orders.prescription_no = ? or orders.social_no = ? or orders.receiver_phone = ?", @no, @no, @no)	
 		end
+
+		# 显示保价订单
+		if  !current_user.unit.blank? && (current_user.unit.no == I18n.t('unit_no.gy'))
+      if !params[:selected].blank? && (params[:selected].eql?"true")
+        @packages = @packages.where("valuation_sum>0")
+        @selected = params[:selected]
+      end
+    end
 	  
     @packages_grid = initialize_grid(@packages,
-         :order => 'packed_at',
-         :order_direction => 'asc', 
-         :per_page => params[:page_size])
+    	:order => 'packed_at',
+      :order_direction => 'asc', 
+      :per_page => params[:page_size],
+  		:name => 'packages',
+  		:enable_export_to_csv => true,
+    	:csv_file_name => 'packages',
+    	:csv_encoding => 'gbk')
+    	export_grid_if_requested
   end
 
   def tkzd
@@ -247,175 +259,6 @@ class PackagesController < ApplicationController
 		# msg = "成功"
 		return msg			
 	end
-
-	def package_export
-		packages = filter_packages(@packages,params)
-    
-    if packages.blank?
-      flash[:alert] = "无装箱数据"
-      redirect_to :action => 'index'
-    else
-      send_data(package_xls_content_for(packages.order(:packed_at)), :type => "text/excel;charset=utf-8; header=present", :filename => "装箱数据_#{Time.now.strftime("%Y%m%d")}.xls")  
-    end
-	end
-
-	def filter_packages(packages, params)
-    start_date = nil
-    end_date = nil
-    packages = packages.left_joins(:user)
-
-    if !params[:grid].blank?
-      if !params[:grid][:f].blank?
-        params_f = params[:grid][:f]
-        if !params_f[:package_no].blank?
-          packages = packages.where("package_no like ?", '%#{params_f[:package_no]}%')
-        end
-        if !params_f[:express_no].blank?
-        	packages = packages.where("express_no like ?", '%#{params_f[:express_no]}%')
-        end
-        if !params_f[:route_code].blank?
-        	packages = packages.where("route_code like ?", '%#{params_f[:route_code]}%')
-        end
-        if !params_f[:order_list].blank?
-        	packages = packages.where("order_list like ?", '%#{params_f[:order_list]}%')
-        end
-        if !params_f[:bag_list].blank?
-        	packages = packages.where("bag_list like ?", '%#{params_f[:bag_list]}%')
-        end
-        if !params_f[:status].blank?
-          if !params_f[:status][0].blank?
-          	packages = packages.where(status: params_f[:status][0])
-          end
-        end
-        if !params_f['users.name'].blank?
-        	uname = params_f['users.name']
-        	packages = packages.where("users.name like ?", '%#{uname}%')
-        end
-        if params_f[:packed_at][:fr].blank? && params_f[:packed_at][:to].blank?
-        	start_date = Date.today
-	      	end_date = Date.today+1.day
-	      else
-	        start_date = params_f[:packed_at][:fr] if !params_f[:packed_at][:fr].blank?
-	      	end_date = params_f[:packed_at][:to].to_date+1.day if !params_f[:packed_at][:to].blank?
-	      end
-
-	      if !start_date.blank?
-	      	packages = packages.where("packed_at >= ?", start_date)
-	      end
-		    if !end_date.blank?
-		    	packages = packages.where("packed_at < ?", end_date)
-		    end
-	    end
-	  end
-	  
-	  return packages
-	end
-
-	# def package_xls_content_for(objs)  
- #    xls_report = StringIO.new  
- #    book = Spreadsheet::Workbook.new  
- #    sheet1 = book.create_worksheet :name => "装箱数据"  
-  
- #    blue = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 10  
- #    sheet1.row(0).default_format = blue  
-
- #    sheet1.row(0).concat %w{箱号 邮件号 格口码 订单号 袋子号 状态 处理用户 装箱日期}  
- #    count_row = 1
- #    objs.each do |obj|  
- #      sheet1[count_row,0]=obj.package_no
- #      sheet1[count_row,1]=obj.express_no
- #      sheet1[count_row,2]=obj.route_code
- #      sheet1[count_row,5]=obj.status_name
- #      sheet1[count_row,6]=obj.user.try(:name)
- #      sheet1[count_row,7]=obj.packed_at.strftime('%Y-%m-%d').to_s
- #      if obj.unit.no == I18n.t('unit_no.sy').to_s
-	# 	    if !obj.orders.blank?
-	# 	    	obj.orders.order(:order_no).each do |o|
-	# 	    		sheet1[count_row,3]=o.order_no
-	# 	    		if !o.bags.blank?
-	# 	    			o.bags.each do |b|
-	# 	    				sheet1[count_row,3]=o.order_no
-	# 	    				sheet1[count_row,4]=b.bag_no
-	# 	    				count_row += 1
-	# 	    			end
-	# 	    		end
-	# 	    	end
-	# 	    else
-	# 	    	count_row += 1
-	# 	    end  
-	#     elsif obj.unit.no == I18n.t('unit_no.gy').to_s		        	    
-	#       if !obj.orders.blank?
-	#       	obj.orders.order(:order_no).each do |o|
-	#       		sheet1[count_row,3]=o.order_no
-	#       		if !o.bag_list.blank?
-	#       			sheet1[count_row,4]=o.bag_list
-	#       			count_row += 1
-	#       		end
-	#       	end
-	#       else
-	#       	count_row += 1
-	#       end
-	#     end
- #    end
-
- #    book.write xls_report  
- #    xls_report.string  
- #  end
-
-  def package_xls_content_for(objs)  
-    xls_report = StringIO.new  
-    book = Spreadsheet::Workbook.new  
-    sheet1 = book.create_worksheet :name => "装箱数据"  
-  
-    blue = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 10  
-    sheet1.row(0).default_format = blue  
-
-    sheet1.row(0).concat %w{邮件号 站点编号 处方号 订单号 袋子号 装箱日期 处理用户 模式 收件人姓名 收件人电话 医院名称} 
-    count_row = 1
-    objs.each do |obj|  
-      sheet1[count_row,0]=obj.express_no
-      sheet1[count_row,1]=obj.orders.first.try(:site_no)
-      sheet1[count_row,2]=obj.orders.first.try(:prescription_no)
-      sheet1[count_row,5]=obj.packed_at.strftime('%Y-%m-%d').to_s
-      sheet1[count_row,6]=obj.user.try(:name)
-      sheet1[count_row,7]=obj.orders.first.try(:order_mode)
-      sheet1[count_row,8]=obj.orders.first.try(:receiver_name)
-      sheet1[count_row,9]=obj.orders.first.try(:receiver_phone)
-      sheet1[count_row,10]=obj.orders.first.try(:hospital_name)
-
-      if obj.unit.no == I18n.t('unit_no.sy').to_s
-		    if !obj.orders.blank?
-		    	obj.orders.order(:order_no).each do |o|
-		    		sheet1[count_row,3]=o.order_no
-		    		if !o.bags.blank?
-		    			o.bags.each do |b|
-		    				sheet1[count_row,3]=o.order_no
-		    				sheet1[count_row,4]=b.bag_no
-		    				count_row += 1
-		    			end
-		    		end
-		    	end
-		    else
-		    	count_row += 1
-		    end  
-	    elsif obj.unit.no == I18n.t('unit_no.gy').to_s		        	    
-	      if !obj.orders.blank?
-	      	obj.orders.order(:order_no).each do |o|
-	      		sheet1[count_row,3]=o.order_no
-	      		if !o.bag_list.blank?
-	      			sheet1[count_row,4]=o.bag_list
-	      			count_row += 1
-	      		end
-	      	end
-	      else
-	      	count_row += 1
-	      end
-	    end
-    end
-
-    book.write xls_report  
-    xls_report.string  
-  end
 
 
   def gy_scan
@@ -827,9 +670,10 @@ class PackagesController < ApplicationController
 		  		package_no = Package.new_package_no(current_user)
 		  		ActiveRecord::Base.transaction do
 		  			begin
-							@package = Package.create! package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: @scaned_orders.split(","), bag_list: @scaned_bags.split(","), unit_id: current_user.unit_id
+							@package = Package.create! package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: @scaned_orders.split(","), bag_list: @scaned_bags.split(","), unit_id: current_user.unit_id, valuation_sum: Order.where(order_no: @scaned_orders.split(",")).sum(:valuation_amount)
 							@package_id = @package.id
 							Order.where(order_no: @scaned_orders.split(",")).update_all package_id: @package.id, status: "packaged", tmp_package: nil
+							
 							@is_packaged = "1"
 						rescue Exception => e
 		          flash[:alert] = e.message 
@@ -1041,7 +885,91 @@ class PackagesController < ApplicationController
     return date
   end
 
+  def sorting_code_report
+  	@create_at_start = !params[:create_at_start].blank? ? params[:create_at_start] : nil
+    @create_at_end = !params[:create_at_end].blank? ? params[:create_at_end] : nil
+    @results = nil
 
+    unless request.get?
+      if @create_at_start.blank? && @create_at_end.blank?
+      	flash[:alert] = "请选择日期"
+        redirect_to request.referer
+      else
+      	@results = sorting_code_init_result(@create_at_start, @create_at_end)
+	    end
+    end
+  end
+
+  def sorting_code_init_result(create_at_start, create_at_end)
+  	results = {}
+  	
+  	unit_id = Unit.find_by(no: I18n.t('unit_no.gy')).id
+    
+    where_sql = "packages.unit_id = #{unit_id}"
+    if !create_at_start.blank?
+      where_sql += " and packed_at >= '#{create_at_start.to_date}'"
+    end
+    if !create_at_end.blank?
+      where_sql += " and packed_at < '#{create_at_end.to_date+1.days}'"
+    end
+
+    results = Package.where(where_sql).group(:sorting_code).count
+    results["合计"] = Package.where(where_sql).count
+    
+    return results
+  end
+
+  def sorting_code_report_export
+  	@create_at_start = !params[:create_at_start].blank? ? params[:create_at_start] : nil
+  	@create_at_end = !params[:create_at_end].blank? ? params[:create_at_end] : nil
+
+  	if @create_at_start.blank? && @create_at_end.blank?
+    	flash[:alert] = "请先查询"
+      redirect_to request.referer
+    else
+  		@results = sorting_code_init_result(@create_at_start, @create_at_end)
+
+	  	if @results.blank?
+	      flash[:alert] = "无数据"
+	      redirect_to request.referer
+	    else
+	    	send_data(sorting_code_report_xls_content_for(@create_at_start, @create_at_end, @results),:type => "text/excel;charset=utf-8; header=present",:filename => "同城分拣码统计表_#{Time.now.strftime("%Y%m%d")}.xls")  
+	    end
+	  end
+  end
+
+  def sorting_code_report_xls_content_for(create_at_start, create_at_end, results) 
+    xls_report = StringIO.new  
+    book = Spreadsheet::Workbook.new  
+    sheet1 = book.create_worksheet :name => "报表"  
+    
+    filter = Spreadsheet::Format.new :size => 12
+    body = Spreadsheet::Format.new :size => 13, :border => :thin, :align => :center
+    
+    sheet1.row(0).default_format = filter
+    sheet1[0,0] = "日期：#{create_at_start}至#{create_at_end}"
+
+    sheet1.row(2).concat %w{同城分拣码 邮件数量}
+    0.upto(1) do |x|
+      sheet1.row(2).set_format(x, body)
+    end 
+    
+    count_row = 3
+    
+    results.each do |k, v|
+      sheet1[count_row,0] = k
+      sheet1[count_row,1] = v
+
+      0.upto(1) do |x|
+        sheet1.row(count_row).set_format(x, body)
+      end 
+
+      count_row += 1
+    end
+
+    book.write xls_report  
+    xls_report.string
+  end
 	
 	private
 

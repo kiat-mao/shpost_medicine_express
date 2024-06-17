@@ -157,7 +157,7 @@ class XydInterfaceSender < ActiveRecord::Base
         express_no = resBody['wayBillNo']
         route_code = resBody['routeCode']
         if !package_id.nil? && package_id.is_a?(Numeric)
-          Package.find(package_id).update(express_no: express_no, route_code: route_code)
+          Package.find(package_id).update(express_no: express_no, route_code: route_code, sorting_code: Package.get_sorting_code(route_code))
           puts '运单号:' + express_no.to_s
           puts '分拣码:' + route_code.to_s
           return true

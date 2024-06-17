@@ -304,6 +304,8 @@ zh-CN:
         pkp: "收寄状态"
         weight: "重量"
         price: "价格"
+        valuation_sum: "保价总额"
+        sorting_code: "同城分拣码"
       order:
         order_no: "订单号"
         prescription_no: "处方号"
@@ -336,6 +338,7 @@ zh-CN:
         address_status: "地址解析状态"
         original_receiver_addr: "原收件人地址"
         interface_status: "发送状态"
+        valuation_amount: "保价金额"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"

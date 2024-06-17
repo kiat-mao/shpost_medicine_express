@@ -55,7 +55,7 @@ zh-CN:
       submenu:
         package:
           name: "装箱管理"
-          link: "/packages?grid[f][packed_at][fr]="
+          link: "/packages?packages[f][packed_at][fr]="
           need_count: false
           needrole:
             can: :read
@@ -66,6 +66,13 @@ zh-CN:
           need_count: false
           needrole:
             can: :package_report
+            role: :Package
+        sorting_code_report:
+          name: "同城分拣码统计表"
+          link: "/packages/sorting_code_report"
+          need_count: false
+          needrole:
+            can: :sorting_code_report
             role: :Package
     scan_packages:
       name: "扫描装箱"
