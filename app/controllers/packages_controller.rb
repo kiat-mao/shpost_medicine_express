@@ -15,13 +15,11 @@ class PackagesController < ApplicationController
 		end
 
 		# 显示保价订单
-		if  !current_user.unit.blank? && (current_user.unit.no == I18n.t('unit_no.gy'))
-      if !params[:selected].blank? && (params[:selected].eql?"true")
-        @packages = @packages.where("valuation_sum>0")
-        @selected = params[:selected]
-      end
+	  if !params[:selected].blank? && (params[:selected].eql?"true")
+      @packages = @packages.where("valuation_sum>0")
+      @selected = params[:selected]
     end
-	  
+    
     @packages_grid = initialize_grid(@packages,
     	:order => 'packed_at',
       :order_direction => 'asc', 

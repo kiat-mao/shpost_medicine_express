@@ -29,6 +29,8 @@
         package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
       end
 
+      g.column name: model_class.human_attribute_name(:valuation_sum), attribute: 'valuation_sum'
+
     elsif current_user.unit.no == I18n.t('unit_no.gy')
       g.column name: model_class.human_attribute_name(:express_no), attribute: 'express_no'
 
