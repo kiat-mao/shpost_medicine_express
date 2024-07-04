@@ -189,10 +189,20 @@ class PackagesController < ApplicationController
 		  		order_list = get_orders(@order_bags)
 		  		bag_list = get_bags(@order_bags)
 	  			package_no = Package.new_package_no(current_user)
-					@package = Package.create package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list, unit_id: current_user.unit_id
-					@package_id = @package.id
-					Order.where(order_no: order_list).update_all package_id: @package.id, status: "packaged"
-					@is_packaged = "1"
+	  			ActiveRecord::Base.transaction do
+		  			begin
+							@package = Package.create! package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list, unit_id: current_user.unit_id
+							@package_id = @package.id
+							Order.where(order_no: order_list).update_all package_id: @package.id, status: "packaged"
+							commodity_list = get_commodities(@package)
+							@package.update commodity_list: commodity_list
+							
+							@is_packaged = "1"
+						rescue Exception => e
+		          flash[:alert] = e.message 
+		          raise ActiveRecord::Rollback
+		        end
+      		end	
 					msg = package_send(@package)
 					@err_msg = msg if !msg.eql?"成功"			
 				end
@@ -232,6 +242,18 @@ class PackagesController < ApplicationController
 			bag_nos += o.split(":")[1].split(",")
 		end
 		return bag_nos
+	end
+
+	def get_commodities(package)
+		commodity_list = []
+
+		package.orders.each do |o|
+			if !o.commodities.blank?
+				commodity_list += o.commodities.map{|c| c.commodity_no}.compact.uniq 
+			end
+		end
+
+		return commodity_list
 	end
 
 	def send_xyd

@@ -306,6 +306,7 @@ zh-CN:
         price: "价格"
         valuation_sum: "保价总额"
         sorting_code: "同城分拣码"
+        commodity_list: "商品编码列表"
       order:
         order_no: "订单号"
         prescription_no: "处方号"
