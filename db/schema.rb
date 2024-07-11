@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_29_081213) do
+ActiveRecord::Schema.define(version: 2024_06_17_015742) do
+
+  create_table "authentic_pictures", force: :cascade do |t|
+    t.string "express_no"
+    t.datetime "posting_date"
+    t.string "status"
+    t.datetime "next_time"
+    t.integer "sended_times"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["express_no"], name: "index_authentic_pictures_on_express_no"
+  end
 
   create_table "bags", force: :cascade do |t|
     t.string "bag_no"
@@ -156,6 +167,8 @@ ActiveRecord::Schema.define(version: 2024_04_29_081213) do
     t.decimal "volume"
     t.decimal "price"
     t.string "pkp"
+    t.decimal "valuation_sum", default: "0.0"
+    t.string "sorting_code"
     t.index ["express_no"], name: "index_packages_on_express_no"
     t.index ["package_no"], name: "index_packages_on_package_no"
     t.index ["user_id"], name: "index_packages_on_user_id"

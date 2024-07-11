@@ -32,3 +32,18 @@ production:
   pool: 64
   statement_limit: 250
 
+pkp_data_source_development:
+  <<: *default
+  database: ../shpost_mail_message_rails6/db/development.sqlite3
+
+pkp_data_source_production:
+  adapter: oracle_enhanced
+  database: sy
+  host: 172.16.205.48
+  port: 1521
+  username: sy
+  password: Shp0st_BCL
+  pool: 64
+  statement_limit: 250
+
+

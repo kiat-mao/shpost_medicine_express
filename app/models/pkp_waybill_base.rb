@@ -1,0 +1,2 @@
+class PkpWaybillBase < PkpDataRecord
+end

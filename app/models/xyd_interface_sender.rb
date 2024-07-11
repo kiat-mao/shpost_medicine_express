@@ -68,7 +68,14 @@ class XydInterfaceSender < ActiveRecord::Base
           order['biz_product_no'] = xydConfig[:biz_product_no_3]
         end
       end
-      
+
+      #保价
+      insurance_amount = package.orders.sum(:valuation_amount)
+
+      if insurance_amount > 0
+        order['insurance_flag'] = '2'
+        order['insurance_amount'] = insurance_amount
+      end 
     else
       unless xydConfig[:sender_no].nil?
         order['sender_no'] = xydConfig[:sy_sender_no]
@@ -94,13 +101,6 @@ class XydInterfaceSender < ActiveRecord::Base
     order['receiver'] = receiver
     body['order'] = order
     params['body'] = body
-
-    insurance_amount = package.orders.sum(:valuation_amount)
-
-    if insurance_amount > 0
-      order['insurance_flag'] = '2'
-      order['insurance_amount'] = insurance_amount
-    end 
 
     params.to_json
   end
@@ -247,4 +247,85 @@ class XydInterfaceSender < ActiveRecord::Base
       false
     end
   end
+
+  
+  def self.obtain_authentic_picture_interface_sender_initialize(authentic_picture)
+    xydConfig = Rails.application.config_for(:xyd)
+    body = obtain_authentic_picture_request_body_generate(authentic_picture, xydConfig)
+    args = {}
+    callback_params = {}
+    callback_params['authentic_picture_id'] = authentic_picture.id
+    args[:callback_params] = callback_params.to_json
+    args[:url] = xydConfig[:obtain_authentic_picture_url]
+    args[:parent_id] = authentic_picture.id
+    InterfaceSender.interface_sender_initialize('obtain_authentic_picture', body, args)
+    # order.update(address_status: :address_parseing)#要改
+  end
+
+  def self.obtain_authentic_picture_request_body_generate(authentic_picture, xydConfig)
+    now_time = Time.new
+
+    params = {}
+    head = {}
+    head['system_name'] = xydConfig[:ap_system_name]
+    head['req_time'] = now_time.strftime('%Y%m%d%H%M%S%L')
+    head['req_trans_no'] = xydConfig[:ap_system_name] + head['req_time']
+    signature = Digest::MD5.hexdigest('system_name' + head['system_name'] + 'req_time' + head['req_time'] + 'req_trans_no' + head['req_trans_no'] + xydConfig[:ap_pwd])
+    head['signature'] = signature
+    params['head'] = head
+    body = {}
+    data = {}
+    data['waybillNo'] = authentic_picture.express_no
+    data['authenticType'] = "2"
+    data['channelName'] = xydConfig[:channelName]
+    
+    body['data'] = data
+    params['body'] = body
+
+    params.to_json
+  end
+
+  def self.obtain_authentic_picture_callback_method(response, callback_params)
+    return false if callback_params.blank? || response.blank?
+
+    # 判断authentic_picture是否存在,是否不可修改
+    begin
+      authentic_picture = AuthenticPicture.waiting.find callback_params['authentic_picture_id']
+    rescue StandardError => e
+      Rails.logger.error e.message
+      return false
+    end
+
+    resJSON = JSON.parse response
+    error_code = resJSON['head']['error_code']
+
+    if ! error_code.eql? '0'
+			authentic_picture.failed!
+      return false
+    end
+    
+    image = resJSON['body']['image']
+    if ! image.blank?
+      # 转发图片
+      context = {'ORDER_NO': authentic_picture.express_no, 'IMAGE': image}.to_json
+
+      secret_key = ''
+
+      sign = Base64.encode64(Digest::MD5.hexdigest("#{context}#{secret_key}")).strip
+
+      body = {'context': context, 'business': '0001', 'unit': '0001', 'format': 'json', 'sign': sign}.to_json
+
+      i= InterfaceSender.interface_sender_initialize('image_push', body)
+
+      i.interface_send
+      
+      
+      authentic_picture.sended!
+
+      return true
+    end
+
+    return false 
+  end
+  
 end
