@@ -12,13 +12,11 @@
     <%= button_tag "打印面单",:class => 'btn btn-primary', :id => "tkzds" %>
     <%= button_tag "打印配货单",:class => 'btn btn-primary', :id => "zxqds" %>
     <button class="btn btn-primary wg-external-csv-export-button" data-grid-name="packages">导出</button>
-    <% if current_user.unit.no == I18n.t('unit_no.gy') %>
     <br>
     <div style="float:right">
       <% url = (request.url.include?"selected=true") ? request.url : (request.url+'&selected=true') %>
       <p style="font-weight: bold;"><%= check_box("checkbox","show_valuation_package", onclick: "window.location.href='#{url}'", checked: @selected.blank? ? false : (@selected.eql?('false') ? false : true))%>显示保价邮件</p>
     </div>
-  <% end %>
   </div>
 </div> 
 <% if current_user.unit.no == I18n.t('unit_no.gy') %>

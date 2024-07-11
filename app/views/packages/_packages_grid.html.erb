@@ -11,12 +11,20 @@
 
       g.column name: model_class.human_attribute_name(:route_code), attribute: 'route_code'
 
+      # g.column name: model_class.human_attribute_name(:order_list), attribute: 'order_list' do |package|
+      #   [package.order_list.try(:truncate, 100), {height: '50px', width: '100px', style: 'white-space:normal', title: package.order_list}]
+      # end
+
+      # g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
+      #   [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
+      # end
+
       g.column name: model_class.human_attribute_name(:order_list), attribute: 'order_list' do |package|
-        [package.order_list.try(:truncate, 100), {height: '50px', width: '100px', style: 'white-space:normal', title: package.order_list}]
+        [package.order_list, {height: '50px', width: '200px', style: 'white-space:normal'}]
       end
 
       g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
-        [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
+        [package.bag_list, {height: '50px', width: '200px', style: 'white-space:normal'}]
       end
 
       g.column name: model_class.human_attribute_name(:status), attribute: 'status', allow_multiple_selection: false, custom_filter: Package::STATUS_NAME.invert do |package| 
@@ -27,6 +35,24 @@
 
       g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
         package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
+      end
+
+      g.column name: model_class.human_attribute_name(:valuation_sum), attribute: 'valuation_sum'
+
+      g.column name: '收件人省', attribute: 'receiver_province', assoc: :orders do |package| 
+        package.orders.blank? ? "" : package.orders.first.receiver_province
+      end
+
+      g.column name: '收件人市', attribute: 'receiver_city', assoc: :orders do |package| 
+        package.orders.blank? ? "" : package.orders.first.receiver_city
+      end
+
+      g.column name: '收件人单位', attribute: 'site_name', assoc: :orders do |package| 
+        package.orders.blank? ? "" : package.orders.first.site_name
+      end
+
+      g.column name: model_class.human_attribute_name(:commodity_list), attribute: 'commodity_list' do |package|
+         [package.commodity_list, {height: '50px', width: '200px', style: 'white-space:normal'}]
       end
 
     elsif current_user.unit.no == I18n.t('unit_no.gy')
@@ -40,9 +66,11 @@
         package.orders.blank? ? "" : package.orders.first.prescription_no
       end
 
-      g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
-        [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
-      end
+      # g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |package|
+      #   [package.bag_list.try(:truncate, 68), {height: '50px', width: '200px', style: 'white-space:normal', title: package.bag_list}]
+      # end
+
+      g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list'
 
       g.column name: model_class.human_attribute_name(:packed_at), attribute: 'packed_at' do |package|
         package.packed_at.blank? ? "" : DateTime.parse(package.packed_at.to_s).strftime('%Y-%m-%d %H:%M:%S').to_s
@@ -67,7 +95,7 @@
       g.column name: model_class.human_attribute_name(:valuation_sum), attribute: 'valuation_sum'
     end
 
-    g.column do |package|
+    g.column in_csv: false do |package|
       ActiveSupport::SafeBuffer.new << 
       (link_to "作废", cancelled_package_path(package), :data => { :confirm => "确定作废吗?" }, :class => 'btn btn-xs btn-danger' if (can? :cancelled, package) && (package.pkp.eql?"pkp_done") && (current_user.unit.no == I18n.t('unit_no.gy')) && (!package.status.eql?"cancelled")) << ' ' << 
       (link_to "作废", cancelled_package_path(package), :data => { :confirm => "确定作废吗?" }, :class => 'btn btn-xs btn-danger' if (can? :cancelled, package) && (["waiting", "to_send", "failed"].include?package.status) && (current_user.unit.no == I18n.t('unit_no.sy'))) << ' ' << 
