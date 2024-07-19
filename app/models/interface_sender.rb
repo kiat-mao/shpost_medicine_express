@@ -147,7 +147,7 @@ class InterfaceSender < ActiveRecord::Base
   end
 
   def succeed! response
-    self.last_response = response
+    self.last_response = response.force_encoding "UTF-8"
     self.last_time = Time.now
     self.send_times += 1
     self.success
@@ -155,7 +155,7 @@ class InterfaceSender < ActiveRecord::Base
   end
 
   def fail! response
-    self.last_response = response
+    self.last_response = response.force_encoding "UTF-8"
     self.last_time = Time.now
     self.send_times += 1
 

@@ -87,17 +87,17 @@ zh-CN:
       header: "{\"Content-Type\":\"application/json\"}"
       parent_class: 'AuthenticPicture'
       # object_class: 'Keyclientorder'
-      max_times: 3 #default_times: 10
-      interval: 600 #default_interval: 600
+      max_times: 15 #default_times: 10
+      interval: 43600 #default_interval: 600
     # 上药真迹回传
     image_push:
-      url: 'http://210.5.151.182:18080/datahubjson/SYXZYS/FluxUdflsonApi'
+      url: 'http://210.5.151.182:19192/datahubjson/SYXZYS/?method=FTP01'
       interface_type: 'json'
       http_type: 'post'
-      # callback_class: 'SoaInterfaceSender'
-      # callback_method: 'order_trace_callback_method'
+      callback_class: 'XydInterfaceSender'
+      callback_method: 'image_push_callback_method'
       # header: "{\"Content-Type\":\"application/json\"}"
-      parent_class: 'Package'
+      parent_class: 'AuthenticPicture'
       # object_class: 'Keyclientorder'
-      max_times: 6 #default_times: 10
+      max_times: 5 #default_times: 10
       interval: 43200 #default_interval: 600

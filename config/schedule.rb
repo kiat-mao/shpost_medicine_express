@@ -38,3 +38,11 @@ end
 every 2.minutes do
   runner "WaybillSender.waybill_schedule_offline"
 end
+
+every 1.day, :at => '8:00 pm' do
+  runner "AuthenticPicture.init_authentic_pictures_yesterday"
+end
+
+every 1.day, :at => '12:15 am' do
+  runner "AuthenticPicture.init_obtain_authentic_pictures_and_send"
+end  

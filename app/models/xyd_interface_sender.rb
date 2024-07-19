@@ -258,8 +258,8 @@ class XydInterfaceSender < ActiveRecord::Base
     args[:callback_params] = callback_params.to_json
     args[:url] = xydConfig[:obtain_authentic_picture_url]
     args[:parent_id] = authentic_picture.id
+    authentic_picture.sending!
     InterfaceSender.interface_sender_initialize('obtain_authentic_picture', body, args)
-    # order.update(address_status: :address_parseing)#要改
   end
 
   def self.obtain_authentic_picture_request_body_generate(authentic_picture, xydConfig)
@@ -286,46 +286,84 @@ class XydInterfaceSender < ActiveRecord::Base
   end
 
   def self.obtain_authentic_picture_callback_method(response, callback_params)
+    max_times = I18n.t(:InterfaceSender)[:obtain_authentic_picture][:max_times]
     return false if callback_params.blank? || response.blank?
 
     # 判断authentic_picture是否存在,是否不可修改
-    begin
-      authentic_picture = AuthenticPicture.waiting.find callback_params['authentic_picture_id']
-    rescue StandardError => e
-      Rails.logger.error e.message
-      return false
-    end
+    # begin
+    authentic_picture = AuthenticPicture.sending.find callback_params['authentic_picture_id']
+    authentic_picture.sended_times += 1
+    # rescue StandardError => e
+    #   puts e.message
+    #   Rails.logger.error e.message
+    #   return false
+    # end
 
     resJSON = JSON.parse response
     error_code = resJSON['head']['error_code']
 
     if ! error_code.eql? '0'
-			authentic_picture.failed!
+      authentic_picture.sended_times > max_times ? authentic_picture.failed! : authentic_picture.sending!
       return false
     end
     
     image = resJSON['body']['image']
     if ! image.blank?
       # 转发图片
-      context = {'ORDER_NO': authentic_picture.express_no, 'IMAGE': image}.to_json
+      # context = {'ORDER_NO': authentic_picture.express_no, 'IMAGE': image}.to_json
 
-      secret_key = ''
+      # secret_key = ''
 
-      sign = Base64.encode64(Digest::MD5.hexdigest("#{context}#{secret_key}")).strip
+      # sign = Base64.encode64(Digest::MD5.hexdigest("#{context}#{secret_key}")).strip
 
-      body = {'context': context, 'business': '0001', 'unit': '0001', 'format': 'json', 'sign': sign}.to_json
+      #body = {'context': context, 'business': '0001', 'unit': '0001', 'format': 'json', 'sign': sign}.to_json
+      body = {'ORDER_NO': authentic_picture.express_no, 'IMAGE': image}.to_json
 
-      i= InterfaceSender.interface_sender_initialize('image_push', body)
+      args = {}
+      callback_params = {}
+      callback_params['authentic_picture_id'] = authentic_picture.id
+      args[:callback_params] = callback_params.to_json
+      args[:parent_id] = authentic_picture.id
 
-      i.interface_send
-      
-      
-      authentic_picture.sended!
+      i = InterfaceSender.interface_sender_initialize('image_push', body, args)
 
+      authentic_picture.sended_times = 0
+      authentic_picture.authentic!
+
+      # i.interface_send
       return true
     end
 
     return false 
   end
   
+  def self.image_push_callback_method(response, callback_params)
+    #{\"Response\":{\"return\":{\"returnCode\":\"ok\",\"returnDesc\":\"成功\",\"returnFlag\":\"0\",\"resultInfo\":[]}}}
+    max_times = I18n.t(:InterfaceSender)[:image_push][:max_times]
+
+    return false if callback_params.blank? || response.blank?
+
+    # 判断authentic_picture是否存在,是否不可修改
+    # begin
+    authentic_picture = AuthenticPicture.authentic.find callback_params['authentic_picture_id']
+    authentic_picture.sended_times += 1
+    # rescue StandardError => e
+      # error_msg = "#{e.class.name} #{e.message} \n#{e.backtrace.join("\n")}"
+      # puts error_msg
+      # Rails.logger.error error_msg
+      # return false
+    # end
+
+    resJSON = JSON.parse response
+    returnFlag = resJSON["Response"]["return"]["returnFlag"]
+
+    if ! returnFlag.eql? '0'
+      authentic_picture.sended_times > max_times ? authentic_picture.failed! : authentic_picture.authentic!
+      return false
+    end
+
+    authentic_picture.sended!
+
+    return true
+  end
 end
