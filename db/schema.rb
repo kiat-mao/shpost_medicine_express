@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_17_015742) do
+ActiveRecord::Schema.define(version: 2024_07_11_013920) do
 
   create_table "authentic_pictures", force: :cascade do |t|
     t.string "express_no"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 2024_06_17_015742) do
     t.integer "order_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "belong_package_id"
     t.index ["bag_no"], name: "index_bags_on_bag_no"
     t.index ["order_id"], name: "index_bags_on_order_id"
   end
@@ -169,6 +170,7 @@ ActiveRecord::Schema.define(version: 2024_06_17_015742) do
     t.string "pkp"
     t.decimal "valuation_sum", default: "0.0"
     t.string "sorting_code"
+    t.string "commodity_list", limit: 2000
     t.index ["express_no"], name: "index_packages_on_express_no"
     t.index ["package_no"], name: "index_packages_on_package_no"
     t.index ["user_id"], name: "index_packages_on_user_id"

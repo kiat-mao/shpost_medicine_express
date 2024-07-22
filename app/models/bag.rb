@@ -1,6 +1,7 @@
 class Bag < ApplicationRecord
 	belongs_to :order, optional: true
 	has_one :package, through: :order
+	belongs_to :belong_package, class_name: "Package", foreign_key: "belong_package_id", optional: true
 
 	# before_save :set_bag_list_to_order
 
