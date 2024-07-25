@@ -38,11 +38,11 @@ pkp_data_source_development:
 
 pkp_data_source_production:
   adapter: oracle_enhanced
-  database: sy
+  database: ywdata
   host: 172.16.205.48
   port: 1521
-  username: sy
-  password: Shp0st_BCL
+  username: mailmessage
+  password: Mmsg_2019
   pool: 64
   statement_limit: 250
 

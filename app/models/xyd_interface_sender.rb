@@ -270,7 +270,7 @@ class XydInterfaceSender < ActiveRecord::Base
     head['system_name'] = xydConfig[:ap_system_name]
     head['req_time'] = now_time.strftime('%Y%m%d%H%M%S%L')
     head['req_trans_no'] = xydConfig[:ap_system_name] + head['req_time']
-    signature = Digest::MD5.hexdigest('system_name' + head['system_name'] + 'req_time' + head['req_time'] + 'req_trans_no' + head['req_trans_no'] + xydConfig[:ap_pwd])
+    signature = Digest::MD5.hexdigest('system_name' + head['system_name'] + 'req_time' + head['req_time'] + 'req_trans_no' + head['req_trans_no'] + xydConfig[:au_pwd])
     head['signature'] = signature
     params['head'] = head
     body = {}

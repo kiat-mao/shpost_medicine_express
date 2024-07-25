@@ -2,6 +2,12 @@ class AuthenticPicture < ApplicationRecord
 	enum status: {waiting: 'waiting', sending: 'sending', sended: 'sended', authentic: 'authentic', failed: 'failed'}
 	STATUS_NAME = { waiting: '待发送', sending: '获得真迹中', sended: '已发送上药', authentic: '获得真迹成功', failed: '发送失败' }
 
+	def self.init_authentic_pictures_15days_ago
+		start_date = Date.today - 15.day
+    end_date = Date.today - 14.
+		init_authentic_pictures(start_date, end_date)
+	end
+
 	def self.init_authentic_pictures_yesterday
 		start_date = Date.today - 1.day
     end_date = Date.today
@@ -40,13 +46,14 @@ class AuthenticPicture < ApplicationRecord
 	def self.init_obtain_authentic_pictures_and_send
 		puts("#{Time.now}  send_authentic_pictures,  start")
 		authentic_pictures = self.where(status: 'waiting').where("next_time <= ? ", Time.now)
+		size = authentic_pictures.count
 		authentic_pictures.find_each(batch_size: 2000) do |authentic_picture|
 			interface_sender = XydInterfaceSender.obtain_authentic_picture_interface_sender_initialize(authentic_picture)
 			# interface_sender.interface_send
 			# authentic_picture.update!(status: 'sended')
 		end
 		
-		puts("#{Time.now}  send_authentic_pictures, count: #{authentic_pictures.size},  end")
+		puts("#{Time.now}  send_authentic_pictures, count: #{size},  end")
 	end
 
 end
