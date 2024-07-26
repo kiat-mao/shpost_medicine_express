@@ -87,8 +87,8 @@ zh-CN:
       header: "{\"Content-Type\":\"application/json\"}"
       parent_class: 'AuthenticPicture'
       # object_class: 'Keyclientorder'
-      max_times: 5 #default_times: 10
-      interval: 43600 #default_interval: 600
+      max_times: 15 #default_times: 10
+      interval: 86400 #default_interval: 600
     # 上药真迹回传
     image_push:
       url: 'http://210.5.151.182:19192/datahubjson/SYXZYS/?method=FTP01'
