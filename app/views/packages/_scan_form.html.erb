@@ -31,9 +31,9 @@
 	     <tr>
 	     	<% bag_nos.pop(4).reverse.each do |b| %>
 		     	<td>
-		     		<% if @order_bags.include?b %><font color="red"><% end %>
+		     		<% if (@order_bags.include?b) || (!Bag.find_by(bag_no: b).belong_package_id.blank?) %><font color="red"><% end %>
 		     		袋子<%= i %>:<%= b %>
-		     		<% if @order_bags.include?b %></font><% end %>
+		     		<% if (@order_bags.include?b) || (!Bag.find_by(bag_no: b).belong_package_id.blank?) %></font><% end %>
 		     	</td>
 	     		<% i += 1 %>
 	     	<% end %>

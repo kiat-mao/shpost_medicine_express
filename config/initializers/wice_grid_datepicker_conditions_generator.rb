@@ -22,7 +22,7 @@ module Wice
           op = '<='
           date = opts[:to].to_date
           if datetime
-            # date = (date + 1).to_datetime
+            date = (date + 1.days)#.to_datetime
             op = '<'
           end
           conditions[0] << " #{@column_wrapper.alias_or_table_name(table_alias)}.#{@column_wrapper.name} #{op} ? "

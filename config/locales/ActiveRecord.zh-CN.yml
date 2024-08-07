@@ -340,6 +340,7 @@ zh-CN:
         original_receiver_addr: "原收件人地址"
         interface_status: "发送状态"
         valuation_amount: "保价金额"
+        package_list: "箱子号列表"
   user_navigation:
     update_self: "个人信息"
     show_unit: "单位信息"

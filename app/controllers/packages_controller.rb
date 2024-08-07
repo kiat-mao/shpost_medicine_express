@@ -132,7 +132,7 @@ class PackagesController < ApplicationController
 		if bag.blank? || (bag.order.try(:unit_id) != current_user.unit_id.to_s)
 			@err_msg = "包裹无信息"
 		else
-			if !Bag.joins(:order).joins(:order=>:package).where("bags.bag_no=? and orders.status=? and packages.packed_at>=? and packages.packed_at<?", @bag_no, "packaged", Time.now-1.year, Time.now).blank?
+			if Bag.where(bag_no: @bag_no, belong_package_id: nil).blank? || !Bag.joins(:belong_package).where("bags.bag_no=? and packages.packed_at>=? and packages.packed_at<?", @bag_no, Time.now-1.year, Time.now).blank?
 				@err_msg = "包裹已装箱，不可二次装箱"
 			else
 				if (!@site_no.blank?) && (!@site_no.eql?bag.order.site_no)
@@ -182,18 +182,32 @@ class PackagesController < ApplicationController
 			end
   	else
 	  	if !@order_bags.blank?
-		  	uneql_order_no = uneql_order_no(@order_bags)
-		  	if !uneql_order_no.blank?
-		  		@err_msg = "订单号#{uneql_order_no}，有袋子未扫描"
-		  	else
+		  	# uneql_order_no = uneql_order_no(@order_bags)
+		  	# if !uneql_order_no.blank?
+		  	# 	@err_msg = "订单号#{uneql_order_no}，有袋子未扫描"
+		  	# else
 		  		order_list = get_orders(@order_bags)
 		  		bag_list = get_bags(@order_bags)
 	  			package_no = Package.new_package_no(current_user)
 	  			ActiveRecord::Base.transaction do
 		  			begin
-							@package = Package.create! package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list, unit_id: current_user.unit_id
+		  				@package = Package.create! package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list, unit_id: current_user.unit_id
 							@package_id = @package.id
-							Order.where(order_no: order_list).update_all package_id: @package.id, status: "packaged"
+							Bag.where(bag_no: bag_list).update_all belong_package_id: @package_id
+							Order.where(order_no: order_list).each do |o|
+								if o.package_list.blank?
+									o.update package_list: package_no
+								else
+									if !(o.package_list.include?package_no)
+										plist = o.package_list + "," + package_no
+										o.update package_list: plist
+									end
+								end
+
+								if o.bags.where.not(belong_package_id: nil).count == o.bags.count
+									o.update status: "packaged"
+								end
+							end
 							commodity_list = get_commodities(@package)
 							@package.update commodity_list: commodity_list
 							
@@ -205,7 +219,7 @@ class PackagesController < ApplicationController
       		end	
 					msg = package_send(@package)
 					@err_msg = msg if !msg.eql?"成功"			
-				end
+				# end
 			end		
 		end
 	end
@@ -247,7 +261,9 @@ class PackagesController < ApplicationController
 	def get_commodities(package)
 		commodity_list = []
 
-		package.orders.each do |o|
+		oids = Bag.where(belong_package_id: package.id).map{|b| b.order_id}.compact
+
+		Order.where(id: oids).each do |o|
 			if !o.commodities.blank?
 				commodity_list += o.commodities.map{|c| c.commodity_no}.compact.uniq 
 			end

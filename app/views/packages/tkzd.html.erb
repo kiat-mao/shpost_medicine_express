@@ -25,193 +25,275 @@
     LODOP.SET_PRINT_PAGESIZE(1,750,1300,"tkzd");
     LODOP.ADD_PRINT_LINE("2mm","2mm","2mm","74mm",2,1);
     <% if package.unit.no == I18n.t('unit_no.sy') %>
-    LODOP.ADD_PRINT_TEXT("2.4mm","4mm","11.11mm","7.67mm","EMS");
-    <% else %>
-    LODOP.ADD_PRINT_TEXT("2.4mm","4mm","20mm","7.67mm","<%= (!package.orders.first.freight.blank? && package.orders.first.freight) ? "到付" : "" %>");
-    <% end %>
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("2.8mm","24mm","30mm","6.61mm","特快专递");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("2.8mm","55mm","30.43mm","5.29mm","客服电话：11183");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("6.2mm","55mm","29.1mm","5.29mm","www.ems.com.cn");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_BARCODE("10mm","3.4mm","72mm","14mm","128A","<%= package.express_no %>");
-    LODOP.ADD_PRINT_LINE("26mm","2mm","26mm","74mm",2,1);
-    
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("27mm","3mm","72mm","24mm","格口码: <%= package.route_code %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",22);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_LINE("45mm","2mm","45mm","74mm",2,1);
-    <% if package.unit.no == I18n.t('unit_no.sy') %>
-    LODOP.ADD_PRINT_TEXT("45.5mm","3mm","73mm","8mm","收件人姓名: <%= package.orders.first.receiver_name %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("53mm","3mm","72mm","4mm","收件人电话: <%= package.orders.first.receiver_phone %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    <% else %>
-    <%  receiver_name = package.orders.first.receiver_name
-        receiver_name.length>2 ? (receiver_name[1, receiver_name.length-2] = "*") : (receiver_name[1, receiver_name.length-1] = "*")
-    %>
-    LODOP.ADD_PRINT_TEXT("45.5mm","3mm","73mm","8mm","收件人姓名: <%= receiver_name %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    <%  receiver_phone = package.orders.first.receiver_phone
-        receiver_phone[3, receiver_phone.length-7] = "****"
-    %>
-    LODOP.ADD_PRINT_TEXT("53mm","3mm","72mm","4mm","收件人电话: <%= receiver_phone %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    <% end %>
-    LODOP.ADD_PRINT_TEXT("57mm","3mm","73mm","11mm","收件人地址: <%= package.orders.first.receiver_addr.tr("\n", "") %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_LINE("68mm","2mm","68mm","74mm",2,1);
-    LODOP.ADD_PRINT_TEXT("68.4mm","3mm","36mm","4mm","寄件人姓名: <%= package.orders.first.sender_name %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("68.4mm","36mm","36mm","4mm","寄件人电话: <%= package.orders.first.sender_phone %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    <% if package.unit.no == I18n.t('unit_no.sy') %>
-    LODOP.ADD_PRINT_TEXT("72.4mm","3mm","72mm","4mm","寄件人地址: <%= package.orders.first.sender_addr.tr("\n", "") %>");
-    <% else %>
-    LODOP.ADD_PRINT_TEXT("72.4mm","3mm","72mm","4mm","寄件人地址: 上海市徐汇区百色路1218号");
-    <% end %>
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_LINE("75.4mm","2mm","75mm","74mm",2,1);
-    LODOP.ADD_PRINT_TEXT("76mm","3mm","36mm","4mm","实际重量:");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("76mm","36mm","36mm","4mm","体积(cm):");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("80mm","3mm","36mm","4mm","邮费:");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("80mm","36mm","36mm","4mm","保价金额:");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("84mm","3mm","36mm","4mm","其他费用:");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("84mm","36mm","36mm","4mm","实收金额:");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_LINE("88.2mm","2mm","88.2mm","74mm",2,1);
-    LODOP.ADD_PRINT_LINE("89.2mm","2mm","89.2mm","74mm",2,1);
-    <% if package.unit.no == I18n.t('unit_no.sy') %>
-    LODOP.ADD_PRINT_TEXT("91mm","3mm","49mm","4mm","贵重物品，当面交接");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("96mm","3mm","49mm","4mm","客服电话专线:");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("100mm","3mm","49mm","4mm","66110271");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("106mm","3mm","60mm","4mm","收寄机构20007213电商物流");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("112mm","3mm","49mm","4mm","已验视");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("116mm","3mm","49mm","4mm","已安检");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("120mm","3mm","49mm","4mm","已消毒");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    <% else %>
-    LODOP.ADD_PRINT_TEXT("91mm","3mm","47mm","28mm","处方药品为特殊管理商品，根据相关管理要求，药品配送后如非损坏等质量问题需先完成收货后，再与相关互联网诊疗医院沟通后续事项。退件请退至上海市徐汇区百色路1218号。");
-    LODOP.ADD_PRINT_TEXT("118mm","3mm","47mm","20mm","所属医院名称: <%= package.orders.first.try('hospital_name').to_s %>");
-    <% end %>
-    LODOP.ADD_PRINT_TEXT("96mm","49.2mm","28mm","4mm","打印时间:<%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("104mm","49.2mm","28mm","4mm","编号: <%= package.package_no.split('-').last %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    LODOP.ADD_PRINT_TEXT("112mm","49.2mm","28mm","4mm","打印账号: <%= current_user.name %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    // 分拣码
-    <% if package.unit.no == I18n.t('unit_no.gy') %>
-    LODOP.ADD_PRINT_TEXT("118mm","49.2mm","28mm","4mm","<%= package.sorting_code %>");
-    LODOP.SET_PRINT_STYLEA(0,"FontSize",22);
-    LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-    LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
-    <% end %>
-    LODOP.ADD_PRINT_LINE("126mm","2mm","126mm","74mm",2,1);
-    LODOP.ADD_PRINT_LINE("129mm","2mm","129mm","74mm",2,1);
-    // 竖线
-    LODOP.ADD_PRINT_LINE("2mm","2mm","129mm","2mm",2,1);
-    LODOP.ADD_PRINT_LINE("89.2mm","49mm","129mm","49mm",2,1);
-    LODOP.ADD_PRINT_LINE("2mm","74mm","129mm","74mm",2,1);
+      LODOP.ADD_PRINT_TEXT("2.4mm","4mm","11.11mm","7.67mm","EMS");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("2.8mm","24mm","30mm","6.61mm","特快专递");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("2.8mm","55mm","30.43mm","5.29mm","客服电话：11183");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("6.2mm","55mm","29.1mm","5.29mm","www.ems.com.cn");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_BARCODE("10mm","3.4mm","72mm","14mm","128A","<%= package.express_no %>");
+      LODOP.ADD_PRINT_LINE("26mm","2mm","26mm","74mm",2,1);
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("27mm","3mm","72mm","24mm","格口码: <%= package.route_code %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",22);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("45mm","2mm","45mm","74mm",2,1);
+      <% order = Bag.find_by(belong_package_id: package.id).order %>
+      LODOP.ADD_PRINT_TEXT("45.5mm","3mm","73mm","8mm","收件人姓名: <%= order.receiver_name %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("53mm","3mm","72mm","4mm","收件人电话: <%= order.receiver_phone %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("57mm","3mm","73mm","11mm","收件人地址: <%= order.receiver_addr.tr("\n", "") %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("68mm","2mm","68mm","74mm",2,1);
+      LODOP.ADD_PRINT_TEXT("68.4mm","3mm","36mm","4mm","寄件人姓名: <%= order.sender_name %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("68.4mm","36mm","36mm","4mm","寄件人电话: <%= order.sender_phone %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("72.4mm","3mm","72mm","4mm","寄件人地址: <%= order.sender_addr.tr("\n", "") %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("75.4mm","2mm","75mm","74mm",2,1);
+      LODOP.ADD_PRINT_TEXT("76mm","3mm","36mm","4mm","实际重量:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("76mm","36mm","36mm","4mm","体积(cm):");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("80mm","3mm","36mm","4mm","邮费:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("80mm","36mm","36mm","4mm","保价金额:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("84mm","3mm","36mm","4mm","其他费用:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("84mm","36mm","36mm","4mm","实收金额:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("88.2mm","2mm","88.2mm","74mm",2,1);
+      LODOP.ADD_PRINT_LINE("89.2mm","2mm","89.2mm","74mm",2,1);
+      LODOP.ADD_PRINT_TEXT("91mm","3mm","49mm","4mm","贵重物品，当面交接");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("96mm","3mm","49mm","4mm","客服电话专线:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("100mm","3mm","49mm","4mm","66110271");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("106mm","3mm","60mm","4mm","收寄机构20007213电商物流");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("112mm","3mm","49mm","4mm","已验视");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("116mm","3mm","49mm","4mm","已安检");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("120mm","3mm","49mm","4mm","已消毒");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("96mm","49.2mm","28mm","4mm","打印时间:<%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("104mm","49.2mm","28mm","4mm","编号: <%= package.package_no.split('-').last %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("112mm","49.2mm","28mm","4mm","打印账号: <%= current_user.name %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("126mm","2mm","126mm","74mm",2,1);
+      LODOP.ADD_PRINT_LINE("129mm","2mm","129mm","74mm",2,1);
+      // 竖线
+      LODOP.ADD_PRINT_LINE("2mm","2mm","129mm","2mm",2,1);
+      LODOP.ADD_PRINT_LINE("89.2mm","49mm","129mm","49mm",2,1);
+      LODOP.ADD_PRINT_LINE("2mm","74mm","129mm","74mm",2,1);
 
-    //设置某个打印机
-    LODOP.SET_PRINTER_INDEXA("<%= current_user.hot_printer.blank? ? I18n.t('printer.hot_printer') : current_user.hot_printer %>");
-    // LODOP.PRINT_DESIGN();
-    // LODOP.PREVIEW();
-    LODOP.PRINT();
+      //设置某个打印机
+      LODOP.SET_PRINTER_INDEXA("<%= current_user.hot_printer.blank? ? I18n.t('printer.hot_printer') : current_user.hot_printer %>");
+      // LODOP.PRINT_DESIGN();
+      // LODOP.PREVIEW();
+      LODOP.PRINT();
+    <% elsif package.unit.no == I18n.t('unit_no.gy') %>
+      LODOP.ADD_PRINT_TEXT("2.4mm","4mm","20mm","7.67mm","<%= (!package.orders.first.freight.blank? && package.orders.first.freight) ? "到付" : "" %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("2.8mm","24mm","30mm","6.61mm","特快专递");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("2.8mm","55mm","30.43mm","5.29mm","客服电话：11183");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("6.2mm","55mm","29.1mm","5.29mm","www.ems.com.cn");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_BARCODE("10mm","3.4mm","72mm","14mm","128A","<%= package.express_no %>");
+      LODOP.ADD_PRINT_LINE("26mm","2mm","26mm","74mm",2,1);
+      
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("27mm","3mm","72mm","24mm","格口码: <%= package.route_code %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",22);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("45mm","2mm","45mm","74mm",2,1);
+      <%  receiver_name = package.orders.first.receiver_name
+          receiver_name.length>2 ? (receiver_name[1, receiver_name.length-2] = "*") : (receiver_name[1, receiver_name.length-1] = "*")
+      %>
+      LODOP.ADD_PRINT_TEXT("45.5mm","3mm","73mm","8mm","收件人姓名: <%= receiver_name %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      <%  receiver_phone = package.orders.first.receiver_phone
+          receiver_phone[3, receiver_phone.length-7] = "****"
+      %>
+      LODOP.ADD_PRINT_TEXT("53mm","3mm","72mm","4mm","收件人电话: <%= receiver_phone %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("57mm","3mm","73mm","11mm","收件人地址: <%= package.orders.first.receiver_addr.tr("\n", "") %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("68mm","2mm","68mm","74mm",2,1);
+      LODOP.ADD_PRINT_TEXT("68.4mm","3mm","36mm","4mm","寄件人姓名: <%= package.orders.first.sender_name %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("68.4mm","36mm","36mm","4mm","寄件人电话: <%= package.orders.first.sender_phone %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("72.4mm","3mm","72mm","4mm","寄件人地址: 上海市徐汇区百色路1218号");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("75.4mm","2mm","75mm","74mm",2,1);
+      LODOP.ADD_PRINT_TEXT("76mm","3mm","36mm","4mm","实际重量:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("76mm","36mm","36mm","4mm","体积(cm):");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("80mm","3mm","36mm","4mm","邮费:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("80mm","36mm","36mm","4mm","保价金额:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("84mm","3mm","36mm","4mm","其他费用:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("84mm","36mm","36mm","4mm","实收金额:");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("88.2mm","2mm","88.2mm","74mm",2,1);
+      LODOP.ADD_PRINT_LINE("89.2mm","2mm","89.2mm","74mm",2,1);
+      LODOP.ADD_PRINT_TEXT("91mm","3mm","47mm","28mm","处方药品为特殊管理商品，根据相关管理要求，药品配送后如非损坏等质量问题需先完成收货后，再与相关互联网诊疗医院沟通后续事项。退件请退至上海市徐汇区百色路1218号。");
+      LODOP.ADD_PRINT_TEXT("118mm","3mm","47mm","20mm","所属医院名称: <%= package.orders.first.try('hospital_name').to_s %>");
+      LODOP.ADD_PRINT_TEXT("96mm","49.2mm","28mm","4mm","打印时间:<%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("104mm","49.2mm","28mm","4mm","编号: <%= package.package_no.split('-').last %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_TEXT("112mm","49.2mm","28mm","4mm","打印账号: <%= current_user.name %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      // 分拣码
+      LODOP.ADD_PRINT_TEXT("118mm","49.2mm","28mm","4mm","<%= package.sorting_code %>");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",22);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
+      LODOP.ADD_PRINT_LINE("126mm","2mm","126mm","74mm",2,1);
+      LODOP.ADD_PRINT_LINE("129mm","2mm","129mm","74mm",2,1);
+      // 竖线
+      LODOP.ADD_PRINT_LINE("2mm","2mm","129mm","2mm",2,1);
+      LODOP.ADD_PRINT_LINE("89.2mm","49mm","129mm","49mm",2,1);
+      LODOP.ADD_PRINT_LINE("2mm","74mm","129mm","74mm",2,1);
+
+      //设置某个打印机
+      LODOP.SET_PRINTER_INDEXA("<%= current_user.hot_printer.blank? ? I18n.t('printer.hot_printer') : current_user.hot_printer %>");
+      // LODOP.PRINT_DESIGN();
+      // LODOP.PREVIEW();
+      LODOP.PRINT();
     <% end %>
-    };
+  <% end %>
+  };
 
-    if (needCLodop()) {
-      //如果是只运行C-Lodop,只需下边的代码，
-      //C-Lodop----begin----
-      window.On_CLodop_Opened=function(){
-        tkzd_preview(); //OpenPreview()是调用打印方法                      
-        window.On_CLodop_Opened=null;
-      };  
-      //C-Lodop----end----                
-    } else {
-      window.onload = function(){
-        tkzd_preview(); //使用lodop控件时的调用
-        window.open('','_top');
-        // window.top.close();
-      };  
-    }
+  if (needCLodop()) {
+    //如果是只运行C-Lodop,只需下边的代码，
+    //C-Lodop----begin----
+    window.On_CLodop_Opened=function(){
+      tkzd_preview(); //OpenPreview()是调用打印方法                      
+      window.On_CLodop_Opened=null;
+    };  
+    //C-Lodop----end----                
+  } else {
+    window.onload = function(){
+      tkzd_preview(); //使用lodop控件时的调用
+      window.open('','_top');
+      // window.top.close();
+    };  
+  }
 
-    setTimeout(function(){window.top.close()},3000);                
+  setTimeout(function(){window.top.close()},3000);                
 
   </script>
 
