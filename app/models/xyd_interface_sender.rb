@@ -345,7 +345,7 @@ class XydInterfaceSender < ActiveRecord::Base
 
     # 判断authentic_picture是否存在,是否不可修改
     # begin
-    authentic_picture = AuthenticPicture.authentic.find callback_params['authentic_picture_id']
+    authentic_picture = AuthenticPicture.find callback_params['authentic_picture_id']
     authentic_picture.sended_times += 1
     # rescue StandardError => e
       # error_msg = "#{e.class.name} #{e.message} \n#{e.backtrace.join("\n")}"
@@ -363,6 +363,8 @@ class XydInterfaceSender < ActiveRecord::Base
     end
 
     authentic_picture.sended!
+
+    #InterfaceSender.where(interface_code: ['obtain_authentic_picture','image_push']).where(parent_class: 'AuthenticPicture', parent_id: authentic_picture.id).destroy_all
 
     return true
   end
