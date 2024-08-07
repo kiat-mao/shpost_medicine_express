@@ -182,10 +182,10 @@ class PackagesController < ApplicationController
 			end
   	else
 	  	if !@order_bags.blank?
-		  	# uneql_order_no = uneql_order_no(@order_bags)
-		  	# if !uneql_order_no.blank?
-		  	# 	@err_msg = "订单号#{uneql_order_no}，有袋子未扫描"
-		  	# else
+		  	uneql_order_no = uneql_order_no(@order_bags)
+		  	if !uneql_order_no.blank?
+		  		@err_msg = "订单号#{uneql_order_no}，有袋子未扫描"
+		  	else
 		  		order_list = get_orders(@order_bags)
 		  		bag_list = get_bags(@order_bags)
 	  			package_no = Package.new_package_no(current_user)
@@ -219,7 +219,7 @@ class PackagesController < ApplicationController
       		end	
 					msg = package_send(@package)
 					@err_msg = msg if !msg.eql?"成功"			
-				# end
+				end
 			end		
 		end
 	end
@@ -230,7 +230,9 @@ class PackagesController < ApplicationController
 		order_bags_arr = @order_bags.split("|")
 		order_bags_arr.each do |o|
 			obarr = o.split(":")
-			if Order.find_by(order_no: obarr[0]).bags.count > obarr[1].split(",").count
+			order = Order.find_by(order_no: obarr[0])
+			# 不可拆箱为true，且袋子数量未扫完，需要弹框提醒
+			if order.unboxing && (order.bags.count > obarr[1].split(",").count)
 				uneql_order_no = obarr[0]
 				break
 			end
