@@ -48,7 +48,18 @@ class Package < ApplicationRecord
  	end
 
  	def cancelled
- 		self.orders.update_all status: "waiting", package_id: nil
+ 		if self.unit.no == I18n.t('unit_no.sy')
+ 			oids = Bag.where(belong_package_id: self.id).map{|b| b.order_id}.compact
+ 			Bag.where(belong_package_id: self.id).update_all belong_package_id: nil
+ 			Order.where(id: oids).each do |o|
+ 				old_package_list = o.package_list.split(",")
+ 				old_package_list.delete(self.package_no)
+ 				new_package_list = old_package_list.join(",")
+ 				o.update package_list: new_package_list, status: "waiting"
+ 			end			
+ 		elsif self.unit.no == I18n.t('unit_no.gy')
+ 			self.orders.update_all status: "waiting", package_id: nil
+ 		end
 		self.update status: "cancelled"
 	end
 

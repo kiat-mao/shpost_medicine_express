@@ -97,7 +97,9 @@
       order.status_name
     end
 
-    g.column name: model_class.human_attribute_name(:package_id), attribute: 'package_id', assoc: :package, attribute: 'package_no'
+    g.column name: model_class.human_attribute_name(:package_list), attribute: 'package_list' do |order|
+      [order.package_list.try(:truncate, 50), {title: order.package_list}]
+    end
 
     g.column name: model_class.human_attribute_name(:bag_list), attribute: 'bag_list' do |order|
       [order.bag_list.try(:truncate, 50), {title: order.bag_list}]
