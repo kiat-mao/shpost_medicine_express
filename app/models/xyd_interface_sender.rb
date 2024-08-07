@@ -81,7 +81,7 @@ class XydInterfaceSender < ActiveRecord::Base
         order['sender_no'] = xydConfig[:sy_sender_no]
         order['sender_type'] = '1'
       end
-      order['base_product_no'] = xydConfig[:base_product_no_1]
+      order['base_product_no'] = o.product_type
     end
     sender = {}
     receiver = {}

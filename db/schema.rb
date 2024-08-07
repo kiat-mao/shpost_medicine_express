@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_11_013920) do
+ActiveRecord::Schema.define(version: 2024_08_07_021906) do
 
   create_table "authentic_pictures", force: :cascade do |t|
     t.string "express_no"
@@ -140,6 +140,9 @@ ActiveRecord::Schema.define(version: 2024_07_11_013920) do
     t.string "original_receiver_addr"
     t.string "pay_mode"
     t.decimal "valuation_amount", default: "0.0"
+    t.string "package_list", limit: 2000
+    t.string "product_type", default: "1"
+    t.boolean "unboxing", default: true
     t.index ["address_status"], name: "index_orders_on_address_status"
     t.index ["bag_list"], name: "index_orders_on_bag_list"
     t.index ["order_mode"], name: "index_orders_on_order_mode"
