@@ -38,7 +38,15 @@ class StandardInterfaceController < ApplicationController
     @context = params[:context]
 
     begin
-      @context_hash = ActiveSupport::JSON.decode(@context)
+      if @context.is_a? Hash
+        @context_hash = @context
+        @context = @context_hash.to_json
+      elsif @context.is_a? ActionController::Parameters
+        @context_hash = @context.to_unsafe_h
+        @context = @context_hash.to_json
+      else
+        @context_hash = ActiveSupport::JSON.decode(@context)
+      end
     rescue Exception => e
       return error_builder('0002')
     end
