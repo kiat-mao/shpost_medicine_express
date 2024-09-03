@@ -45,7 +45,11 @@ class XydInterfaceSender < ActiveRecord::Base
     order['inner_channel'] = xydConfig[:inner_channel]
     order['logistics_order_no'] = 'package' + package.package_no
 
-    o = package.orders.first
+    if I18n.t('unit_no.gy').to_s == package.unit.no
+      o = package.orders.first
+    else
+      o = Order.where("package_list like ?", "%#{package.package_no}%").first
+    end
     # 20221115 区分国药上药
     if I18n.t('unit_no.gy').to_s == package.unit.no
       unless xydConfig[:sender_no].nil?
