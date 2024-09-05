@@ -48,7 +48,7 @@ class XydInterfaceSender < ActiveRecord::Base
     if I18n.t('unit_no.gy').to_s == package.unit.no
       o = package.orders.first
     else
-      o = Order.where("package_list like ?", "%#{package.package_no}%").first
+      o = Order.where("id in (?)", Bag.where(belong_package_id: package.id).map{|b| b.order_id}.uniq).first
     end
     # 20221115 区分国药上药
     if I18n.t('unit_no.gy').to_s == package.unit.no

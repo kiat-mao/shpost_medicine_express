@@ -28,7 +28,13 @@ class SoaInterfaceSender < ActiveRecord::Base
 
 		list = {}
 		orderIraces = []
-		package.orders.each_with_index do |order, i|
+		orders = nil
+		if I18n.t('unit_no.gy').to_s == package.unit.no
+	      orders = package.orders
+	    else
+	      orders = Order.where("id in (?)", Bag.where(belong_package_id: package.id).map{|b| b.order_id}.uniq)
+	    end
+		orders.each_with_index do |order, i|
 			orderIrace = {}
 			orderIrace["container"] = package.express_no
 			orderIrace["volume"] = '1'
