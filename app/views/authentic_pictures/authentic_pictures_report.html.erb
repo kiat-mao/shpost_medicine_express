@@ -1,0 +1,36 @@
+<br>
+<font face="微软雅黑" color='#006030' size=6>真迹发送报表</font>   
+<br><br><br>
+ 
+<% if !@results.blank? %>
+<table border="1" table-layout="fixed" data-toggle="table" data-height="700">
+    <tr class= 'nowrap'>
+      <td><b>收寄日期</b></td>
+      <% AuthenticPicture::STATUS_NAME.invert.keys.each do |n| %>
+        <td><b><%= n %></b></td>
+      <% end %>
+    </tr>
+    
+    <% date = nil %>
+    <% @results.each do |k,v| %>
+      <tr class= 'nowrap'>
+        <% if !(k[0].eql?date) %>
+          <td width="16%"><%= k[0] %></td>
+          <% AuthenticPicture::STATUS_NAME.keys.each do |s| %>
+            <td width="16%"><%= @results[[k[0], s.to_s]].blank? ? 0 : @results[[k[0], s.to_s]] %></td>
+          <% end %>
+        <% else %>
+          <% next %>
+        <% end %>
+      </tr>
+      <% date = k[0] %>
+    <% end %>
+    <tr class= 'nowrap'>
+      <td width="16%"><b><%= "合计" %></b></td>
+      <% AuthenticPicture::STATUS_NAME.keys.each do |s| %>
+        <td width="16%"><%= @results_hj[s.to_s].blank? ? 0 : @results_hj[s.to_s] %></td>
+      <% end %>
+    </tr>
+</table>
+<% end %>
+<br><br><br><br><br><br>

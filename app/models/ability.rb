@@ -14,6 +14,7 @@ class Ability
       can :manage, UpDownload
       can :manage, Package
       can :manage, Order
+      can :manage, AuthenticPicture
       #can :manage, User
     elsif user.unitadmin?
       can :manage, Unit, id: user.unit.id
@@ -36,6 +37,7 @@ class Ability
       cannot [:gy_scan, :sorting_code_report, :package_report], Package if user.unit.no == I18n.t('unit_no.sy')
       can :manage, Order, unit_id: user.unit_id.to_s
       cannot [:other_province_index, :order_report, :order_report_export, :cancel], Order if user.unit.no.eql?(I18n.t('unit_no.sy'))
+      can :authentic_pictures_report, AuthenticPicture if user.unit.no == I18n.t('unit_no.sy')
     else
       can :update, User, id: user.id
       can :read, UserLog, user: {id: user.id}
@@ -47,6 +49,7 @@ class Ability
       cannot [:gy_scan, :sorting_code_report, :package_report], Package if user.unit.no == I18n.t('unit_no.sy')
       can [:read, :order_report, :order_report_export], Order, unit_id: user.unit_id.to_s
       cannot [:order_report, :order_report_export, :cancel], Order if user.unit.no.eql?(I18n.t('unit_no.sy'))
+      can :authentic_pictures_report, AuthenticPicture if user.unit.no == I18n.t('unit_no.sy')
     end
 
     

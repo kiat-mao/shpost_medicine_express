@@ -98,6 +98,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :authentic_pictures do
+    collection do 
+      get 'authentic_pictures_report'
+    end
+  end
+
 
 
   match "/standard_interface/order_push" => "standard_interface#order_push", via: [:get, :post]

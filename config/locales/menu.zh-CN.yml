@@ -100,6 +100,19 @@ zh-CN:
           needrole:
             can: :gy_scan
             role: :Package
+    authentic_pictures_report:
+      name: "报表"
+      needrole:
+        can: :authentic_pictures_report
+        role: :AuthenticPicture
+      submenu:
+        authentic_pictures_report:
+          name: "真迹发送报表"  
+          link: "/authentic_pictures/authentic_pictures_report"
+          need_count: false
+          needrole:
+            can: :authentic_pictures_report
+            role: :AuthenticPicture
   
     # up_downloads:
     #   name: "模板管理"
