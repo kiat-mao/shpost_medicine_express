@@ -19,8 +19,6 @@
           <% AuthenticPicture::STATUS_NAME.keys.each do |s| %>
             <td width="16%"><%= @results[[k[0], s.to_s]].blank? ? 0 : @results[[k[0], s.to_s]] %></td>
           <% end %>
-        <% else %>
-          <% next %>
         <% end %>
       </tr>
       <% date = k[0] %>
@@ -32,5 +30,7 @@
       <% end %>
     </tr>
 </table>
+<% else %>
+近30天内无数据
 <% end %>
 <br><br><br><br><br><br>
