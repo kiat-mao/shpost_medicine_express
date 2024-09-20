@@ -43,7 +43,7 @@ class InterfaceSender < ActiveRecord::Base
   end
 
   def self.schedule_send(thread_count = nil)
-    interface_senders = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).order(:created_at).limit(1000).to_a
+    interface_senders = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).order(:created_at).limit(500).to_a
     if ! thread_count.blank?
       i = thread_count
     else

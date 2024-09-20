@@ -8,7 +8,7 @@ class AuthenticPicture < ApplicationRecord
 	
 	def self.init_authentic_pictures_15days_ago
 		start_date = Date.today - 15.day
-    end_date = Date.today - 14.
+    end_date = Date.today - 14.day
 		init_authentic_pictures(start_date, end_date)
 	end
 
@@ -30,7 +30,7 @@ class AuthenticPicture < ApplicationRecord
     end
 
     ActiveRecord::Base.transaction do
-      pkp_waybill_bases.find_each(batch_size: 2000) do |pkp_waybill_base|
+      pkp_waybill_bases.find_each(batch_size: 500) do |pkp_waybill_base|
         AuthenticPicture.init_authentic_picture(pkp_waybill_base)
       end
     end

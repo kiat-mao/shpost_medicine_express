@@ -43,10 +43,10 @@ every 1.day, :at => '8:00 pm' do
   runner "AuthenticPicture.init_authentic_pictures_15days_ago"
 end
 
-every 1.day, :at => '00:15 am' do
+every 1.hours do
   runner "AuthenticPicture.init_obtain_authentic_pictures_and_send"
 end  
 
-every 1.day, :at => '01:05 am' do
+every 30.minutes do
   runner "AuthenticPicture.clean_interface_sends"
 end
