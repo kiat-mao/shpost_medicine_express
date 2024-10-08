@@ -3,6 +3,8 @@ class Package < ApplicationRecord
 	has_many :bags, through: :orders
 	belongs_to :user
 	belongs_to :unit
+	has_many :belong_bags, class_name: "Bag", foreign_key: "belong_package_id"
+
 
 	validates_presence_of :package_no, :message => '箱号不能为空'
  	validates_uniqueness_of :package_no, :message => '箱号已存在'
