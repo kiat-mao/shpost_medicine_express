@@ -1,6 +1,6 @@
 class AuthenticPicture < ApplicationRecord
 	enum status: {waiting: 'waiting', sending: 'sending', sended: 'sended', authentic: 'authentic', failed: 'failed'}
-	STATUS_NAME = { waiting: '待发送', sending: '获得真迹中', sended: '已发送上药', authentic: '获得真迹成功', failed: '发送失败' }
+	STATUS_NAME = { waiting: '待发送', sending: '获得真迹中', authentic: '获得真迹成功', sended: '已发送上药', failed: '发送失败' }
 
 	def self.clean_interface_sends
 		InterfaceSender.where(interface_code: ['image_push', 'obtain_authentic_picture']).where(status: 'success').destroy_all
