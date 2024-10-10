@@ -111,6 +111,10 @@
 
     g.column name: "装箱用户", attribute: 'name', assoc: [:package, :user]
 
+    g.column name: "不可拆箱", attribute: 'unboxing' do |order| 
+      order.unboxing? ? '不可拆箱' : '可拆箱'
+    end
+
   end %>
 <% elsif current_user.unit.no == I18n.t('unit_no.gy') %>
 
