@@ -191,7 +191,7 @@ class PackagesController < ApplicationController
 	  			package_no = Package.new_package_no(current_user)
 	  			ActiveRecord::Base.transaction do
 		  			begin
-		  				@package = Package.create! package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list, unit_id: current_user.unit_id
+		  				@package = Package.create! package_no: package_no, status: 'waiting', packed_at: Time.now, user_id: current_user.id, order_list: order_list, bag_list: bag_list, unit_id: current_user.unit_id, valuation_sum: Order.where(order_no: order_list).sum(:valuation_amount)
 							@package_id = @package.id
 							Bag.where(bag_no: bag_list).update_all belong_package_id: @package_id
 							Order.where(order_no: order_list).each do |o|
