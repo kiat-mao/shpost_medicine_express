@@ -17,7 +17,15 @@
         <% if !(k[0].eql?date) %>
           <td width="16%"><%= k[0] %></td>
           <% AuthenticPicture::STATUS_NAME.keys.each do |s| %>
-            <td width="16%"><%= @results[[k[0], s.to_s]].blank? ? 0 : @results[[k[0], s.to_s]] %></td>
+            <%  val = 0
+                #获得真迹成功=获得真迹成功+已发送上药
+                if s.to_s.eql?"authentic"
+                  val = (@results[[k[0], "authentic"]].blank? ? 0 : @results[[k[0], "authentic"]]) + (@results[[k[0], "sended"]].blank? ? 0 : @results[[k[0], "sended"]])
+                else
+                  val = @results[[k[0], s.to_s]].blank? ? 0 : @results[[k[0], s.to_s]]
+                end 
+            %>
+            <td width="16%"><%= val %></td>
           <% end %>
         <% end %>
       </tr>
@@ -26,7 +34,15 @@
     <tr class= 'nowrap'>
       <td width="16%"><b><%= "合计" %></b></td>
       <% AuthenticPicture::STATUS_NAME.keys.each do |s| %>
-        <td width="16%"><%= @results_hj[s.to_s].blank? ? 0 : @results_hj[s.to_s] %></td>
+        <%  val = 0
+            #获得真迹成功=获得真迹成功+已发送上药
+            if s.to_s.eql?"authentic"
+              val = (@results_hj["authentic"].blank? ? 0 : @results_hj["authentic"]) + (@results_hj["sended"].blank? ? 0 : @results_hj["sended"])
+            else
+              val = @results_hj[s.to_s].blank? ? 0 : @results_hj[s.to_s]
+            end 
+        %>
+        <td width="16%"><%= val %></td>
       <% end %>
     </tr>
 </table>
