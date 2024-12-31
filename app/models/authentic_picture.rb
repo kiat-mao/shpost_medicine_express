@@ -51,6 +51,11 @@ class AuthenticPicture < ApplicationRecord
 		puts("#{Time.now}  send_authentic_pictures,  start")
 		authentic_pictures = self.where(status: 'waiting').where("next_time <= ? ", Time.now)
 		size = authentic_pictures.count
+
+		waiting_image_push_size = InterfaceSender.where(status: 'waiting').where(interface_code: 'image_push').count
+		
+		return if waiting_image_push_size >= 2000
+
 		authentic_pictures.find_each(batch_size: 2000) do |authentic_picture|
 			interface_sender = XydInterfaceSender.obtain_authentic_picture_interface_sender_initialize(authentic_picture)
 			# interface_sender.interface_send
