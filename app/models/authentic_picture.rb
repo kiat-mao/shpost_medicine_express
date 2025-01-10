@@ -58,7 +58,7 @@ class AuthenticPicture < ApplicationRecord
 
 		authentic_pictures.find_each(batch_size: 2000) do |authentic_picture|
 			interface_sender = XydInterfaceSender.obtain_authentic_picture_interface_sender_initialize(authentic_picture)
-			# interface_sender.interface_send
+			interface_sender.interface_send
 			# authentic_picture.update!(status: 'sended')
 		end
 		
