@@ -32,6 +32,17 @@ zh-CN:
       # object_class: 'Keyclientorder'
       max_times: 1 #default_times: 10
       interval: 1000 #default_interval: 600
+    xyd_order_create_by_waybill_no:
+      # url: ''
+      interface_type: 'json'
+      http_type: 'post'
+      callback_class: 'XydInterfaceSender'
+      callback_method: 'order_create_by_waybill_no_callback_method'
+      header: "{\"Content-Type\":\"application/json\"}"
+      parent_class: 'Order'
+      # object_class: 'Keyclientorder'
+      max_times: 6 #default_times: 10
+      interval: 600 #default_interval: 600
     # 上药
     soa_order_trace:
       # url: ''
