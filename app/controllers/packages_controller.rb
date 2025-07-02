@@ -172,12 +172,15 @@ class PackagesController < ApplicationController
   	@err_msg = ""
   	@package_id = params[:package_id]
   	@is_packaged = "0"
+  	@unboxing = ""
   	
   	if !@package_id.blank?
   		package = Package.find(@package_id)
-  		if !package.blank? && package.express_no.blank?
-	  		msg = package_send(package)
-				@err_msg = msg if !msg.eql?"成功"	
+  		if !package.blank?
+  			if !package.has_boxing && package.express_no.blank?
+		  		msg = package_send(package)
+					@err_msg = msg if !msg.eql?"成功"	
+				end
 				@is_packaged = "1"
 			end
   	else
@@ -216,9 +219,15 @@ class PackagesController < ApplicationController
 		          flash[:alert] = e.message 
 		          raise ActiveRecord::Rollback
 		        end
-      		end	
-					msg = package_send(@package)
-					@err_msg = msg if !msg.eql?"成功"			
+
+		        if !@package.has_boxing
+							msg = package_send(@package)
+							@err_msg = msg if !msg.eql?"成功"	
+							@unboxing = "true"	
+						else
+							@unboxing = "false"
+						end
+      		end		
 				end
 			end		
 		end
@@ -227,7 +236,7 @@ class PackagesController < ApplicationController
 	def uneql_order_no(order_bags)
 		# “订单号1：袋子号1，袋子号2，袋子号3|订单号2：袋子号4，袋子号5...”
 		uneql_order_no = ""
-		order_bags_arr = @order_bags.split("|")
+		order_bags_arr = order_bags.split("|")
 		order_bags_arr.each do |o|
 			obarr = o.split(":")
 			order = Order.find_by(order_no: obarr[0])
@@ -1009,6 +1018,21 @@ class PackagesController < ApplicationController
     xls_report.string
   end
 	
+	def scan_express_no
+		package_id =params[:package_id]
+		scan_express_no = params[:scan_express_no]
+
+		if !package_id.blank? && !scan_express_no.blank?
+			package = Package.find(package_id)
+			if !package.blank? && package.has_boxing
+				package.update express_no: scan_express_no
+				flash[:notice] = "面单号绑定成功"
+			end
+		end
+		
+		redirect_to request.referer
+	end
+
 	private
 
 	def package_params
