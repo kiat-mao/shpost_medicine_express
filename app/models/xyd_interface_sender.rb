@@ -171,6 +171,111 @@ class XydInterfaceSender < ActiveRecord::Base
     end
   end
 
+  def self.order_create_by_waybill_no_interface_sender_initialize(package)
+		xydConfig = Rails.application.config_for(:xyd)
+		body = self.order_create_by_waybill_no_request_body_generate(package, xydConfig)
+		args = Hash.new
+		callback_params = Hash.new
+		callback_params["package_id"] = package.id
+		args[:callback_params] = callback_params.to_json
+		args[:url] = xydConfig[:order_create_by_waybill_no_url]
+		args[:parent_id] = package.id
+    args[:unit_id] = package.unit_id
+    args[:next_time] = Time.now + 600
+		InterfaceSender.interface_sender_initialize("xyd_order_create_by_waybill_no", body, args)
+	end
+
+	def self.order_create_by_waybill_no_request_body_generate(order, xydConfig)
+		now_time = Time.new
+
+		params = {}
+		head = {}
+		head["system_name"] = xydConfig[:oc_system_name]
+		head["req_time"] = now_time.strftime("%Y%m%d%H%M%S%L")
+		head["req_trans_no"] = xydConfig[:oc_system_name] + head["req_time"]
+		signature = Digest::MD5.hexdigest("system_name" + head["system_name"] + "req_time" + head["req_time"] + "req_trans_no" + head["req_trans_no"] + xydConfig[:oc_pwd_waybill])
+		head["signature"] = signature
+		params["head"] = head
+		body = {}
+		body["ecCompanyId"] = xydConfig[:ecCompanyId]
+		body["parentId"] = xydConfig[:parentId]
+		order = {}
+    order['created_time'] = now_time.strftime('%Y-%m-%d %H:%M:%S')
+    order['logistics_provider'] = xydConfig[:logistics_provider]
+    order['ecommerce_no'] = xydConfig[:ecommerce_no]
+    order['ecommerce_user_id'] = now_time.strftime('%Y%m%d%H%M%S%L')
+    order['inner_channel'] = xydConfig[:inner_channel]
+    order['logistics_order_no'] = 'package' + package.package_no
+    
+		#different from order_create
+		order["waybill_no"] = order.express_no
+		order["one_bill_flag"] = "0"
+		order["product_type"] = "1"
+
+    o = Order.where("id in (?)", Bag.where(belong_package_id: package.id).map{|b| b.order_id}.uniq).first
+
+		unless xydConfig[:sender_no].nil?
+      order['sender_no'] = xydConfig[:sy_sender_no]
+      order['sender_type'] = '1'
+    end
+    # order['base_product_no'] = o.product_type
+  
+		sender = {}
+    receiver = {}
+    sender['name'] = o.sender_name
+    sender['mobile'] = o.sender_phone
+    sender['prov'] = o.sender_province
+    sender['city'] = o.sender_city
+    sender['county'] = o.sender_district
+    sender['address'] = o.sender_addr
+    receiver['name'] = o.receiver_name
+    receiver['mobile'] = o.receiver_phone
+    receiver['prov'] = o.receiver_province
+    receiver['city'] = o.receiver_city
+    receiver['county'] = o.receiver_district
+    receiver['address'] = o.receiver_addr
+    order['sender'] = sender
+    order['receiver'] = receiver
+    body['order'] = order
+    params['body'] = body
+
+		params.to_json
+	end
+
+	def self.order_create_by_waybill_no_callback_method(response, callback_params)
+		return false if callback_params.nil?
+
+		package_id = callback_params["package_id"]
+
+		if response.nil?
+			return false
+		else
+			puts 'response:' + response
+			resJSON = JSON.parse response
+			resHead = resJSON["head"]
+			error_code = resHead["error_code"]
+			if (error_code=='0')
+				resBody = resJSON["body"]
+				logistic_id = resBody["logisticId"]
+				route_code = resBody["routeCode"]
+				if (! package_id.blank? && package_id.is_a?(Numeric))
+					package = Package.find package_id
+					package.route_code = route_code
+          package.sorting_code = Package.get_sorting_code(route_code)
+          
+					package.save!
+
+					puts '运单号:' + package.express_no.to_s
+					puts '分拣码:' + package.route_code.to_s
+          
+					return true
+				end
+			end
+			return false
+		end
+	end
+
+
   def self.address_parsing_interface_sender_initialize(order)
     xydConfig = Rails.application.config_for(:xyd)
     body = address_parsing_request_body_generate(order, xydConfig)
