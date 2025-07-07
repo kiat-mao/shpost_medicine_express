@@ -25,6 +25,7 @@ development:
   obtain_authentic_picture_url: http://222.66.108.206:4000/xyd_server/ObtainAuthenticPictureByCSBServlet
   channelName: test_uat
   order_create_by_waybill_no_url: http://222.66.108.206:4000//xyd_server/OrderCreateByWaybillNoServlet
+  oc_pwd_waybill: test
 test:
   <<: *default
   # order create
@@ -47,6 +48,7 @@ test:
   ap_pwd: "11111"
   ap_salt: ""
   order_create_by_waybill_no_url: http://10.126.25.218:7001/xyd_server/OrderCreateByWaybillNoServlet
+  oc_pwd_waybill: test
 production:
   <<: *default
   # order create
@@ -74,4 +76,5 @@ production:
   obtain_authentic_picture_url: http://172.20.7.11:3000/xyd_server/ObtainAuthenticPictureByCSBServlet
   channelName: SHYIYAO
   au_pwd: c3d0ZDIwMjRfVUFUMjAyNA
-  order_create_by_waybill_no_url: http://10.126.25.138:7001/xyd_server/OrderCreateByWaybillNoServlet
+  order_create_by_waybill_no_url: http://172.20.7.11:3000/xyd_server/OrderCreateByWaybillNoServlet
+  oc_pwd_waybill: b3JkZXJzIGNyZWF0ZQ
