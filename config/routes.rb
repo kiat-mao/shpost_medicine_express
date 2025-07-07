@@ -76,6 +76,8 @@ Rails.application.routes.draw do
       get 'sorting_code_report'
       post 'sorting_code_report'
       post 'sorting_code_report_export'
+      get 'scan_express_no'
+      post 'scan_express_no'
     end
     member do
       get 'cancelled'

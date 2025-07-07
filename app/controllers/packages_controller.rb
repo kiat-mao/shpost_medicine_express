@@ -1035,7 +1035,7 @@ class PackagesController < ApplicationController
 			package = Package.find(package_id)
 			if !package.blank? && package.has_boxing
 				package.update express_no: scan_express_no
-				msg = package_send_by_waybill_no(@package)		
+				msg = package_send_by_waybill_no(package)		
 				flash[:notice] = "面单号绑定成功"
 			end
 		end

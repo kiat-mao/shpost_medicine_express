@@ -88,5 +88,14 @@ class Package < ApplicationRecord
  		return sorting_code
  	end
 
+ 	# 是否有拆箱订单
+ 	def has_boxing
+ 		orders = self.belong_bags.map{|b|b.order}.compact.uniq
+ 		orders.each do |o|
+ 			return true if !o.unboxing
+		end
+		return false
+	end
+
 
 end

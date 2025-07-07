@@ -7,6 +7,7 @@
 <%= hidden_field_tag('order_bags', @order_bags) %>
 <%= hidden_field_tag('is_packaged', @is_packaged) %>
 <%= hidden_field_tag('package_id', @package_id) %>
+<%= hidden_field_tag('unboxing', @unboxing) %>
 <audio src="<%=asset_path("success.mp3")%>" id="success_alert"></audio>
 <audio src="<%=asset_path("failed.mp3")%>" id="failed_alert"></audio>
 <div>
@@ -29,6 +30,13 @@
 			<td></td>
 			<td><font color="green"><h3><%= label_tag 'express_no', "", class: 'control-group', :id => "express_no" %></h3></font></td>
 			<td><font color="green"><h3><%= label_tag 'route_code', "", class: 'control-group', :id => "route_code" %></h3></font></td>
+		</tr>
+	</table>
+</div>
+<div id="scan_exp_no">
+	<table>
+		<tr class= 'nowrap'>
+			<td>面单号:<%= text_field_tag 'scan_express_no', nil, class: "control-group", size: "50", :id => "scan_express_no", :disabled => false %></td>
 		</tr>
 	</table>
 </div>

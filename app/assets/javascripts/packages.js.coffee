@@ -9,13 +9,12 @@ $(document).on "turbolinks:load", ->
 ready = ->
   $("#bag_no").keypress(enterpress)
   $('#reset').click(enterpress2)
-  if document.getElementById("bag_no")
-  	setInterval("$('#bag_no').focus();",3000);
   $("#scan_no").keypress(enterpress3)
   if document.getElementById("scan_no")
   	setInterval("$('#scan_no').focus();",3000);
   $('#tmp_save').click(enterpress4)
-  
+  $("#scan_express_no").keypress(enterpress5)
+
 enterpress = (e) ->
 	e = e || window.event;   
 	if e.keyCode == 13   
@@ -45,7 +44,11 @@ enterpress = (e) ->
 						package_id = $('#package_id').val()
 						window.open("../packages/tkzd?package_id="+package_id)
 						window.open("../packages/zxqd?package_id="+package_id)
-				$('#bag_no').focus();
+						if $('#unboxing').val() == "true"
+							$('#bag_no').focus();
+						else
+							$("#scan_exp_no").show();
+							$('#scan_express_no').focus();
 				return false;
 				
 
@@ -105,6 +108,17 @@ enterpress4 = ->
 	clear()
 	$('#scan_no').focus();
 
+enterpress5 = (e) ->
+	e = e || window.event;   
+	if e.keyCode == 13   
+		if $('#scan_express_no').val() != ""
+			scan_express_no()
+			$('#bag_no').focus();
+			$("#scan_exp_no").hide();
+		else
+			alert("请扫描面单号");
+			$('#scan_express_no').focus();
+		return false;
 
 
 
@@ -161,6 +175,9 @@ clear = ->
 	$('#order_mode_show').text("");
 	$('#tmp_package_msg').text("");
 	$("#tmp_msg").hide();
+	$("#scan_exp_no").hide();
+	$('#scan_express_no').val("");
+	$('#unboxing').val("");
 
 showMask = ->
 	document.getElementById('mid').style.display="block";
@@ -174,3 +191,10 @@ tmp_save = ->
 					dataType : 'script'
 				});
 
+scan_express_no = -> 
+				$.ajax({
+					type : 'POST',
+					url : '../packages/scan_express_no/',
+					data: { scan_express_no: $('#scan_express_no').val(), package_id: $('#package_id').val()},
+					dataType : 'script'
+				});

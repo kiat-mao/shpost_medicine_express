@@ -42,6 +42,7 @@ class OrdersController < ApplicationController
           # format.html { redirect_to @order, notice: I18n.t('controller.update_success_notice', model: '订单')}
           # format.json { head :no_content }
           @is_updated = "1"
+          Rails.logger.info "other_province_modify:"+order_params.to_s
 
           redirect_to edit_order_path(is_updated: @is_updated)
         else

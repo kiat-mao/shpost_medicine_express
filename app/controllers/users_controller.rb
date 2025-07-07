@@ -98,6 +98,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params[:user].permit(:username, :name, :password, :email, :unit_id,  :role, :hot_printer, :normal_printer)
+      params[:user].permit(:username, :name, :password, :email, :unit_id,  :role, :hot_printer, :normal_printer, :ems_printer, :kdbg_printer)
     end
 end

@@ -6,6 +6,7 @@
 	$('#bag_no').focus();
 	$('#package_id').val("<%= @package_id %>");
 	$('#is_packaged').val("<%= @is_packaged %>");
+	$('#unboxing').val("<%= @unboxing %>");
 <% else %>
 	// alert("装箱已完成，请继续打印面单和配货单");
 	document.getElementById('mid').style.display='none';
@@ -16,10 +17,15 @@
 	$('#order_bags').val("");
 	$('#is_packaged').val("<%= @is_packaged %>");
 	$('#package_id').val("<%= @package_id %>");
-	$('#tkzd').attr('onclick', "window.open('../packages/tkzd?package_id=<%= @package_id %>', '_blank');return false;");
+	$('#unboxing').val("<%= @unboxing %>");
+	<% if eval(@unboxing) %>
+		$('#tkzd').attr('onclick', "window.open('../packages/tkzd?package_id=<%= @package_id %>', '_blank');return false;");
+		$('#express_no').text("邮件号:<%= @package.reload.try(:express_no) %>");
+		$('#route_code').text("格口码:<%= @package.reload.try(:route_code) %>");
+	<% else %>
+		$('#tkzd').attr('onclick', "window.open('../packages/tkzd?package_id=<%= @package_id %>', '_blank');$('#scan_exp_no').show();$('#scan_express_no').focus();return false;");
+	<% end %>
 	$('#zxqd').attr('onclick', "window.open('../packages/zxqd?package_id=<%= @package_id %>', '_blank');return false;");
-	$('#express_no').text("邮件号:<%= @package.reload.try(:express_no) %>");
-	$('#route_code').text("格口码:<%= @package.reload.try(:route_code) %>");
 	$('#bag_no').focus();
 <% end %>
 
