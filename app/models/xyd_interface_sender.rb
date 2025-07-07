@@ -185,7 +185,7 @@ class XydInterfaceSender < ActiveRecord::Base
 		InterfaceSender.interface_sender_initialize("xyd_order_create_by_waybill_no", body, args)
 	end
 
-	def self.order_create_by_waybill_no_request_body_generate(order, xydConfig)
+	def self.order_create_by_waybill_no_request_body_generate(package, xydConfig)
 		now_time = Time.new
 
 		params = {}
@@ -199,25 +199,28 @@ class XydInterfaceSender < ActiveRecord::Base
 		body = {}
 		body["ecCompanyId"] = xydConfig[:ecCompanyId]
 		body["parentId"] = xydConfig[:parentId]
-		order = {}
-    order['created_time'] = now_time.strftime('%Y-%m-%d %H:%M:%S')
-    order['logistics_provider'] = xydConfig[:logistics_provider]
-    order['ecommerce_no'] = xydConfig[:ecommerce_no]
-    order['ecommerce_user_id'] = now_time.strftime('%Y%m%d%H%M%S%L')
-    order['inner_channel'] = xydConfig[:inner_channel]
-    order['logistics_order_no'] = 'package' + package.package_no
+		orders = {}
+    orderNormals = []
+		orderNormal = {}
+    orderNormal['created_time'] = now_time.strftime('%Y-%m-%d %H:%M:%S')
+    orderNormal['logistics_provider'] = xydConfig[:logistics_provider]
+    orderNormal['ecommerce_no'] = xydConfig[:ecommerce_no]
+    orderNormal['ecommerce_user_id'] = now_time.strftime('%Y%m%d%H%M%S%L')
+    orderNormal['inner_channel'] = xydConfig[:inner_channel]
+    orderNormal['logistics_order_no'] = 'package' + package.package_no
     
 		#different from order_create
-		order["waybill_no"] = order.express_no
-		order["one_bill_flag"] = "0"
-		order["product_type"] = "1"
+		orderNormal["waybill_no"] = package.express_no
+		orderNormal["one_bill_flag"] = "0"
+		orderNormal["product_type"] = "1"
 
     o = Order.where("id in (?)", Bag.where(belong_package_id: package.id).map{|b| b.order_id}.uniq).first
 
 		unless xydConfig[:sender_no].nil?
-      order['sender_no'] = xydConfig[:sy_sender_no]
-      order['sender_type'] = '1'
+      orderNormal['sender_no'] = xydConfig[:sy_sender_no]
+      orderNormal['sender_type'] = '1'
     end
+    # orderNormal["base_product_no"] = xydConfig[:base_product_no_1]
     # order['base_product_no'] = o.product_type
   
 		sender = {}
@@ -228,16 +231,24 @@ class XydInterfaceSender < ActiveRecord::Base
     sender['city'] = o.sender_city
     sender['county'] = o.sender_district
     sender['address'] = o.sender_addr
+    # sender["post_code"] = o.sender_postcode
+    
     receiver['name'] = o.receiver_name
     receiver['mobile'] = o.receiver_phone
     receiver['prov'] = o.receiver_province
     receiver['city'] = o.receiver_city
     receiver['county'] = o.receiver_district
     receiver['address'] = o.receiver_addr
-    order['sender'] = sender
-    order['receiver'] = receiver
-    body['order'] = order
-    params['body'] = body
+
+
+    orderNormal['sender'] = sender
+    orderNormal['receiver'] = receiver
+
+    orderNormals << orderNormal
+		orders["orderNormal"] = orderNormals
+		body["orders"] = orders
+
+    params["body"] = body
 
 		params.to_json
 	end

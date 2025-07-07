@@ -25,7 +25,7 @@ development:
   obtain_authentic_picture_url: http://222.66.108.206:4000/xyd_server/ObtainAuthenticPictureByCSBServlet
   channelName: test_uat
   order_create_by_waybill_no_url: http://222.66.108.206:4000//xyd_server/OrderCreateByWaybillNoServlet
-  oc_pwd_waybill: test
+  oc_pwd_waybill: "11111"
 test:
   <<: *default
   # order create
@@ -48,7 +48,7 @@ test:
   ap_pwd: "11111"
   ap_salt: ""
   order_create_by_waybill_no_url: http://10.126.25.218:7001/xyd_server/OrderCreateByWaybillNoServlet
-  oc_pwd_waybill: test
+  oc_pwd_waybill: "11111"
 production:
   <<: *default
   # order create
