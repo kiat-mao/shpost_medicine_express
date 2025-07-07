@@ -308,7 +308,7 @@ class PackagesController < ApplicationController
 
 
 	def package_send_by_waybill_no(package)
-		interface_sender = XydInterfaceSender.order_create_interface_sender_initialize(package)
+		interface_sender = XydInterfaceSender.order_create_by_waybill_no_interface_sender_initialize(package)
 		interface_sender.interface_send(10)
 		msg = XydInterfaceSender.get_response_message(interface_sender)
 		# package.update express_no: "e000001", route_code: "r000001"
