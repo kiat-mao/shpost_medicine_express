@@ -219,15 +219,14 @@ class PackagesController < ApplicationController
 		          flash[:alert] = e.message 
 		          raise ActiveRecord::Rollback
 		        end
-
-		        if !@package.has_boxing
-							msg = package_send(@package)
-							@err_msg = msg if !msg.eql?"成功"	
-							@unboxing = "true"	
-						else
-							@unboxing = "false"
-						end
-      		end		
+		      end		
+	        if !@package.has_boxing
+						msg = package_send(@package)
+						@err_msg = msg if !msg.eql?"成功"	
+						@unboxing = "true"	
+					else
+						@unboxing = "false"
+					end
 				end
 			end		
 		end
@@ -1036,6 +1035,7 @@ class PackagesController < ApplicationController
 			package = Package.find(package_id)
 			if !package.blank? && package.has_boxing
 				package.update express_no: scan_express_no
+				msg = package_send_by_waybill_no(@package)		
 				flash[:notice] = "面单号绑定成功"
 			end
 		end
