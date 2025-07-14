@@ -96,7 +96,7 @@
   </div>
 
   <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit nil, :class => 'btn btn-primary', :id => 'user_ce'%>
     <% if can? :index, User%>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 (params['referer'].blank? ? request.referer : params['referer']), :class => 'btn' %>

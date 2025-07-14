@@ -1,0 +1,5 @@
+<% if !@err_msg.blank? %>
+	alert("<%= @err_msg %>");
+	$('#scan_express_no').val("");
+	$('#scan_express_no').focus();
+<% end %>
