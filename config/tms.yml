@@ -3,10 +3,12 @@ default: &default
 
 development:
   <<: *default
-  order_trace_url: 'http://tmstest.savecloud.cn:30004/gytms_edi/*.expressCollect'
+  # order_trace_url: 'http://tmstest.savecloud.cn:30004/gytms_edi/*.expressCollect'
+  order_trace_url: 'https://uat-tms.sinopharmlogistics.com/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
   method: 'collect'
-  appKey: '3bdfdedb1c370749'
-  appSercret: 'b27df4bbce458abaa710ee553b7a9a28c57cc393'
+  appKey: 'A01C0141-250618'
+  appSercret: 'uWLKhaIWYmlerrkPdv5claq3dbnJcNxCaJ44oVWjFMQ'
+  path: '/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
   from: 'EMS'
 
 test:
@@ -15,12 +17,15 @@ test:
   method: 'collect'
   appKey: '3bdfdedb1c370749'
   appSercret: 'b27df4bbce458abaa710ee553b7a9a28c57cc393'
+  path: '/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
   from: 'EMS'
 
 production:
   <<: *default
   order_trace_url: 'http://tms2.savecloud.cn:8080/gytms_edi/*.expressCollect'
+  #order_trace_url: 'https://tms.sinopharmlogistics.com/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
   method: 'collect'
   appKey: '81383eadf544d4d0'
   appSercret: 'e7ebfea0ae6a846d30fcfaf819407f5caaa3d2a9'
+  path: '/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
   from: 'EMS'

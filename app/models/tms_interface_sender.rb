@@ -34,13 +34,58 @@ class TmsInterfaceSender < ActiveRecord::Base
 	def self.order_trace_request_head_generate(body, tmsConfig)
 		args = Hash.new
 		args["Content-Type"] = "application/json;charset=utf-8"
-		args[:method] = tmsConfig[:method]
-		args[:timestamp] = (Time.new.to_f*1000).to_i.to_s
-		args[:appKey] = tmsConfig[:appKey]
-		args[:dataDigest] = data_digest_generate(tmsConfig[:appSercret], args[:timestamp], body)
-		args[:from] = tmsConfig[:from]
+
+		# date = Time.now.utc.strftime("%a, %d %b %Y %H:%M:%S GMT")
+		date = "2025-07-11 16:00:00 GMT".to_time.utc.strftime("%a, %d %b %Y %H:%M:%S GMT") # For testing, use a fixed date
+		args[:Date] = date
+
+		args[:"X-HMAC-ACCESS-KEY"] = tmsConfig[:appKey]
+
+		# args[:dataDigest] = data_digest_generate(tmsConfig[:appSercret], args[:timestamp], body)
+		# args[:from] = tmsConfig[:from]
+		sign_body = "POST\n#{tmsConfig[:path]}\n\n#{tmsConfig[:appKey]}\n#{date}\n"
+
+		args[:"X-HMAC-SIGNATURE"] = self.hmac_sha256_and_base_64_hex_generate(tmsConfig[:appSercret], sign_body).strip
+
+		args[:"X-HMAC-ALGORITHM"] = "hmac-sha256"
+		
+		args[:"X-HMAC-DIGEST"] = self.hmac_sha256_and_base_64_hex_generate(tmsConfig[:appSercret], body).strip
+
 		puts args
 		return args.to_json
+	end
+
+	def self.hmac_sha256_and_base_64_hex_generate(key, data)
+		return self.base_64_hex_generate(self.hmac_sha256_generate(key, data))
+	end
+
+	def self.base_64_hex_generate(data)
+		# This method encodes the given data into Base64 format.
+		# Ensure Base64 is available
+		unless defined?(Base64)
+			raise "Base64 is not available. Please install the Base64 gem."
+		end
+
+		binary_data = [data].pack('H*')
+		# Example of encoding data to Base64
+		base64_data = Base64.strict_encode64(binary_data)
+		puts "Base64 Encoded Data: #{base64_data}"
+		return base64_data
+	end
+
+	def self.hmac_sha256_generate(key, data)
+		# This method generates an HMAC-SHA256 signature for the given key and data.
+		# It uses the OpenSSL library to create the digest.
+		# Ensure OpenSSL is available
+		unless defined?(OpenSSL::Digest) && defined?(OpenSSL::HMAC)
+			raise "OpenSSL is not available. Please install the OpenSSL gem."
+		end
+		# Example of generating HMAC-SHA256 signature
+
+		digest = OpenSSL::Digest.new('sha256')
+		hmac = OpenSSL::HMAC.hexdigest(digest, key, data)
+		puts "HMAC-SHA256: #{hmac}"
+		return hmac
 	end
 
 	def self.data_digest_generate(appSercret, timestamp, body)
