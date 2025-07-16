@@ -14,6 +14,7 @@ development:
 test:
   <<: *default
   order_trace_url: 'http://tmstest.savecloud.cn:30004/gytms_edi/*.expressCollect'
+  # order_trace_url: 'https://uat-tms.sinopharmlogistics.com/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
   method: 'collect'
   appKey: '3bdfdedb1c370749'
   appSercret: 'b27df4bbce458abaa710ee553b7a9a28c57cc393'
