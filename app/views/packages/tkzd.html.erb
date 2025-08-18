@@ -160,9 +160,10 @@
         LODOP.PRINT();
       <% else %>
         // 可拆箱
-        <% product_type = package.belong_bags.map{|b|b.order}.compact.uniq.first.product_type %>
+        <% #product_type = package.belong_bags.map{|b|b.order}.compact.uniq.first.product_type %>
         // 上药国内标准快递EMS
-        <% if product_type.eql?"1" %>
+        <% #if product_type.eql?"1"
+           if !current_user.ems_printer.blank? %>
           <% order = Bag.find_by(belong_package_id: package.id).order %>
           LODOP.PRINT_INITA("0mm","0mm","230.2mm","127.3mm","ems");
           LODOP.SET_PRINT_PAGESIZE(1,"230mm","127mm","ems");
@@ -197,7 +198,8 @@
           LODOP.PRINT();
 
         // 上药快递包裹
-        <% elsif product_type.eql?"2" %>
+        <% #elsif product_type.eql?"2"
+           elsif !current_user.kdbg_printer.blank? %>
           <% order = Bag.find_by(belong_package_id: package.id).order %>
           LODOP.PRINT_INITA("0mm","0mm","230.2mm","127.3mm","kdbg");
           LODOP.SET_PRINT_PAGESIZE(1,"230mm","127mm","kdbg");

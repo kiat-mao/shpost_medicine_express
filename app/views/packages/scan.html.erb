@@ -19,6 +19,12 @@
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td><h3>已扫袋数:</h3></td>
 			<td><font color="red"><h1><%= label_tag 'bag_amount', @bag_amount, class: 'control-group', :id => "bag_amount" %></h1></font></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<% printer = ""
+				 printer = "国内特快专递面单" if !current_user.ems_printer.blank?
+				 printer = "快递包裹面单" if !current_user.kdbg_printer.blank?
+			%>
+			<td><h3><%= printer %></h3></td>
 		</tr>
 	</table>
 	<table>

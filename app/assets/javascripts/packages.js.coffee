@@ -112,9 +112,14 @@ enterpress5 = (e) ->
 	e = e || window.event;   
 	if e.keyCode == 13   
 		if $('#scan_express_no').val() != ""
-			scan_express_no()
-			$('#bag_no').focus();
-			$("#scan_exp_no").hide();
+			if $('#scan_express_no').val().length != 13
+				alert("面单号必须为13位");
+				$('#scan_express_no').val("");
+				$('#scan_express_no').focus();
+			else
+				scan_express_no()
+				# $('#bag_no').focus();
+				# $("#scan_exp_no").hide();
 		else
 			alert("请扫描面单号");
 			$('#scan_express_no').focus();

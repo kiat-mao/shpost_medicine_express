@@ -41,8 +41,14 @@ ready = ->
       this.href = this.href.replace "unlock" , "lock"
       this.text = "用户停用"
       alert "该用户已启用"
+  $("#user_ce").click(enterpress1)
 
 enterpress = (e) ->
   e = e || window.event;   
   if e.keyCode == 13    
+    return false;
+
+enterpress1 = ->  
+  if ($('#ems_printer').val() != "") && ($('#kdbg_printer').val() != "")
+    alert("EMS面单打印机和快递包裹面单打印机只能选填一个")
     return false;

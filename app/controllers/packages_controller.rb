@@ -1027,20 +1027,43 @@ class PackagesController < ApplicationController
     xls_report.string
   end
 	
+	# def scan_express_no
+	# 	package_id =params[:package_id]
+	# 	scan_express_no = params[:scan_express_no]
+
+	# 	if !package_id.blank? && !scan_express_no.blank?
+	# 		package = Package.find(package_id)
+	# 		if !package.blank? && package.has_boxing
+	# 			package.update express_no: scan_express_no
+	# 			msg = package_send_by_waybill_no(package)		
+	# 			flash[:notice] = "面单号绑定成功"
+	# 		end
+	# 	end
+		
+	# 	redirect_to request.referer
+	# end
 	def scan_express_no
 		package_id =params[:package_id]
 		scan_express_no = params[:scan_express_no]
 
 		if !package_id.blank? && !scan_express_no.blank?
+			if !current_user.kdbg_printer.blank? && !(["8","9"].include?scan_express_no[0])
+				@err_msg = "请输入快递包裹面单号"
+				return
+			end
+			if !current_user.ems_printer.blank? && !(scan_express_no[0].eql?"1")
+				@err_msg = "请输入国内特快专递面单号"
+				return
+			end
+
 			package = Package.find(package_id)
 			if !package.blank? && package.has_boxing
 				package.update express_no: scan_express_no
-				msg = package_send_by_waybill_no(package)		
-				flash[:notice] = "面单号绑定成功"
+				msg = package_send_by_waybill_no(package)	
+				flash[:notice] = "面单号绑定成功"	
 			end
-		end
-		
-		redirect_to request.referer
+			redirect_to request.referer
+		end	
 	end
 
 	private
