@@ -19,13 +19,15 @@
 	$('#package_id').val("<%= @package_id %>");
 	$('#unboxing').val("<%= @unboxing %>");
 	<% if eval(@unboxing) %>
-		$('#tkzd').attr('onclick', "window.open('../packages/tkzd?package_id=<%= @package_id %>', '_blank');return false;");
+		$('#tkzd').attr('onclick', "window.open('../packages/tkzd?package_id=<%= @package_id %>', '_blank');$('#bag_no').focus();return false;");
+		$('#zxqd').attr('onclick', "window.open('../packages/zxqd?package_id=<%= @package_id %>', '_blank');$('#bag_no').focus();return false;");
 		$('#express_no').text("邮件号:<%= @package.reload.try(:express_no) %>");
 		$('#route_code').text("格口码:<%= @package.reload.try(:route_code) %>");
 	<% else %>
 		$('#tkzd').attr('onclick', "window.open('../packages/tkzd?package_id=<%= @package_id %>', '_blank');$('#scan_exp_no').show();$('#scan_express_no').focus();return false;");
+		$('#zxqd').attr('onclick', "window.open('../packages/zxqd?package_id=<%= @package_id %>', '_blank');$('#scan_express_no').focus();return false;");
 	<% end %>
-	$('#zxqd').attr('onclick', "window.open('../packages/zxqd?package_id=<%= @package_id %>', '_blank');return false;");
+	
 	$('#bag_no').focus();
 <% end %>
 
