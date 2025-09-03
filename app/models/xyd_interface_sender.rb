@@ -225,15 +225,18 @@ class XydInterfaceSender < ActiveRecord::Base
   
 		sender = {}
     receiver = {}
-    sender['name'] = o.sender_name
-    sender['mobile'] = o.sender_phone
+    # sender['name'] = o.sender_name
+    # sender['mobile'] = o.sender_phone
+    sender['name'] = "上海医药"
+    sender['mobile'] = "18621106906"
     sender['prov'] = o.sender_province
     sender['city'] = o.sender_city
     sender['county'] = o.sender_district
     sender['address'] = o.sender_addr
     # sender["post_code"] = o.sender_postcode
     
-    receiver['name'] = o.receiver_name
+    # receiver['name'] = o.receiver_name
+    receiver['name'] = "麻药验收组"
     receiver['mobile'] = o.receiver_phone
     receiver['prov'] = o.receiver_province
     receiver['city'] = o.receiver_city
