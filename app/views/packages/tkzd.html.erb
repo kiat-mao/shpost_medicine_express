@@ -167,8 +167,8 @@
           <% order = Bag.find_by(belong_package_id: package.id).order %>
           LODOP.PRINT_INITA("0mm","0mm","230.2mm","127.3mm","ems");
           LODOP.SET_PRINT_PAGESIZE(1,"230mm","127mm","ems");
-          LODOP.ADD_PRINT_TEXT("22.7mm","34.2mm","27.8mm","5.3mm",'<%= order.try(:sender_name) %>');
-          LODOP.ADD_PRINT_TEXT("22.7mm","76.2mm","41mm","5.3mm",'<%= order.try(:sender_phone) %>');
+          LODOP.ADD_PRINT_TEXT("22.7mm","34.2mm","27.8mm","5.3mm",'上海医药');
+          LODOP.ADD_PRINT_TEXT("22.7mm","76.2mm","41mm","5.3mm",'18621106906');
           LODOP.ADD_PRINT_TEXT("29mm","37.3mm","46mm","7mm",'上药控股有限公司');
           LODOP.ADD_PRINT_TEXT("29mm","96mm","25mm","5.3mm","仓配物流");
           LODOP.ADD_PRINT_TEXT("35mm","32mm","90mm","9mm","上海市宝山区沪太支路1107弄28号");
@@ -178,18 +178,20 @@
           LODOP.ADD_PRINT_TEXT("43.6mm","107.2mm","4mm","4mm","4");
           LODOP.ADD_PRINT_TEXT("43.6mm","112mm","4mm","4mm","3");
           LODOP.ADD_PRINT_TEXT("43.6mm","117mm","4mm","4mm","6");
-          LODOP.ADD_PRINT_TEXT("53mm","34.2mm","27.8mm","5.3mm",'<%= order.try(:receiver_name) %>');
+          LODOP.ADD_PRINT_TEXT("53mm","34.2mm","27.8mm","5.3mm",'麻药验收组');
           LODOP.ADD_PRINT_TEXT("53mm","76.2mm","41mm","5.3mm",'<%= order.try(:receiver_phone) %>');
           LODOP.ADD_PRINT_TEXT("60mm","37.3mm","46mm","5.3mm",'<%= order.try(:site_name) %>');
           LODOP.ADD_PRINT_TEXT("65.5mm","32mm","86mm","13.2mm",'<%= order.try(:receiver_addr) %>');
-          LODOP.ADD_PRINT_TEXT("76mm","32mm","86mm","5.3mm",'签收请盖收货章');
+          LODOP.ADD_PRINT_TEXT("76mm","32mm","86mm","5.3mm",'签收请盖收货章     共   票');
           LODOP.ADD_PRINT_TEXT("81mm","37.3mm","46mm","5.3mm",'<%= order.try(:receiver_city) %>');
-          LODOP.ADD_PRINT_TEXT("94mm","30.5mm","15mm","5.3mm",'<%= package.belong_bags.count %>');
+          LODOP.ADD_PRINT_TEXT("94mm","25.5mm","15mm","5.3mm",'内件<%= package.belong_bags.count %>');
           LODOP.ADD_PRINT_TEXT("99.3mm","37.3mm","85mm","5.3mm",'药品');
           LODOP.ADD_PRINT_TEXT("48mm","183mm","27.8mm","6.6mm",'上海医药');
           LODOP.ADD_PRINT_TEXT("55mm","175.2mm","10mm","5.3mm",'<%= Time.now.year %>');
           LODOP.ADD_PRINT_TEXT("55mm","187.4mm","5.8mm","5.3mm",'<%= Time.now.month %>');
           LODOP.ADD_PRINT_TEXT("55mm","194.6mm","5.8mm","5.3mm",'<%= Time.now.day %>');
+          LODOP.ADD_PRINT_TEXT("91mm","181.5mm","28mm","15mm","<%= eval(package.order_list).join(',') %>");
+          LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
           //设置某个打印机
           
           LODOP.SET_PRINTER_INDEXA("<%= current_user.ems_printer.blank? ? I18n.t('printer.ems_printer') : current_user.ems_printer %>");
@@ -203,8 +205,8 @@
           <% order = Bag.find_by(belong_package_id: package.id).order %>
           LODOP.PRINT_INITA("0mm","0mm","230.2mm","127.3mm","kdbg");
           LODOP.SET_PRINT_PAGESIZE(1,"230mm","127mm","kdbg");
-          LODOP.ADD_PRINT_TEXT("21mm","34.2mm","27.8mm","5.3mm",'<%= order.try(:sender_name) %>');
-          LODOP.ADD_PRINT_TEXT("21mm","76.2mm","41mm","5.3mm",'<%= order.try(:sender_phone) %>');
+          LODOP.ADD_PRINT_TEXT("21mm","34.2mm","27.8mm","5.3mm",'上海医药');
+          LODOP.ADD_PRINT_TEXT("21mm","76.2mm","41mm","5.3mm",'18621106906');
           LODOP.ADD_PRINT_TEXT("29mm","36.3mm","46mm","7mm",'上药控股有限公司');
           LODOP.ADD_PRINT_TEXT("29mm","98mm","25mm","5.3mm","仓配物流");
           LODOP.ADD_PRINT_TEXT("35mm","33mm","90mm","9mm","上海市宝山区沪太支路1107弄28号");
@@ -214,18 +216,20 @@
           LODOP.ADD_PRINT_TEXT("41mm","107.2mm","4mm","4mm","4");
           LODOP.ADD_PRINT_TEXT("41mm","112.5mm","4mm","4mm","3");
           LODOP.ADD_PRINT_TEXT("41mm","117mm","4mm","4mm","6");
-          LODOP.ADD_PRINT_TEXT("51mm","34.2mm","27.8mm","5.3mm",'<%= order.try(:receiver_name) %>');
+          LODOP.ADD_PRINT_TEXT("51mm","34.2mm","27.8mm","5.3mm",'麻药验收组');
           LODOP.ADD_PRINT_TEXT("51mm","76.2mm","41mm","5.3mm",'<%= order.try(:receiver_phone) %>');
           LODOP.ADD_PRINT_TEXT("58mm","36.3mm","46mm","5.3mm",'<%= order.try(:site_name) %>');
           LODOP.ADD_PRINT_TEXT("63.5mm","34mm","86mm","13.2mm",'<%= order.try(:receiver_addr) %>');
-          LODOP.ADD_PRINT_TEXT("69.2mm","32mm","86mm","5.3mm",'签收请盖收货章');
-          LODOP.ADD_PRINT_TEXT("89mm","29mm","15mm","5.3mm",'<%= package.belong_bags.count %>');
+          LODOP.ADD_PRINT_TEXT("69.2mm","32mm","86mm","5.3mm",'签收请盖收货章     共   票');
+          LODOP.ADD_PRINT_TEXT("89mm","26mm","15mm","5.3mm",'内件<%= package.belong_bags.count %>');
           LODOP.ADD_PRINT_TEXT("98mm","26mm","85mm","5.3mm",'药品');
           LODOP.ADD_PRINT_TEXT("24mm","176mm","35mm","5.3mm",'<%= order.try(:receiver_city) %>');
           LODOP.ADD_PRINT_TEXT("52mm","182.3mm","27.8mm","6.6mm",'上海医药');
           LODOP.ADD_PRINT_TEXT("58.5mm","174mm","10mm","5.3mm",'<%= Time.now.year %>');
           LODOP.ADD_PRINT_TEXT("58.5mm","186mm","5.8mm","5.3mm",'<%= Time.now.month %>');
           LODOP.ADD_PRINT_TEXT("58.5mm","195mm","5.8mm","5.3mm",'<%= Time.now.day %>');
+          LODOP.ADD_PRINT_TEXT("98.7mm","174mm","36mm","10mm","<%= eval(package.order_list).join(',') %>");
+          LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
           //设置某个打印机
           LODOP.SET_PRINTER_INDEXA("<%= current_user.kdbg_printer.blank? ? I18n.t('printer.kdbg_printer') : current_user.kdbg_printer %>");
           // LODOP.PRINT_DESIGN();
