@@ -23,8 +23,8 @@ test:
 
 production:
   <<: *default
-  order_trace_url: 'http://tms2.savecloud.cn:8080/gytms_edi/*.expressCollect'
-  #order_trace_url: 'https://tms.sinopharmlogistics.com/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
+  # order_trace_url: 'http://tms2.savecloud.cn:8080/gytms_edi/*.expressCollect'
+  order_trace_url: 'https://tms.sinopharmlogistics.com/spl/tms/disp/mgt/open/dispatch/carrierFeedback'
   method: 'collect'
   appKey: '81383eadf544d4d0'
   appSercret: 'e7ebfea0ae6a846d30fcfaf819407f5caaa3d2a9'
