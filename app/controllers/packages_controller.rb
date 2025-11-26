@@ -298,11 +298,15 @@ class PackagesController < ApplicationController
 
 	# 发送新一代接口，获取邮件号，格口码,返回'成功'或出错信息
 	def package_send(package)
-		interface_sender = XydInterfaceSender.order_create_interface_sender_initialize(package)
-		interface_sender.interface_send(10)
-		msg = XydInterfaceSender.get_response_message(interface_sender)
-		# package.update express_no: "e000001", route_code: "r000001"
-		# msg = "成功"
+		begin
+			interface_sender = XydInterfaceSender.order_create_interface_sender_initialize(package)
+			interface_sender.interface_send(10)
+			msg = XydInterfaceSender.get_response_message(interface_sender)
+			# package.update express_no: "e000001", route_code: "r000001"
+			# msg = "成功"
+		rescue Exception => e
+      msg = e.message
+    end
 		return msg			
 	end
 
@@ -711,9 +715,9 @@ class PackagesController < ApplicationController
   	@order_mode = params[:order_mode]
 
   	if !@package_id.blank?
-  		package = Package.find(@package_id)
-  		if !package.blank? && package.express_no.blank?
-	  		msg = package_send(package)
+  		@package = Package.find(@package_id)
+  		if !@package.blank? && @package.express_no.blank?
+	  		msg = package_send(@package)
 				@err_msg = msg if !msg.eql?"成功"	
 				@is_packaged = "1"
 			end

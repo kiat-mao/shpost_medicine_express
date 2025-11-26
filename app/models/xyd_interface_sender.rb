@@ -116,16 +116,19 @@ class XydInterfaceSender < ActiveRecord::Base
     # 优先显示last_response信息,其次是error_msg信息
     last_response_string = interfaceSender.last_response
     if !last_response_string.nil?
-      last_response = JSON.parse last_response_string
-      head = last_response['head']
-      return '不是新一代InterfaceSender对象' if head.nil?
+      if !self.valid_json?(last_response_string)
+        return 'JSON转换异常'
+      else
+        last_response = JSON.parse last_response_string
+        head = last_response['head']
+        return '不是新一代InterfaceSender对象' if head.nil?
 
-      error_code = head['error_code']
-      error_msg = head['error_msg']
-      return '成功' if error_code == '0'
+        error_code = head['error_code']
+        error_msg = head['error_msg']
+        return '成功' if error_code == '0'
 
-      error_msg
-
+        error_msg
+      end
     else
       error_message = interfaceSender.error_msg
       return '未发送' if error_message.nil?
@@ -133,6 +136,13 @@ class XydInterfaceSender < ActiveRecord::Base
       error_message.split("\n")[0]
 
     end
+  end
+
+  def self.valid_json?(json_string)
+    JSON.parse(json_string)
+    true
+  rescue JSON::ParserError
+    false
   end
 
   def self.order_create_callback_method(response, callback_params)

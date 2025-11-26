@@ -40,15 +40,15 @@
       g.column name: model_class.human_attribute_name(:valuation_sum), attribute: 'valuation_sum'
 
       g.column name: '收件人省', attribute: 'receiver_province', assoc: :orders do |package| 
-        package.belong_bags.blank? ? "" : package.belong_bags.first.order.receiver_province
+        package.belong_bags.blank? ? "" : package.belong_bags.first.order.try(:receiver_province)
       end
 
       g.column name: '收件人市', attribute: 'receiver_city', assoc: :orders do |package| 
-        package.belong_bags.blank? ? "" : package.belong_bags.first.order.receiver_city
+        package.belong_bags.blank? ? "" : package.belong_bags.first.order.try(:receiver_city)
       end
 
       g.column name: '收件人单位', attribute: 'site_name', assoc: :orders do |package| 
-        package.belong_bags.blank? ? "" : package.belong_bags.first.order.site_name
+        package.belong_bags.blank? ? "" : package.belong_bags.first.order.try(:site_name)
       end
 
       g.column name: model_class.human_attribute_name(:commodity_list), attribute: 'commodity_list' do |package|
