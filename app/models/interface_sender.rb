@@ -42,8 +42,49 @@ class InterfaceSender < ActiveRecord::Base
     end
   end
 
+  def self.schedule_send_image_push(thread_count = nil)
+    i1 = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).where(interface_code: 'image_push').order(:created_at).limit(200).to_a
+    if i1.size < 50
+      i2 = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).where(interface_code: 'obtain_authentic_picture').order(:created_at).limit(200).to_a
+    else
+      i2 = []
+    end
+    interface_senders = i1 | i2
+    puts "==========InterfaceSender.schedule_send_image_push==========" 
+    puts "==========Begin at #{Time.now}=========="
+    puts "==========ImagePush: #{i1.size}, ObtainAuthenticPicture: #{i2.size}=========="
+     if ! thread_count.blank?
+      i = thread_count
+    else
+      i = interface_senders.size > 5 ? 5 : interface_senders.size
+    end
+    ts = []
+    i.times.each do |x|
+      t = Thread.new do
+        while interface_senders.size > 0
+          is = nil
+          @@lock.synchronize do
+            is = interface_senders.pop
+          end
+          if is.blank?
+            next
+          end
+
+          puts is.id
+          is.interface_send
+        end
+      end
+      ts<<t
+    end
+    ts.each do |x|
+      x.join
+    end
+    puts "==========End at #{Time.now}=========="
+  end
+
   def self.schedule_send(thread_count = nil)
-    interface_senders = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).order(:created_at).limit(500).to_a
+    #interface_senders = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).where(interface_code: 'image_push').order(:created_at).limit(200).to_a
+    interface_senders = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).where.not(interface_code: ['image_push', 'obtain_authentic_picture']).order(:created_at).limit(2000).to_a #if interface_senders.blank?
     if ! thread_count.blank?
       i = thread_count
     else
@@ -72,10 +113,21 @@ class InterfaceSender < ActiveRecord::Base
     end
   end
 
-  def interface_send(second = nil, persisted = true)
+  # def self.schedule_send
+  #   interface_senders = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).order(:created_at).limit(1000)
+  #   i = interface_senders.size > 50 ? 50 : interface_senders.size
+  #   50.times.each do
+  #     Thread.new{ interface_senders.pop.interface_send until interface_senders.size.eql? 0}.join
+  #   end
+  #   # interface_senders.each do |x|
+  #   #   x.interface_send
+  #   # end
+  # end
+
+  def interface_send(second = nil)
     begin
       response = nil
-      Timeout.timeout(second.blank? ? 60 : second) do
+      Timeout.timeout(second.blank? ? 30 : second) do
         case self.interface_type
           when INTERFACE_TYPE[:xml]
             response = self.xml_send
@@ -91,53 +143,61 @@ class InterfaceSender < ActiveRecord::Base
       end
       throw TimeoutError if response.blank?
 
-      self.callback(response, persisted)
+      self.callback response
     rescue Exception => e
       self.error_msg = "#{e.class.name} #{e.message} \n#{e.backtrace.join("\n")}"
-      if persisted
-        self.fail! response
-      else
-        self.fail response
+      puts error_msg
+      #Rails.logger.error error_msg
+      self.fail! response
+    end
+  end
+
+  def interface_rebuild
+    if !self.object_class.blank? && !self.object_id.blank?
+      object_class = self.object_class.constantize
+      object = object_class.find_by id: self.object_id
+      if !object.blank?
+        case self.callback_class
+        when "YitongInterface"
+          inorders = Order.where(big_packet: object)
+          params = YitongInterface.setPackageSendParams(inorders)
+          self.body = params.to_json
+        when "WISHInterface"
+          case self.callback_method
+          when "parseInorder"
+            x = [object]
+            xml = WISHInterface.set_inorder(x)
+            self.body = xml
+          when "parsePostTrack"
+            xml_post = WISHInterface.set_post_track(object)
+            self.body = xml_post
+          end
+        when "Swtd"
+          self.body = Swtd.setOrderPost(object)
+        end
+        self.save
       end
     end
   end
 
-  def callback(response, persisted = true)
+  def callback response
     if self.callback_class.blank? || ! self.callback_class.constantize.respond_to?(self.callback_method.to_sym) || self.callback_class.constantize.send(self.callback_method.to_sym, response, (self.callback_params.blank? ? self.callback_params : JSON.parse(self.callback_params)))
 
-      if persisted
-        self.succeed! response
-      else
-        self.succeed response
-      end
+      self.succeed! response
     else
-      if persisted
-        self.fail! response
-      else
-        self.fail response
-      end
+      self.fail! response
     end
   end
 
-
   def succeed! response
-    self.succeed response
-    self.save!
-  end
-
-  def succeed response
     self.last_response = response.force_encoding "UTF-8"
     self.last_time = Time.now
     self.send_times += 1
     self.success
-  end
-
-  def fail! response
-    self.fail response
     self.save!
   end
 
-  def fail response
+  def fail! response
     self.last_response = response.force_encoding "UTF-8"
     self.last_time = Time.now
     self.send_times += 1
@@ -149,11 +209,16 @@ class InterfaceSender < ActiveRecord::Base
       self.set_next_time
       self.waiting
     end
+    self.save!
   end
 
   def set_next_time
     self.next_time = Time.now + (self.interval || 600)
   end
+
+  # def self.unfinished_count(storage)
+  #   count = InterfaceSender.where(storage_id: storage,status:"failed").where("interface_senders.created_at >= '#{DateTime.parse((Time.now-1.month).to_s).strftime('%Y-%m-%d').to_s}' and interface_senders.created_at<= '#{DateTime.parse(Time.now.to_s).strftime('%Y-%m-%d').to_s}'").count
+  # end
 
   # private
   def url_parser

@@ -19,7 +19,7 @@ set :output, "./log/cron_log.log"
 
 # Learn more: http://github.com/javan/whenever
 
-every 2.minutes do
+every 5.minutes do
   runner "InterfaceSender.schedule_send"
 end
 
@@ -39,14 +39,22 @@ every 2.minutes do
   runner "WaybillSender.waybill_schedule_offline"
 end
 
-every 1.day, :at => '8:00 pm' do
+every 1.day, :at => '10:00 pm' do
   runner "AuthenticPicture.init_authentic_pictures_15days_ago"
 end
 
-every 1.hours do
+#every 1.day, :at => '00:15 am' do
+every '0 22-23,0-8 * * *' do
   runner "AuthenticPicture.init_obtain_authentic_pictures_and_send"
 end  
 
+#every 1.day, :at => '01:05 am' do
 every 30.minutes do
   runner "AuthenticPicture.clean_interface_sends"
 end
+
+
+every '0,5,10,15,20,25,30,35,40,45,50,55 22-23,0-8 * * *' do
+  runner "InterfaceSender.schedule_send_image_push"
+end
+
