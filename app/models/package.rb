@@ -20,7 +20,7 @@ class Package < ApplicationRecord
 
 	# 年月日+用户id+当天该用户装箱计数,Eg:”20220707-3-1”
  	def self.new_package_no(current_user)		
- 		new_package_no = Date.today.strftime('%Y%m%d') + "-" + current_user.id.to_s + "-" + self.get_package_no_by_user(current_user).to_s
+ 		new_package_no = Date.today.strftime('%Y%m%d') + "-" + current_user.id.to_s + "-" + self.get_package_no_by_user(current_user).to_s + "-" + ('%02d' % rand(100))
  	end
 
 	# 每日每个工号自动从“编号1”开始装箱计数
