@@ -327,6 +327,10 @@
       LODOP.ADD_PRINT_LINE("89.2mm","2mm","89.2mm","74mm",2,1);
       LODOP.ADD_PRINT_TEXT("91mm","3mm","47mm","28mm","处方药品为特殊管理商品，根据相关管理要求，药品配送后如非损坏等质量问题需先完成收货后，再与相关互联网诊疗医院沟通后续事项。退件请退至上海市闵行区中春路9965号。");
       LODOP.ADD_PRINT_TEXT("118mm","3mm","47mm","20mm","所属医院名称: <%= (package.orders.first.hospital_name.blank? || (package.orders.first.hospital_name.eql?"上海市公共卫生临床中心")) ? "" : package.orders.first.try('hospital_name').to_s %>");
+      LODOP.ADD_PRINT_TEXT("91mm","49.2mm","28mm","4mm","华宝路已验视");
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
+      LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+      LODOP.SET_PRINT_STYLEA(0,"FontName","黑体");
       LODOP.ADD_PRINT_TEXT("96mm","49.2mm","28mm","4mm","打印时间:<%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %>");
       LODOP.SET_PRINT_STYLEA(0,"FontSize",6);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
