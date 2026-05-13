@@ -1059,8 +1059,13 @@ class PackagesController < ApplicationController
 				@err_msg = "请输入国内特快专递面单号"
 				return
 			end
+			if !Package.where(express_no: scan_express_no).blank?
+				@err_msg = "该面单号已被绑定"
+				return
+			end
 
 			package = Package.find(package_id)
+
 			if !package.blank? && package.has_boxing
 				package.update express_no: scan_express_no
 				msg = package_send_by_waybill_no(package)	

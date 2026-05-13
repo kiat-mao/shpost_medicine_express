@@ -80,16 +80,17 @@ class XydInterfaceSender < ActiveRecord::Base
         order['insurance_flag'] = '2'
         order['insurance_amount'] = insurance_amount
       end 
+      sender['name'] = "君沧供应链"
     else
       unless xydConfig[:sender_no].nil?
         order['sender_no'] = xydConfig[:sy_sender_no]
         order['sender_type'] = '1'
       end
       order['base_product_no'] = o.product_type
+      sender['name'] = o.sender_name
     end
     sender = {}
     receiver = {}
-    sender['name'] = o.sender_name
     sender['mobile'] = o.sender_phone
     sender['prov'] = o.sender_province
     sender['city'] = o.sender_city
