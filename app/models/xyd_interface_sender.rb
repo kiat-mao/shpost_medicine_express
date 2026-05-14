@@ -44,6 +44,7 @@ class XydInterfaceSender < ActiveRecord::Base
     order['ecommerce_user_id'] = now_time.strftime('%Y%m%d%H%M%S%L')
     order['inner_channel'] = xydConfig[:inner_channel]
     order['logistics_order_no'] = 'package' + package.package_no
+    sender = {}
 
     if I18n.t('unit_no.gy').to_s == package.unit.no
       o = package.orders.first
@@ -89,7 +90,7 @@ class XydInterfaceSender < ActiveRecord::Base
       order['base_product_no'] = o.product_type
       sender['name'] = o.sender_name
     end
-    sender = {}
+    
     receiver = {}
     sender['mobile'] = o.sender_phone
     sender['prov'] = o.sender_province
