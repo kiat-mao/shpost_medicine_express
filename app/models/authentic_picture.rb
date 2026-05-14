@@ -8,7 +8,7 @@ class AuthenticPicture < ApplicationRecord
 	
 	def self.init_authentic_pictures_15days_ago
 		start_date = Date.today - 15.day
-    end_date = Date.today - 14.day
+    end_date = Date.today - 11.day
 		init_authentic_pictures(start_date, end_date)
 	end
 
@@ -43,7 +43,7 @@ class AuthenticPicture < ApplicationRecord
 		authentic_picture.posting_date = pkp_waybill_base.biz_occur_date
 		authentic_picture.status = 'waiting'
 		authentic_picture.sended_times = 0
-		authentic_picture.next_time = Date.today + 5.day#考虑真迹未取到的可能性
+		authentic_picture.next_time = Date.today + 1.day#考虑真迹未取到的可能性
 		authentic_picture.save!
 	end
 
