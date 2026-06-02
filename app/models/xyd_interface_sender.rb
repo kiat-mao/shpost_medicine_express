@@ -44,6 +44,7 @@ class XydInterfaceSender < ActiveRecord::Base
     order['ecommerce_user_id'] = now_time.strftime('%Y%m%d%H%M%S%L')
     order['inner_channel'] = xydConfig[:inner_channel]
     order['logistics_order_no'] = 'package' + package.package_no
+    sender = {}
 
     if I18n.t('unit_no.gy').to_s == package.unit.no
       o = package.orders.first
@@ -80,7 +81,8 @@ class XydInterfaceSender < ActiveRecord::Base
         order['insurance_flag'] = '2'
         order['insurance_amount'] = insurance_amount
       end 
-      sender['name'] = "君沧供应链"
+      sender['name'] = "君沧供应链互联网医院"
+      sender['address'] = "上海市闵行区中春路9965号互联网医院"
     else
       unless xydConfig[:sender_no].nil?
         order['sender_no'] = xydConfig[:sy_sender_no]
@@ -88,14 +90,14 @@ class XydInterfaceSender < ActiveRecord::Base
       end
       order['base_product_no'] = o.product_type
       sender['name'] = o.sender_name
+      sender['address'] = o.sender_addr
     end
-    sender = {}
+    
     receiver = {}
     sender['mobile'] = o.sender_phone
     sender['prov'] = o.sender_province
     sender['city'] = o.sender_city
-    sender['county'] = o.sender_district
-    sender['address'] = o.sender_addr
+    sender['county'] = o.sender_district   
     receiver['name'] = o.receiver_name
     receiver['mobile'] = o.receiver_phone
     receiver['prov'] = o.receiver_province
