@@ -70,7 +70,9 @@ class Order < ApplicationRecord
 
 	def self.order_push(context_hash, unit = nil)
 		order = Order.find_or_initialize_by(order_no: context_hash['ORDER_NO'], unit: unit)
-
+		if ! order.waiting?
+			return
+		end
 		order.unit = unit 
 
 		context_hash.keys.each do |key|
