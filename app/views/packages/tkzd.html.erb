@@ -167,10 +167,16 @@
       <% else %>
         // 可拆箱四联单
         <% #product_type = package.belong_bags.map{|b|b.order}.compact.uniq.first.product_type %>
+        <% order = Bag.find_by(belong_package_id: package.id).order
+           receiver_name = "麻药验收组"
+           if order.site_no.eql?"SHYY-101084" 
+             receiver_name = "上药内蒙古"
+           end
+        %>
         // 上药国内标准快递EMS
         <% #if product_type.eql?"1"
            if !current_user.ems_printer.blank? %>
-          <% order = Bag.find_by(belong_package_id: package.id).order %>
+          
           LODOP.PRINT_INITA("0mm","0mm","230.2mm","127.3mm","ems");
           LODOP.SET_PRINT_PAGESIZE(1,"230mm","127mm","ems");
           LODOP.ADD_PRINT_TEXT("22.7mm","34.2mm","27.8mm","5.3mm",'上海医药');
@@ -184,7 +190,7 @@
           LODOP.ADD_PRINT_TEXT("43.6mm","107.2mm","4mm","4mm","4");
           LODOP.ADD_PRINT_TEXT("43.6mm","112mm","4mm","4mm","3");
           LODOP.ADD_PRINT_TEXT("43.6mm","117mm","4mm","4mm","6");
-          LODOP.ADD_PRINT_TEXT("53mm","34.2mm","27.8mm","5.3mm",'麻药验收组');
+          LODOP.ADD_PRINT_TEXT("53mm","34.2mm","27.8mm","5.3mm",'<%= receiver_name %>');
           LODOP.ADD_PRINT_TEXT("53mm","76.2mm","41mm","5.3mm",'<%= order.try(:receiver_phone) %>');
           LODOP.ADD_PRINT_TEXT("60mm","37.3mm","46mm","5.3mm",'<%= order.try(:site_name) %>');
           LODOP.ADD_PRINT_TEXT("65.5mm","32mm","86mm","13.2mm",'<%= order.try(:receiver_addr) %>');
@@ -208,7 +214,6 @@
         // 上药快递包裹
         <% #elsif product_type.eql?"2"
            elsif !current_user.kdbg_printer.blank? %>
-          <% order = Bag.find_by(belong_package_id: package.id).order %>
           LODOP.PRINT_INITA("0mm","0mm","230.2mm","127.3mm","kdbg");
           LODOP.SET_PRINT_PAGESIZE(1,"230mm","127mm","kdbg");
           LODOP.ADD_PRINT_TEXT("21mm","34.2mm","27.8mm","5.3mm",'上海医药');
@@ -222,7 +227,7 @@
           LODOP.ADD_PRINT_TEXT("41mm","107.2mm","4mm","4mm","4");
           LODOP.ADD_PRINT_TEXT("41mm","112.5mm","4mm","4mm","3");
           LODOP.ADD_PRINT_TEXT("41mm","117mm","4mm","4mm","6");
-          LODOP.ADD_PRINT_TEXT("51mm","34.2mm","27.8mm","5.3mm",'麻药验收组');
+          LODOP.ADD_PRINT_TEXT("51mm","34.2mm","27.8mm","5.3mm",'<%= receiver_name %>');
           LODOP.ADD_PRINT_TEXT("51mm","76.2mm","41mm","5.3mm",'<%= order.try(:receiver_phone) %>');
           LODOP.ADD_PRINT_TEXT("58mm","36.3mm","86mm","5.3mm",'<%= order.try(:site_name) %>');
           LODOP.ADD_PRINT_TEXT("63.5mm","34mm","86mm","13.2mm",'<%= order.try(:receiver_addr) %>');
