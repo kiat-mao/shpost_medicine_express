@@ -169,7 +169,7 @@
         <% #product_type = package.belong_bags.map{|b|b.order}.compact.uniq.first.product_type %>
         <% order = Bag.find_by(belong_package_id: package.id).order
            receiver_name = "麻药验收组"
-           if order.site_no.eql?"SHYY-101084" 
+           if (!order.site_no.blank?) && (order.site_no.eql?"SHYY-101084") 
              receiver_name = "上药内蒙古"
            end
         %>
