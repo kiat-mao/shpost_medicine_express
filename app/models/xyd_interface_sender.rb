@@ -84,6 +84,7 @@ class XydInterfaceSender < ActiveRecord::Base
       sender['name'] = "君沧供应链互联网医院"
       sender['address'] = "上海市闵行区中春路9965号互联网医院"
       sender['mobile'] = "021-80344136"
+      sender['county'] = "闵行区"
     else
       unless xydConfig[:sender_no].nil?
         order['sender_no'] = xydConfig[:sy_sender_no]
@@ -93,13 +94,13 @@ class XydInterfaceSender < ActiveRecord::Base
       sender['name'] = o.sender_name
       sender['address'] = o.sender_addr
       sender['mobile'] = o.sender_phone
+      sender['county'] = o.sender_district 
     end
     
     receiver = {}
     
     sender['prov'] = o.sender_province
-    sender['city'] = o.sender_city
-    sender['county'] = o.sender_district   
+    sender['city'] = o.sender_city  
     receiver['name'] = o.receiver_name
     receiver['mobile'] = o.receiver_phone
     receiver['prov'] = o.receiver_province
