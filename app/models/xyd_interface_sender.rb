@@ -5,7 +5,14 @@ class XydInterfaceSender < ActiveRecord::Base
     gy_units = Unit.where no: gy_unit_no
     orders = Order.where(address_status: :address_waiting, unit: gy_units)
     orders.each_with_index do |order, _i|
-      address_parsing_interface_sender_initialize order
+      begin
+				self.address_parsing_interface_sender_initialize order
+			rescue => e
+				# 只记录该 order 的错误，然后继续下一个
+				puts "[#{Time.now}] ERROR address_parsing_schedule processing order: #{order.id}: #{e.class}: #{e.message}"
+				puts e.backtrace.join("\n")
+				# 不 raise，继续循环
+			end
     end
   end
 

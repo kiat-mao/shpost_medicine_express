@@ -1,11 +1,18 @@
 class TmsInterfaceSender < ActiveRecord::Base
-
 	def self.order_trace_schedule
 		gy_unit_no = I18n.t('unit_no.gy').to_s
 		gy_units = Unit.where no: gy_unit_no
 		orders = Order.where(interface_status: :need_send, unit: gy_units).where.not(package_id: nil)
+		
 		orders.each do |order|
-			self.order_trace_order_interface_sender_initialize order
+			begin
+				self.order_trace_order_interface_sender_initialize order
+			rescue => e
+				# 只记录该 order 的错误，然后继续下一个
+				puts "[#{Time.now}] ERROR order_trace_schedule processing order: #{order.id}: #{e.class}: #{e.message}"
+				puts e.backtrace.join("\n")
+				# 不 raise，继续循环
+			end
 		end
 	end
 
