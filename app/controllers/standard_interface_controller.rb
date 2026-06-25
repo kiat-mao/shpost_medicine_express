@@ -22,7 +22,8 @@ class StandardInterfaceController < ApplicationController
       end
     ensure
       # binding.pry
-      InterfaceLog.log(params[:controller], params[:action], @status ? InterfaceLog::statuses[:success] : InterfaceLog::statuses[:failed], {request_url: request.url, params: params.to_json, response_body: @response, request_ip: request.ip, business_code: @business_no, parent: @object, error_msg: @error_msg, unit: @unit}) if @status.eql? false#if Rails.env.development?
+      InterfaceLog.log(params[:controller], params[:action], @status ? InterfaceLog::statuses[:success] : InterfaceLog::statuses[:failed], {request_url: request.url, params: params.reject{|key,value| key.in? ["action", "controller", "standard_interface"]}
+.to_json, response_body: @response, request_ip: request.ip, business_code: @order_code, parent: @object, error_msg: @error_msg, unit: @unit}) if @status.eql? false#if Rails.env.development?
     end
   end
 
@@ -51,9 +52,10 @@ class StandardInterfaceController < ApplicationController
       return error_builder('0002')
     end
 
-    return error_builder('0005', "ORDER_NO is null") if @context_hash['ORDER_NO'].blank?
+    @order_code =  @context_hash['ORDER_NO']
+    return error_builder('0005', "ORDER_NO is null") if @order_code.blank?
 
-    order = Order.find_by(order_no: @context_hash['ORDER_NO'], unit: @unit)
+    order = Order.find_by(order_no: @order_code, unit: @unit)
 
     return error_builder('0005', 'ORDER_NO had packaged') if order.try('packaged?')
 

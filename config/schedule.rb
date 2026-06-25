@@ -40,7 +40,7 @@ every 2.minutes do
 end
 
 every 1.day, :at => '10:00 pm' do
-  runner "AuthenticPicture.init_authentic_pictures_15days_ago"
+  runner "AuthenticPicture.init_authentic_pictures_recently"
 end
 
 #every 1.day, :at => '00:15 am' do

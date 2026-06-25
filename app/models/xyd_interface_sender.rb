@@ -389,16 +389,22 @@ class XydInterfaceSender < ActiveRecord::Base
 
   
   def self.obtain_authentic_picture_interface_sender_initialize(authentic_picture)
-    xydConfig = Rails.application.config_for(:xyd)
-    body = obtain_authentic_picture_request_body_generate(authentic_picture, xydConfig)
-    args = {}
-    callback_params = {}
-    callback_params['authentic_picture_id'] = authentic_picture.id
-    args[:callback_params] = callback_params.to_json
-    args[:url] = xydConfig[:obtain_authentic_picture_url]
-    args[:parent_id] = authentic_picture.id
-    authentic_picture.sending!
-    InterfaceSender.interface_sender_initialize('obtain_authentic_picture', body, args)
+    updated = AuthenticPicture.where(id: authentic_picture.id, status: 'waiting').update_all(status: 'sending')
+    if updated == 1
+      xydConfig = Rails.application.config_for(:xyd)
+      body = obtain_authentic_picture_request_body_generate(authentic_picture, xydConfig)
+      args = {}
+      callback_params = {}
+      callback_params['authentic_picture_id'] = authentic_picture.id
+      args[:callback_params] = callback_params.to_json
+      args[:url] = xydConfig[:obtain_authentic_picture_url]
+      args[:parent_id] = authentic_picture.id
+      authentic_picture.sending!
+      InterfaceSender.interface_sender_initialize('obtain_authentic_picture', body, args)
+    else
+      # 已被其他进程处理，跳过
+      return nil
+    end
   end
 
   def self.obtain_authentic_picture_request_body_generate(authentic_picture, xydConfig)

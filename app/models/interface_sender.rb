@@ -74,7 +74,7 @@ class InterfaceSender < ActiveRecord::Base
           is.interface_send
         end
       end
-      ts<<t
+      ts << t
     end
     ts.each do |x|
       x.join
@@ -106,7 +106,7 @@ class InterfaceSender < ActiveRecord::Base
           is.interface_send
         end
       end
-      ts<<t
+      ts << t
     end
     ts.each do |x|
       x.join
@@ -125,31 +125,59 @@ class InterfaceSender < ActiveRecord::Base
   # end
 
   def interface_send(second = nil)
+    response = nil
     begin
-      response = nil
       Timeout.timeout(second.blank? ? 30 : second) do
         case self.interface_type
-          when INTERFACE_TYPE[:xml]
-            response = self.xml_send
-          when INTERFACE_TYPE[:http]
-            response = self.http_send
-          when INTERFACE_TYPE[:json]
-            response = self.http_send true
-          when INTERFACE_TYPE[:soap]
-            response  = self.soap_send
-          else
-            response = self.http_send
+        when INTERFACE_TYPE[:http]
+          response = self.http_send
+        when INTERFACE_TYPE[:xml]
+          response = self.xml_send
+        when INTERFACE_TYPE[:json]
+          response = self.http_send(true)
+        when INTERFACE_TYPE[:soap]
+          response = self.soap_send
+        else
+          response = self.http_send
         end
       end
-      throw TimeoutError if response.blank?
+    rescue Timeout::Error => e
+      # 真正的超时异常
+      self.error_msg = "请求超时 (超过#{second || 30}秒): #{e.message}"
 
-      self.callback response
-    rescue Exception => e
-      self.error_msg = "#{e.class.name} #{e.message} \n#{e.backtrace.join("\n")}"
-      puts error_msg
-      #Rails.logger.error error_msg
+      puts self.error_msg
+      Rails.logger.error self.error_msg
+
+      response = '' if response.nil?
       self.fail! response
+      return
+    rescue Exception => e
+      # 其他异常（网络错误、解析错误等）
+      error_title = "http_send 发生异常: #{self.interface_code}: #{self.id}  #{e.class} - #{e.message}"
+      error_msg = e.backtrace.join("\n")
+      
+      puts error_title
+      puts error_msg
+      Rails.logger.error error_title
+      Rails.logger.error error_msg
+
+      self.error_msg = "#{e.class.name} #{e.message} \n#{e.backtrace.join("\n")}"
+
+      response = '' if response.nil?
+      self.fail! response
+      return
     end
+
+    # 如果响应为空，但未发生异常，则视为业务返回空（非超时）
+    if response.blank?
+      self.error_msg = "服务端返回空响应"
+      response = ''
+      self.fail! response
+      return
+    end
+
+    # 正常回调
+    self.callback response
   end
 
   def interface_rebuild
@@ -190,7 +218,7 @@ class InterfaceSender < ActiveRecord::Base
   end
 
   def succeed! response
-    self.last_response = response.force_encoding "UTF-8"
+    self.last_response = response.respond_to?(:force_encoding) ? response.force_encoding("UTF-8") : ''
     self.last_time = Time.now
     self.send_times += 1
     self.success
@@ -198,7 +226,7 @@ class InterfaceSender < ActiveRecord::Base
   end
 
   def fail! response
-    self.last_response = response.force_encoding "UTF-8"
+    self.last_response = response.respond_to?(:force_encoding) ? response.force_encoding("UTF-8") : ''
     self.last_time = Time.now
     self.send_times += 1
 
@@ -240,22 +268,27 @@ class InterfaceSender < ActiveRecord::Base
 
   def http_send is_json = false
     send_url = URI.parse(self.url)
-    if self.http_type.blank?
-      self.http_type = 'post'
-    end
-    request = {}
-    if ! self.body.blank?
-      if is_json
-        request[:body] = self.body
-      else
-        request[:body] = JSON.parse(self.body)
-      end
-    end
-    if ! self.header.blank?
-      request[:header] = JSON.parse(self.header)
-    end 
-    response = HTTPClient.send self.http_type , send_url, request#{'Content-Type' => 'application/json'}
-    response.body
+    http_type = self.http_type.presence || 'post'
+    
+    body = self.body.presence || ''
+    header = self.header.blank? ? {} : JSON.parse(self.header)
+    header['Content-Type'] ||= 'application/json'
+    
+    # 使用 HTTPClient，但捕获异常并重新抛出
+    client = HTTPClient.new
+    client.connect_timeout = 25
+    client.send_timeout = 25
+    client.receive_timeout = 25
+    
+    response = case http_type
+              when 'post' then client.post(send_url, body, header)
+              when 'get'  then client.get(send_url, header)
+              else raise "不支持的 HTTP 方法: #{http_type}"
+              end
+    
+    response.body || ''
+  rescue => e
+    raise  # 重新抛出异常
   end
 
   def soap_send

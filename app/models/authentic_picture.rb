@@ -5,9 +5,35 @@ class AuthenticPicture < ApplicationRecord
 	def self.clean_interface_sends
 		InterfaceSender.where(interface_code: ['image_push', 'obtain_authentic_picture']).where(status: 'success').destroy_all
 	end
+
+	def self.clean_duplicate_obtain_authentic_picture_senders
+		# 1. 找到所有需要处理的记录
+		records = InterfaceSender.where(interface_code: 'obtain_authentic_picture', status: 'waiting')
+														.order(:parent_id, :created_at)  # 按 parent_id 和创建时间排序
+														.to_a
+
+		# 2. 按 parent_id 分组
+		grouped = records.group_by(&:parent_id)
+
+		# 3. 遍历每组，保留第一个（即最早创建的），删除后面的
+		deleted_count = 0
+		grouped.each do |parent_id, group|
+			next if group.size <= 1
+			# 保留第一条
+			keep = group.first
+			# 其余删除
+			to_delete = group[1..-1]
+			ids = to_delete.map(&:id)
+			InterfaceSender.where(id: ids).delete_all  # 直接删除，跳过回调（如果需要回调，用 destroy_all）
+			deleted_count += ids.size
+			puts "已清理 parent_id=#{parent_id} 的 #{ids.size} 条重复记录，保留 ID=#{keep.id}"
+		end
+
+		puts "共清理 #{deleted_count} 条重复记录"
+	end
 	
-	def self.init_authentic_pictures_15days_ago
-		start_date = Date.today - 15.day
+	def self.init_authentic_pictures_recently
+		start_date = Date.today - 12.day
     end_date = Date.today - 11.day
 		init_authentic_pictures(start_date, end_date)
 	end
@@ -40,10 +66,12 @@ class AuthenticPicture < ApplicationRecord
 
 	def self.init_authentic_picture(pkp_waybill_base)
 		authentic_picture = AuthenticPicture.find_or_initialize_by(express_no: pkp_waybill_base.waybill_no)
-		authentic_picture.posting_date = pkp_waybill_base.biz_occur_date
-		authentic_picture.status = 'waiting'
-		authentic_picture.sended_times = 0
-		authentic_picture.next_time = Date.today + 1.day#考虑真迹未取到的可能性
+		if authentic_picture.new_record?
+			authentic_picture.posting_date = pkp_waybill_base.biz_occur_date
+			authentic_picture.status = 'waiting'
+			authentic_picture.sended_times = 0
+			authentic_picture.next_time = Date.today + 1.day#考虑真迹未取到的可能性
+		end
 		authentic_picture.save!
 	end
 
