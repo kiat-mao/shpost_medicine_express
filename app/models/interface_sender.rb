@@ -42,10 +42,10 @@ class InterfaceSender < ActiveRecord::Base
     end
   end
 
-  def self.schedule_send_image_push(thread_count = nil)
+  def self.schedule_send_image_push(thread_count = nil, size = 200)
     i1 = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).where(interface_code: 'image_push').order(:created_at).limit(200).to_a
     if i1.size < 50
-      i2 = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).where(interface_code: 'obtain_authentic_picture').order(:created_at).limit(200).to_a
+      i2 = self.where(status: InterfaceSender::STATUS[:waiting]).where('next_time < ?', Time.now).where(interface_code: 'obtain_authentic_picture').order(:created_at).limit(size).to_a
     else
       i2 = []
     end
