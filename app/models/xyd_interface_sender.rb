@@ -443,7 +443,9 @@ class XydInterfaceSender < ActiveRecord::Base
 
     # 判断authentic_picture是否存在,是否不可修改
     # begin
-    authentic_picture = AuthenticPicture.sending.find callback_params['authentic_picture_id']
+    authentic_picture = AuthenticPicture.find callback_params['authentic_picture_id']
+    return true if authentic_picture.status == 'sended' || authentic_picture.status == 'failed'
+    
     authentic_picture.sended_times += 1
     # rescue StandardError => e
     #   puts e.message
